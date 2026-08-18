@@ -1,11 +1,12 @@
-# All four collaborators are eligible code-owner reviewers on everything in
-# the repo. This is deliberately flat rather than split per product
-# directory: GitHub never auto-requests a review from a PR's own author, so
-# a single-owner directory rule (e.g. "/product-b/ @Cheewaiyip" with no one
-# else listed) makes it impossible for that owner's own PRs to satisfy
-# "require review from code owners" — nobody else is eligible to approve.
-#
-# Who actually owns which product day to day is documented in CLAUDE.md /
-# AGENTS.md's ownership table — this file only exists to keep the required
-# code-owner review satisfiable by someone other than the author.
+# Default: any of the four collaborators. Covers product-a (rhaeyyan's own
+# directory) and shared/process paths (docs, .github, root config) — kept
+# broad specifically so rhaeyyan's own PRs always have someone else eligible
+# to satisfy "require review from code owners" (GitHub never auto-requests
+# a review from a PR's own author).
 * @rhaeyyan @Cheewaiyip @crystalwatson-art @humaali-create
+
+# Teammate-owned product directories require rhaeyyan's review and approval
+# specifically, since rhaeyyan is never the author of these.
+/product-b/ @rhaeyyan
+/product-c/ @rhaeyyan
+/product-d/ @rhaeyyan
