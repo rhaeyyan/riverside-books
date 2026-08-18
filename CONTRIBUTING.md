@@ -2,6 +2,8 @@
 
 This is currently a solo project, but the workflow below is enforced by hooks and CI rather than convention, so it applies regardless of who's committing — including future collaborators.
 
+For the full engineering standards, see [`CLAUDE.md`](./CLAUDE.md) (Claude Code) or [`AGENTS.md`](./AGENTS.md) (Codex CLI). They are kept in sync; change both when a rule changes.
+
 See [`product-a/implementation_plan.md`](./product-a/implementation_plan.md) for the build order and phase exit conditions, and [`product-a/tech_stack_recommendation.md`](./product-a/tech_stack_recommendation.md) for the reasoning behind the stack.
 
 ## Prerequisites
