@@ -20,7 +20,7 @@ npm run dev
 
 - **Feature branches and pull requests only — never commit directly to `main`.**
 - **Rebase is the merge strategy.** Squash and merge-commit are disabled at the repository level. Keep your branch rebased on `main` before merging.
-- Every pull request needs at least 1 approving review and green CI before merging, from anyone but yourself. `CODEOWNERS` lists all four collaborators as eligible reviewers repo-wide, so this is always satisfiable.
+- Every pull request needs at least 1 approving review and green CI before merging. PRs touching `product-b/`, `product-c/`, or `product-d/` are auto-requested to **@rhaeyyan**, whose approval is required to merge. PRs touching `product-a/` or shared paths (docs, `.github/`, root config) can be approved by any other collaborator.
 - Branches are deleted automatically on merge.
 
 ## Commits

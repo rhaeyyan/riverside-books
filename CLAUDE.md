@@ -31,7 +31,7 @@ Once Phase 0 scaffolding lands:
 ## Git workflow
 
 - **Feature branches + PRs only — never commit directly to `main`.** Branch protection on GitHub blocks direct pushes to `main`, including for the repo admin.
-- **Every PR needs at least 1 approving review before merging.** With four collaborators, review each other's PRs — don't merge your own. `CODEOWNERS` lists all four of you as eligible reviewers on everything (not per-directory), specifically so this requirement is always satisfiable by someone other than the author; the ownership table above is the actual convention for who *should* review what.
+- **Every PR needs at least 1 approving review before merging.** `CODEOWNERS` makes **@rhaeyyan the required reviewer for `product-b/`, `product-c/`, and `product-d/`** — a PR touching one of those gets auto-requested to rhaeyyan and needs their approval to merge. `product-a/` and shared paths (docs, `.github/`, root config) list all four collaborators as eligible reviewers instead, specifically so rhaeyyan's own PRs always have someone else eligible to approve them.
 - **Rebase is the merge strategy**, enforced at the GitHub repo level (squash and merge-commit are disabled). Keep feature branches rebased on `main` before merging.
 - Branches are auto-deleted on merge.
 - **CI** (`.github/workflows/ci.yml`) runs lint, format check, typecheck, test-with-coverage, and build on every push/PR. It is not yet a required status check on `main` — enable that once it first runs green:
@@ -57,6 +57,6 @@ Per `product-a/implementation_plan.md`: availability and reservation state are c
 
 ## Notes
 
-- **Four-person team, no multi-agent build roster.** There's no `[SPEC]`/handoff protocol defined here (unlike a team hackathon repo running dispatched subagents) — each collaborator builds their own product directory normally, following the git/commit/CI rules above. The ownership table above is the convention for who owns what; `.github/CODEOWNERS` deliberately doesn't encode it per-directory (see the comment in that file for why).
+- **Four-person team, no multi-agent build roster.** There's no `[SPEC]`/handoff protocol defined here (unlike a team hackathon repo running dispatched subagents) — each collaborator builds their own product directory normally, following the git/commit/CI rules above.
 - **`AGENTS.md` mirrors this file for Codex CLI**, which reads `AGENTS.md` automatically and does not read `CLAUDE.md`. Keep both in sync — a substantive rule change belongs in both files.
 - See `CONTRIBUTING.md` for the same rules in prose form, and `SECURITY.md` for the data/auth model (Supabase Auth, RLS-scoped customer data) — currently written for Product A; extend it as the other products land auth/data of their own.
