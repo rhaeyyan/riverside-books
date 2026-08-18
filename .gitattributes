@@ -1,0 +1,2 @@
+# Enforce LF line endings for all text files, regardless of platform/editor settings.
+* text=auto eol=lf

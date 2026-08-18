@@ -1,0 +1,7 @@
+npx --no -- commitlint --edit "$1"
+
+if grep -qiE '^co-authored-by:.*(claude|anthropic|openai|chatgpt|gpt-|copilot|gemini|codex|\bai\b)' "$1"; then
+  echo "✖ commit-msg: AI Co-Authored-By trailers are not allowed in this repo." >&2
+  echo "  Remove the Co-Authored-By line attributing the commit to an AI tool." >&2
+  exit 1
+fi

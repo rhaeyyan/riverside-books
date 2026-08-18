@@ -1,0 +1,10 @@
+{
+  // MD013 (line-length) is disabled because prose is intentionally kept on a single
+  // unwrapped line per paragraph (see .prettierrc.json proseWrap: "never") rather than
+  // hard-wrapped at a column width.
+  "config": {
+    "MD013": false
+  },
+  "globs": ["**/*.md"],
+  "ignores": ["node_modules", "docs/private"]
+}
