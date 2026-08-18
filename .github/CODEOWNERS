@@ -1,2 +1,18 @@
-# Default owner for everything in the repo.
+# Default owner for anything not matched below.
 * @rhaeyyan
+
+# Product A: Customer Ordering & Loyalty App.
+/product-a/ @rhaeyyan
+
+# Product B: Staff Inventory & Ops Dashboard.
+/product-b/ @Cheewaiyip
+
+# Product C: Customer Support Chatbot.
+/product-c/ @humaali
+
+# Product D: Marketing Content Generator.
+/product-d/ @crystalwatson-art
+
+# Shared docs and repo process.
+/docs/ @rhaeyyan
+/.github/ @rhaeyyan
