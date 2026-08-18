@@ -1,6 +1,15 @@
 # Riverside Books — Product A (Customer Ordering & Loyalty App)
 
-Solo build for the Cycle 4 "Direct-to-Consumer Retail" project brief (`docs/Cycle 4_ Project briefs.md`). Product A is the customer-facing catalog/reservation/loyalty app; three other teammates are building Products B–D as separate repos. This file codifies the repo's GitHub protocols — branching, commits, CI, hooks — so they're enforced consistently rather than re-derived each session.
+Team build for the Cycle 4 "Direct-to-Consumer Retail" project brief (`docs/Cycle 4_ Project briefs.md`), shared across four collaborators in this one repo, each owning a product directory:
+
+| Product | Directory | Owner |
+| --- | --- | --- |
+| A — Customer Ordering & Loyalty App | `product-a/` | [@rhaeyyan](https://github.com/rhaeyyan) |
+| B — Staff Inventory & Ops Dashboard | `product-b/` | [@Cheewaiyip](https://github.com/Cheewaiyip) |
+| C — Customer Support Chatbot | `product-c/` | [@humaali](https://github.com/humaali) |
+| D — Marketing Content Generator | `product-d/` | [@crystalwatson-art](https://github.com/crystalwatson-art) |
+
+This file codifies the repo's GitHub protocols — branching, commits, CI, hooks — so they're enforced consistently across all four product directories rather than re-derived each session. The stack/commands/CI sections below currently describe Product A specifically (the only one scaffolded so far); update them once another product's tooling lands, or split per-directory if the four apps end up with different stacks.
 
 ## Stack & docs
 
@@ -22,6 +31,7 @@ Once Phase 0 scaffolding lands:
 ## Git workflow
 
 - **Feature branches + PRs only — never commit directly to `main`.** Branch protection on GitHub blocks direct pushes to `main`, including for the repo admin.
+- **Every PR needs at least 1 approving review before merging.** With four collaborators, review each other's PRs — don't merge your own without a second person signing off, `CODEOWNERS` requests it automatically for the matching product directory.
 - **Rebase is the merge strategy**, enforced at the GitHub repo level (squash and merge-commit are disabled). Keep feature branches rebased on `main` before merging.
 - Branches are auto-deleted on merge.
 - **CI** (`.github/workflows/ci.yml`) runs lint, format check, typecheck, test-with-coverage, and build on every push/PR. It is not yet a required status check on `main` — enable that once it first runs green:
@@ -47,6 +57,6 @@ Per `product-a/implementation_plan.md`: availability and reservation state are c
 
 ## Notes
 
-- **This is a solo project.** There is no multi-agent build roster or handoff protocol here — build normally, following the git/commit/CI rules above.
+- **Four-person team, no multi-agent build roster.** There's no `[SPEC]`/handoff protocol defined here (unlike a team hackathon repo running dispatched subagents) — each collaborator builds their own product directory normally, following the git/commit/CI rules above. `.github/CODEOWNERS` is the source of truth for who owns what.
 - **`AGENTS.md` mirrors this file for Codex CLI**, which reads `AGENTS.md` automatically and does not read `CLAUDE.md`. Keep both in sync — a substantive rule change belongs in both files.
-- See `CONTRIBUTING.md` for the same rules in prose form, and `SECURITY.md` for the data/auth model (Supabase Auth, RLS-scoped customer data).
+- See `CONTRIBUTING.md` for the same rules in prose form, and `SECURITY.md` for the data/auth model (Supabase Auth, RLS-scoped customer data) — currently written for Product A; extend it as the other products land auth/data of their own.

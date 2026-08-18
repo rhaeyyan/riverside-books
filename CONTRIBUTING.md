@@ -1,6 +1,6 @@
 # Contributing to Riverside Books
 
-This is currently a solo project, but the workflow below is enforced by hooks and CI rather than convention, so it applies regardless of who's committing — including future collaborators.
+Four people build in this repo, each owning a product directory (`product-a` through `product-d` — see `.github/CODEOWNERS` for the mapping). The workflow below is enforced by hooks and CI rather than convention, so it applies regardless of who's committing.
 
 For the full engineering standards, see [`CLAUDE.md`](./CLAUDE.md) (Claude Code) or [`AGENTS.md`](./AGENTS.md) (Codex CLI). They are kept in sync; change both when a rule changes.
 
@@ -20,7 +20,7 @@ npm run dev
 
 - **Feature branches and pull requests only — never commit directly to `main`.**
 - **Rebase is the merge strategy.** Squash and merge-commit are disabled at the repository level. Keep your branch rebased on `main` before merging.
-- Every pull request needs green CI before merging.
+- Every pull request needs at least 1 approving review and green CI before merging. `CODEOWNERS` auto-requests the owner of whatever product directory you touched.
 - Branches are deleted automatically on merge.
 
 ## Commits
