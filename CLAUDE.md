@@ -27,9 +27,9 @@ This file is the standalone, canonical source for this repo's protocols — GitH
 Each product app is its own npm project — run these from inside `product-c-app/` today, and from inside the equivalent `product-X-app/` (or `product-a/`, if that ends up unprefixed) once the other three scaffold theirs. There is no root-level `package.json`.
 
 - `npm run dev` — local dev server. `npm run build` / `npm run start` — production build/serve.
-- `npm run lint` / `npm run format` / `npm run format:check` — app code (ESLint/Prettier).
+- `npm run lint` — app code (ESLint). There is **no `format`/`format:check` script** in `product-c-app` — `.prettierrc.json` exists at the repo root, but nothing currently runs it (see the markdown bullet below).
 - `npm run typecheck` — Vitest and ESLint do **not** type-check; a type error in a test file is invisible without this. For a Next.js app, run `next typegen` first (or as part of the script) — a bare `tsc --noEmit` can't see Next's generated route/layout types otherwise.
-- `npm run test` — Vitest with coverage.
+- `npm run test` — Vitest (`vitest run`). **No coverage is collected** — no `--coverage` flag, no `coverage` block in `vitest.config.ts`, and no `@vitest/coverage-v8` installed — so nothing in this repo can report a coverage figure today.
 - Root-level `lint:md` / `format:md` / `format:md:check` (markdownlint-cli2/Prettier for docs) are referenced by `CONTRIBUTING.md` but not yet wired into any `package.json` — `.github/workflows/ci.yml` currently only runs `product-c-app`'s steps. When you scaffold your own product's app, add your own CI job to that workflow following `product-c-app`'s job as the template (working-directory-scoped steps, its own job name) rather than assuming a shared root job exists.
 
 ## Git workflow
@@ -121,7 +121,7 @@ No default force is imposed — `tech-lead` states the actual trade-off for the 
 
 - **Status**: PASS | FAIL
 - **Oracle run**: <the SPEC's declared oracle, the exact command, and its verdict>
-- **Coverage**: <current %, and trend if this repo later adopts a numeric gate — none is enforced repo-wide today>
+- **Coverage**: <`not collected` — no product app has coverage tooling wired up today, and there is no repo-wide numeric gate; report a figure only once a product actually collects one>
 - **Integrity Boundary check**: <held / violated — where>
 - **Critical violations**: <must fix before merge; empty if PASS>
 - **Recommendations**: <non-blocking improvements>
