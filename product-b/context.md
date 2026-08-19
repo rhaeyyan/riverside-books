@@ -64,11 +64,17 @@ Next.js (App Router), TypeScript, Tailwind, Supabase (Postgres + Auth), deployed
 project and deploy target as Product A, connecting to the same Supabase project per the schema
 decision above.
 
-## Next steps (not yet started)
+## Next steps
 
 - [ ] Confirm the shared `staff` table / role check with @rhaeyyan before writing any auth code.
-- [ ] Resolve the sales/demand-tracking gap (who owns the table, what triggers a write).
-- [ ] Write `product-b/tech_stack_recommendation.md` and `product-b/implementation_plan.md`
+      Still blocking — see the open item in `implementation_plan.md` Phase 1.
+- [x] Resolve the sales/demand-tracking gap. Settled by the cross-team recommended resolution:
+      cut "recently sold titles," derive "most frequently requested" from `reservations`
+      (30-day window) — see `implementation_plan.md` Phase 2.
+- [x] Write `product-b/tech_stack_recommendation.md` and `product-b/implementation_plan.md`
       mirroring Product A's docs, phased with exit conditions.
 - [ ] Phase 0 scaffold: Next.js project, connect to the shared Supabase project, one real metric
       rendered on a deployed URL.
+
+`docs/assumptions.md` is also drafted (proposed default for the POS assumption and the store's
+operating profile) — open for review by all four owners, not yet team-confirmed.
