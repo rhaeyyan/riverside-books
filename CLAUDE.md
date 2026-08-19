@@ -6,7 +6,8 @@ Team build for the Cycle 4 "Direct-to-Consumer Retail" project brief (`docs/Cycl
 | --- | --- | --- |
 | A — Customer Ordering & Loyalty App | `product-a/` | [@rhaeyyan](https://github.com/rhaeyyan) |
 | B — Staff Inventory & Ops Dashboard | `product-b/` | [@Cheewaiyip](https://github.com/Cheewaiyip) |
-| C — Customer Support Chatbot | `product-c/` | [@humaali-create](https://github.com/humaali-create) |
+| C — Customer Support Chatbot (docs) | `product-c/` | [@humaali-create](https://github.com/humaali-create) |
+| C — Customer Support Chatbot (app shell) | `product-c-app/` | [@humaali-create](https://github.com/humaali-create) |
 | D — Marketing Content Generator | `product-d/` | [@crystalwatson-art](https://github.com/crystalwatson-art) |
 
 This file codifies the repo's GitHub protocols — branching, commits, CI, hooks — so they're enforced consistently across all four product directories rather than re-derived each session. The stack/commands/CI sections below currently describe Product A specifically (the only one scaffolded so far); update them once another product's tooling lands, or split per-directory if the four apps end up with different stacks.
