@@ -11,11 +11,12 @@ and event information.
 
 ## Phase 0: Walking skeleton, deployed
 
-**Goal.** One page, one question flow, one real answer from a real database query. No model yet,
-no chat UI polish, no external provider dependency.
+**Goal.** One page, one question flow, and one deterministic answer path. No model yet, no chat
+UI polish, and no claim of a live database connection.
 
 - Next.js App Router project, TypeScript, Tailwind.
-- Supabase project created and connected.
+- Supabase project created and connected at the app boundary, but not yet used for a live product
+  query.
 - One minimal support page with a single text input and a mock or seeded answer path.
 - One seeded fact-path for a title lookup and a static FAQ answer, without claiming a live
   database integration yet.
@@ -24,7 +25,8 @@ no chat UI polish, no external provider dependency.
 - CI: lint, then typecheck, then test, then deploy.
 
 **Exit condition.** A teammate opens the preview URL on their own phone and sees a support page
-that can answer a basic greeting or product question without needing a browser-only mock.
+that can answer a basic greeting or product question without needing a browser-only mock. This is
+still a UI shell; it does not yet assert a live database-backed stock query.
 
 Nothing after this phase is allowed to break deployment.
 
@@ -45,6 +47,11 @@ inventory       book_id (pk, fk books), on_hand int not null default 0,
                 reserved int not null default 0, counted_at timestamptz not null
 
 events          id, title, author_guest, description, event_date, start_time, location, created_at
+
+This event schema is intentionally provisional until the shared team schema is ratified. The
+`author_guest` field aligns with Product D's current event spec and avoids the drift that came from
+Product C omitting it. Once the cross-team event-data owner is decided, Product C will adopt the
+shared contract.
 
 staff           user_id (pk), role
 
