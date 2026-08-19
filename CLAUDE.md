@@ -10,7 +10,7 @@ Team build for the Cycle 4 "Direct-to-Consumer Retail" project brief (`docs/Cycl
 | C — Customer Support Chatbot (app shell) | `product-c-app/` | [@humaali-create](https://github.com/humaali-create) |
 | D — Marketing Content Generator | `product-d/` | [@crystalwatson-art](https://github.com/crystalwatson-art) |
 
-This file is the standalone, canonical source for this repo's protocols — GitHub workflow, engineering standards, and the multi-agent build workflow below — so any teammate's Claude Code, Codex CLI, or Copilot session behaves the same way without cross-referencing a second document. `AGENTS.md` mirrors it for Codex CLI and `.github/copilot-instructions.md` mirrors it for Copilot; keep all three in sync when a rule changes (see Notes).
+This file is the standalone, canonical source for this repo's protocols — GitHub workflow, engineering standards, and the multi-agent build workflow below — so any teammate's agent session behaves the same way without cross-referencing a second document. `AGENTS.md` mirrors it for Codex CLI; keep both in sync when a rule changes (see Notes).
 
 ## Stack & docs
 
@@ -143,5 +143,6 @@ No default force is imposed — `tech-lead` states the actual trade-off for the 
 
 ## Notes
 
-- **`AGENTS.md` mirrors this file for Codex CLI**, which reads `AGENTS.md` automatically and does not read `CLAUDE.md`, `.claude/agents/`, or `.claude/skills/`. Codex-facing versions of the four roles live in `.codex/agents/*.toml`. **`.github/copilot-instructions.md` mirrors the ground rules for GitHub Copilot** — Copilot CLI does support repository-level custom agents (`.github/agents/`), but this repo doesn't define Copilot equivalents of the four roles yet, so it should still follow the Git workflow, Engineering standards, and Integrity Boundary sections, and apply the `[SPEC]`/`[COMPLETION-REPORT]` schemas conversationally when asked to plan or hand off work, rather than running the four roles as separate dispatched agents. Keep all three files in sync — a substantive rule change belongs in every one of them.
+- **`AGENTS.md` mirrors this file for Codex CLI**, which reads `AGENTS.md` automatically and does not read `CLAUDE.md`, `.claude/agents/`, or `.claude/skills/`. Codex-facing versions of the four roles live in `.codex/agents/*.toml`. Keep both files in sync — a substantive rule change belongs in both.
+- **No GitHub Copilot instructions file.** Nothing in this repo's history shows anyone using Copilot (no branch, commit, or PR came from it), so a third copy of these rules would rot unread — it was deliberately not added rather than overlooked. If you do adopt Copilot, add `.github/copilot-instructions.md` (Copilot Chat reads it automatically) and `.github/agents/` profiles for the four roles, and say so here; until then Copilot users should read this file directly.
 - See `CONTRIBUTING.md` for the git/commit rules in prose form, and `SECURITY.md` for the data/auth model (Supabase Auth, RLS-scoped customer data) — currently written for Product A; extend it as the other products land auth/data of their own.
