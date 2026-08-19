@@ -54,10 +54,12 @@ CI is the authoritative gate. In particular, neither Vitest nor ESLint type-chec
 
 ```bash
 npm run typecheck
-npm run lint && npm run lint:md
-npm run format:check && npm run format:md:check
+npm run lint
+npm run test
 npm run build
 ```
+
+There is no `format:check` script — Prettier isn't wired into any app's `package.json` yet, and neither are the markdown commands below.
 
 ## Code style
 

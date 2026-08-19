@@ -11,6 +11,16 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Repo-scoped, no npm install — stays fast and keeps running as each product
+  # scaffolds its own app and adds its own job alongside `ci` below.
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Check docs don't claim npm scripts that don't exist
+        run: python3 .github/scripts/check-doc-commands.py
+
   ci:
     runs-on: ubuntu-latest
     steps:

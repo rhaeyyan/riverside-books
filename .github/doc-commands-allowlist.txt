@@ -1,0 +1,23 @@
+# npm scripts the docs mention on purpose, before any package.json defines them.
+#
+# Checked by .github/scripts/check-doc-commands.py. Adding a name here says "this
+# doc is knowingly describing future state" — so keep the reason current, and
+# delete the line once the script actually exists.
+
+# The markdown lint/format toolchain. .markdownlint-cli2.jsonc and .prettierrc.json
+# are both committed at the repo root, but there is no root package.json to hang the
+# scripts on yet, so nothing runs them. Referenced by CLAUDE.md, AGENTS.md,
+# CONTRIBUTING.md, and .github/PULL_REQUEST_TEMPLATE.md.
+lint:md
+format:md
+format:md:check
+
+# TEMPORARY — delete both lines when PR #31 merges.
+#
+# These two are not future state, they're wrong: CLAUDE.md and AGENTS.md list
+# `npm run format` / `format:check` as if product-c-app had them, and it never has.
+# PR #31 already rewrites both of those lines, so fixing them here too would
+# guarantee a rebase conflict on a PR that rewrites those files wholesale.
+# Allowlisted only so this check can land first; #31 removes the claims for real.
+format
+format:check
