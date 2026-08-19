@@ -1,8 +1,8 @@
 # Retro 2 — Riverside Books, 2026-08-19
 
-21 commits authored today (19 landed on `main`, 2 sitting on the still-open `docs/multi-agent-orchestration` branch) — 10:48 AM to 6:21 PM.
+23 commits authored today — 19 landed on `main`, 3 on the still-open `docs/multi-agent-orchestration` branch (PR #31), and 1 on the branch carrying this retro (PR #32) — from 10:48 AM to 6:43 PM.
 
-**Commits:** 21 · **Contributors:** 4 (rhaeyyan 11, Cheewaiyip 4, Huma Ali 4, Crystal Watson 2) · **PRs opened:** 13 (10 merged, 3 closed unmerged, 1 open)
+**Commits:** 23 · **Contributors:** 4 (rhaeyyan 13, Cheewaiyip 4, Huma Ali 4, Crystal Watson 2) · **PRs opened:** 15 (10 merged, 3 closed unmerged, 2 open), plus #16 and #17 from yesterday merged this morning
 
 ## Morning — Product C ships the first app code (11:20 AM–1:51 PM)
 
@@ -16,9 +16,16 @@
 - **rhaeyyan** assembled `docs/PRD.md` — the whole-suite requirements doc pulling from all four products' planning docs plus the shared contracts (PR #29) — then landed two rounds of same-day review fixes: a missing scope column and a reclassified Product D risk, then a decision-ownership and stale-status-line fix.
 - By end of afternoon, `TODO.md`'s cross-team section and all four per-product sections are checked off except one item each (A's unverified competitor pricing, D's backfill-research question) — both explicitly left open as judgment calls, not oversights.
 
-## Evening — multi-agent orchestration pipeline (4:07–6:21 PM, still open)
+## Evening — multi-agent orchestration pipeline (4:07–6:43 PM, still open)
 
-- **rhaeyyan** added the `tech-lead → sdet → builder → reviewer` roster and the `[SPEC]`/`[FORCES]`/`[COMPLIANCE-REPORT]`/`[COMPLETION-REPORT]` handoff schemas to `CLAUDE.md` (PR #31 — this is the workflow this very retro was requested under). Review comments came in from **Cheewaiyip**, **Huma Ali**, and **Crystal Watson**; a same-day follow-up commit addressed all three reviewers' feedback. **Still open** as of this writing — the one PR from today without a green merge yet.
+**rhaeyyan** added the `tech-lead → sdet → builder → reviewer` roster and the `[SPEC]`/`[FORCES]`/`[COMPLIANCE-REPORT]`/`[COMPLETION-REPORT]` handoff schemas to `CLAUDE.md`, mirrored into `AGENTS.md`, `.claude/agents/`, `.codex/agents/*.toml`, and a new `.github/copilot-instructions.md` (PR #31 — this is the workflow this very retro was requested under). It went through two review rounds the same evening:
+
+1. **Teammate review** — **Crystal Watson** caught three: the premise that Copilot has no custom-agent support was outdated, `product-d/tech_stack_recommendation.md` was named as a required `tech-lead` input but doesn't exist (which would have blocked Product D's default flow immediately), and `product-c-app/` was missing from CODEOWNERS despite the docs describing it as rhaeyyan-reviewed. **Cheewaiyip** caught three more: the CI description claimed a format-check step and coverage that `ci.yml` doesn't run, `sdet`'s "may only edit test files" restriction isn't actually enforced by its tool grant, and both files still carried the Product-A-only title. **Huma Ali** also reviewed. Commit `a71c346` addressed all six.
+2. **Self-review pass** (`b5143c3`, 6:43 PM) — found that Cheewaiyip's coverage finding was only half-fixed: the CI line was corrected, but the Commands section, the `[COMPLIANCE-REPORT]` schema, and `sdet`'s own audit step all still asked for a coverage figure that no command in this repo can produce. The same round found that the **Directory boundary** — the headline new rule, the one CODEOWNERS exists to back — is equally prompt-level-only for `builder` and `reviewer`, which the first fix had disclosed for `sdet` alone.
+
+**Still open** as of this writing — the one PR from today without a green merge yet.
+
+The pattern worth keeping: both rounds found the same *class* of defect — a doc confidently describing tooling the repo doesn't actually have. That's the failure mode a docs-heavy day is most prone to, and the only thing that caught it either time was someone checking the claim against `package.json` and `ci.yml` rather than reading for plausibility.
 
 ## The auto-PR backstop fired five times today, and caught inconsistent results
 
@@ -32,4 +39,6 @@ Retro 1 flagged the "missing PR" failure mode and shipped `auto-pr.yml` as a bac
 
 ## Net state
 
-All four products now have complete planning docs, a shared `docs/schema.md`/`docs/PRD.md`/`docs/assumptions.md`/`docs/model-access.md` contract set, and `TODO.md` nearly fully resolved. Product C has the only scaffolded app and the only prototype code. The multi-agent role system that should shape all future build sessions is written but not yet merged (PR #31 open). Next gate: Product A, B, and D's Phase 0 scaffolding — still nobody but Product C has a deployable app.
+All four products now have complete planning docs, a shared `docs/schema.md`/`docs/PRD.md`/`docs/assumptions.md`/`docs/model-access.md` contract set, and `TODO.md` nearly fully resolved. Product C has the only scaffolded app and the only prototype code. The multi-agent role system that should shape all future build sessions is written and twice-reviewed but not yet merged (PR #31 open, three commits). Next gate: Product A, B, and D's Phase 0 scaffolding — still nobody but Product C has a deployable app.
+
+Two process items carry into tomorrow: making `ci` a required status check (above), and merging #31 so the next build session actually runs under the roster it defines.
