@@ -46,13 +46,6 @@ books           id, isbn13, title, author, format, created_at
 inventory       book_id (pk, fk books), on_hand int not null default 0,
                 reserved int not null default 0, counted_at timestamptz not null
 
-events          id, title, author_guest, description, event_date, start_time, location, created_at
-
-This event schema is intentionally provisional until the shared team schema is ratified. The
-`author_guest` field aligns with Product D's current event spec and avoids the drift that came from
-Product C omitting it. Once the cross-team event-data owner is decided, Product C will adopt the
-shared contract.
-
 staff           user_id (pk), role
 
 customers       id (pk, = auth.uid()), display_name, member_code, created_at
@@ -60,6 +53,10 @@ customers       id (pk, = auth.uid()), display_name, member_code, created_at
 
 Product C does not own these tables. It reads them as a consumer. The bot must never invent or
 rewrite the source data. Its job is to phrase a response around the facts already present.
+
+The authoritative shared event schema lives in [`docs/schema.md`](../docs/schema.md). Product C
+must read that contract rather than restating a local copy in this file. The `events` table is
+owned by Product A, written by Product B staff workflows, and read by Product C and Product D.
 
 ### Core integrity rules
 
