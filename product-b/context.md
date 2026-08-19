@@ -37,26 +37,26 @@ unresolved. **Confirmed with the team at kickoff: the shared-project approach is
   reconciling the physical count against the database is Product B's job, and Product A's
   stock-status honesty depends on B actually doing it.
 - **The staff-role check must be shared** between A and B (a single `staff` table / role check,
-  not two independently invented ones). Product A's plan defines `staff (user_id pk, role)` —
-  Product B should use that table, not create a parallel one, and this needs explicit
-  confirmation with @rhaeyyan before Product B's auth work starts.
-- Product B does own any staff-side tables beyond that shared role check.
+  not two independently invented ones). **Confirmed** — the canonical `staff (user_id pk, role)`
+  shape is now published in [`docs/schema.md`](../docs/schema.md#staff), which Product B reads
+  from rather than defining a parallel table.
+- Product B does **not** own any staff-side tables beyond that shared role check.
 
-## Open gap: no sales/demand data yet
+## Sales and demand data (resolved)
 
-Two of the requested dashboard metrics have no backing table in Product A's schema as currently
-planned:
+Two of the requested dashboard metrics had no backing table in Product A's schema:
 
 - **Recently sold titles** — Product A's schema has no purchase/transaction table. Loyalty
   stamps (`loyalty_stamps`) record a grant, not a sale, and aren't a reliable proxy for "what
-  sold."
-- **Most frequently requested books** — could plausibly be derived from `reservations` (a
-  request that never converts) or from a separate demand-signal table, but this isn't decided.
+  sold." **Cut from scope** — inventing a `sales` table means staff double-entry at the register,
+  which breaks the "must beat a paper log" speed requirement this product exists to satisfy. If a
+  real POS integration happens later, this becomes buildable; until then it stays out.
+- **Most frequently requested books** — **derived from `reservations`**, rolling 30-day window. A
+  request that never converts still records demand, so this is free to build against data that
+  already exists.
 
-This needs a decision, ideally owned by whoever's schema it extends: either Product B adds a
-`sales` (or similar) table it owns and staff record sales into at the register, or this waits on
-a POS integration that doesn't exist yet. Until resolved, "recently sold" and "most requested"
-can't be built against real data.
+See [`implementation_plan.md` Phase 2](implementation_plan.md#phase-2-dashboard-reads) for the
+built-out version of both decisions.
 
 ## Stack (inherited from Product A / CLAUDE.md, not yet confirmed for B specifically)
 
