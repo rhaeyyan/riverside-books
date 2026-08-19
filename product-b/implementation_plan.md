@@ -57,6 +57,14 @@ returning on_hand, counted_at;
 Wrapped in a Server Action, authenticated as staff. A non-staff or unauthenticated session is
 rejected before the query runs, not filtered after.
 
+**Handles the below-`reserved` case explicitly**, per
+[`tech_stack_recommendation.md`](tech_stack_recommendation.md#3-the-reconciliation-write-solved-atomically):
+a recount can find fewer physical copies than are currently reserved, which Product A's
+`inventory_reserved_sane` check constraint rejects outright. The Server Action catches that
+constraint violation and returns a specific message naming the current `reserved` count, rather
+than a generic save failure. The reconciliation screen (Phase 3) also reads `reserved` up front so
+this can be flagged before submit, not just after.
+
 ### Row Level Security
 
 - `inventory` write: staff-only, checked against `staff`, not against an email domain or a
@@ -71,10 +79,14 @@ rejected before the query runs, not filtered after.
   reconciliation write.
 - An integration test asserting `on_hand` and `counted_at` always change together on a
   reconciliation write.
+- An integration test asserting a recount below the current `reserved` count is rejected with the
+  specific message, not a generic error, and that `on_hand`/`counted_at` are unchanged after the
+  rejected attempt.
 
 **Exit condition.** A staff session updates a stock count through the write path, and both
 `on_hand` and `counted_at` change in the database. A non-staff session attempting the same write
-is rejected.
+is rejected. A recount below the current `reserved` count is rejected with a message naming the
+number of copies already held, not a raw database error.
 
 ## Phase 2: Dashboard reads
 
@@ -93,17 +105,20 @@ status.
 
 ### Most frequently requested books
 
-`reservations` grouped by `book_id`, rolling 30-day window, per the cross-team resolution to
-derive demand from `reservations` rather than inventing a `sales` table
-(see [`TODO.md`](../TODO.md#recommended-resolutions)).
+`reservations` grouped by `book_id`, rolling 30-day window, following the *proposed* cross-team
+resolution to derive demand from `reservations` rather than inventing a `sales` table
+(see [`TODO.md`](../TODO.md#recommended-resolutions)). That resolution is Product B's preferred
+default, not yet a decision the other three owners have ratified — the cross-team TODO item it
+answers is still unchecked in `TODO.md` for exactly that reason. If it changes at the sync, this
+section changes with it.
 
-### Cut: recently sold titles
+### Cut (proposed): recently sold titles
 
-Not built. No sales/transaction table exists, and per the cross-team recommended resolution,
-none will — inventing one means staff double-entry at the register, which breaks the "must beat
-a paper log" requirement this whole product exists to satisfy. If a real POS integration happens
-later, this metric becomes buildable; until then it stays out of scope rather than faked from a
-proxy that doesn't mean the same thing.
+Not built, following the same unratified proposal above. No sales/transaction table exists, and
+the recommended resolution is to leave it that way — inventing one means staff double-entry at
+the register, which breaks the "must beat a paper log" requirement this whole product exists to
+satisfy. If a real POS integration happens later, this metric becomes buildable; until then it's
+proposed as out of scope rather than faked from a proxy that doesn't mean the same thing.
 
 ### Tests
 

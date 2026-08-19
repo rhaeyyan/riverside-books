@@ -70,6 +70,21 @@ returning on_hand, counted_at;
 There is no code path that can write one column without the other, because there is no second
 statement to skip.
 
+**A recount can find fewer physical copies than are currently reserved, and that has to fail
+loudly, not silently.** Product A's `inventory_reserved_sane` check constraint
+(`reserved >= 0 and reserved <= on_hand`) already forbids writing an `on_hand` below the current
+`reserved` count — the database rejects the statement above outright rather than accepting a
+number that would say fewer books exist than are already promised to customers. That constraint
+is the correctness backstop and stays authoritative, per the non-negotiable rule in
+[`CLAUDE.md`](../CLAUDE.md). What's missing without this section is the caller's response: a raw
+`23514` constraint-violation error is not something a bookseller should see. The write path reads
+the current `reserved` value alongside `on_hand` before rendering the reconciliation screen, so
+the UI can warn before the count is even submitted, and it also catches the constraint violation
+as a hard backstop on save, translated to a specific message — "N copies are already reserved;
+recount can't go below that until a reservation is fulfilled or expires" — rather than a generic
+save failure. See [`implementation_plan.md`](implementation_plan.md#phase-1-staff-auth-and-the-write-path)
+for where this lands in the build.
+
 **Deliberately not building optimistic concurrency control for this write.** Product A's
 reservation race needs a conditional update because two customers can race for one copy at the
 same instant. Two booksellers overwriting each other's count is a different failure: the store
@@ -110,10 +125,12 @@ transitions a reservation's status; that stays Product A's job per the schema de
 
 ### Most frequently requested books
 
-Derived from `reservations`, per the cross-team resolution to cut "recently sold titles"
-(no sales table exists, and inventing one means staff double-entry at the register — see
+Derived from `reservations`, following the *proposed* cross-team resolution to cut "recently sold
+titles" (no sales table exists, and inventing one means staff double-entry at the register — see
 [`TODO.md`](../TODO.md#recommended-resolutions)) and build "most requested" from `reservations`
-instead, since every request already lands there regardless of whether it converts.
+instead, since every request already lands there regardless of whether it converts. That's
+Product B's preferred default, not yet ratified by the other three owners — the cross-team TODO
+item is still open for exactly that reason, and this section moves if the sync lands elsewhere.
 
 **Window: rolling 30 days, not all-time.** An all-time count only ever surfaces old backlist
 titles that accumulated requests over months; a rolling window tracks what is in demand now,
