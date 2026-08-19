@@ -49,7 +49,14 @@ loyalty_stamps  id, customer_id, granted_by, request_id (unique),
 rewards         id, customer_id, redeemed_at, stamps_spent
 
 staff           user_id (pk), role
+
+events          id, title, author_guest, description, event_date,
+                start_time, location, created_at
 ```
+
+The full ownership/access matrix for these tables, including `events`, is published at
+[`docs/schema.md`](../docs/schema.md) — that file is the copy other products should read from,
+so this block and that one need to be kept in sync rather than letting either drift.
 
 ### The three constraints that matter
 
@@ -211,7 +218,11 @@ pinned now:
   with the store.
 - **Any purchase counts**, including cards and gifts. Excluding them means booksellers making
   judgment calls at the register, which is exactly what kills adoption.
-- **Event tickets are unresolved** and flagged, because Product A does not sell tickets.
+- **Event tickets do not grant a stamp in the MVP.** Product A doesn't sell tickets and has no
+  transaction to grant a stamp against. This is a loyalty-semantics gap, not a data-ownership
+  one: `docs/schema.md` now settles who owns the `events` table (A migrates it, B writes to it),
+  but whether attending a ticketed event should count toward a reward is a separate question
+  that still needs the store's input.
 - **Returns do not revoke a stamp** in the MVP. Revocation needs a link from stamp to
   transaction, and there is no transaction record without a POS integration.
 
@@ -291,8 +302,14 @@ cannot do the thing its brief describes. That does not surface as an error. It s
 last afternoon before the demo, when the four products turn out to be four disconnected apps.
 
 **Proposal to bring to the group:** one shared Supabase project. Product A owns and migrates
-`books`, `inventory`, and `reservations`. B and C read them and do not migrate them. B owns any
-staff-side tables it needs, and D owns its own.
+`books`, `inventory`, `reservations`, and now `events`. B and C read them and do not migrate
+them. B owns any staff-side tables it needs, and D owns its own.
+
+`events` was added to A's migration set to close cross-team TODO item 1 — see
+[`docs/schema.md`](../docs/schema.md) for the field list and the reasoning. Product C's own
+implementation plan had already stood up a provisional `events` shape while this was
+unresolved; C should switch to reading the shared table once this lands rather than keeping its
+own copy.
 
 Two things must be agreed alongside it. Product B needs a write path to `inventory.on_hand` and
 `counted_at`, because reconciling the physical count is B's job and A's honesty depends on it.

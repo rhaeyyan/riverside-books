@@ -182,8 +182,11 @@ lives.
 
 - **No shipping.** Pickup only. The brief rules out becoming an e-commerce business.
 - **No event ticket sales.** The business model section mentions ticket revenue, but Product A's
-  own definition does not list tickets. Flagged as an open question rather than silently added
-  or silently dropped.
+  own definition does not list tickets, and this is now a closed decision rather than a carried
+  one. It does not block owning the event *data*, though: Product A migrates the shared `events`
+  table (see [`docs/schema.md`](../docs/schema.md)) so Products C and D have one shape to read
+  from — table ownership and ticket sales are separate questions, and only the first is Product
+  A's job.
 - **No recommendation engine.** Nothing in the brief asks for one.
 - **No multi-location support.** The store is stated as single-location.
 - **No staff inventory management screens.** That is Product B, and building a second one
@@ -193,8 +196,8 @@ lives.
 
 - Does Riverside already run a POS with a loyalty add-on? This blocks the loyalty feature.
 - Is the store an ABA member with IndieCommerce access? This changes the competitive answer.
-- Does a stamp require a book, or do cards, gifts, and event tickets count?
-- Who owns the inventory schema across the four products? Products B and C both read it.
+- Does a stamp require a book, or do cards, gifts, and event tickets count? (Separate from table
+  ownership — see `implementation_plan.md`'s loyalty section.)
 - Are online payments required for the MVP, or is pay-at-pickup acceptable?
 
 ## Verification status
