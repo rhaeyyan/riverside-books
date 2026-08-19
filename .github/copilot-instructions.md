@@ -1,6 +1,6 @@
 # Riverside Books — Copilot repo instructions
 
-This file is the Copilot-facing mirror of `CLAUDE.md` (canonical) and `AGENTS.md` (Codex CLI). GitHub Copilot has no subagent system of its own, so this doesn't run the four-role roster as separate dispatched agents — it summarizes the ground rules every teammate's tool follows, so Copilot Chat/Workspace behaves consistently with Claude Code and Codex CLI sessions in this repo. Read `CLAUDE.md` for the full detail on any of this, especially the "Multi-agent build workflow" and "Handoff Schemas" sections.
+This file is the Copilot-facing mirror of `CLAUDE.md` (canonical) and `AGENTS.md` (Codex CLI). Copilot CLI does support repository-level custom agents (`.github/agents/`), but this repo doesn't define the four-role roster as Copilot agent profiles yet — this file summarizes the ground rules every teammate's tool follows instead, so Copilot Chat/Workspace/CLI behaves consistently with Claude Code and Codex CLI sessions in this repo. Read `CLAUDE.md` for the full detail on any of this, especially the "Multi-agent build workflow" and "Handoff Schemas" sections.
 
 ## What this repo is
 
@@ -8,7 +8,7 @@ Four collaborators, each owning one product directory, building the Cycle 4 "Dir
 
 ## Directory boundary
 
-Stay inside the one product directory (and its `-app` sibling) you're working in, plus read the shared `docs/` contracts above. Don't edit another product's directory or a shared `docs/` file directly — `.github/CODEOWNERS` makes rhaeyyan the required reviewer for `product-b/`, `product-c/`, and `product-d/` precisely because those are someone else's files. If a change needs a shared table, a new assumption, or touches another product, say so and let the human raise it cross-team (a PR comment, a `TODO.md` item, or a `docs/PRD.md` Section 7 risk row) instead of making the change yourself.
+Stay inside the one product directory (and its `-app` sibling) you're working in, plus read the shared `docs/` contracts above. Don't edit another product's directory or a shared `docs/` file directly — `.github/CODEOWNERS` makes rhaeyyan the required reviewer for `product-b/`, `product-c/`, `product-c-app/`, and `product-d/` precisely because those are someone else's files. If a change needs a shared table, a new assumption, or touches another product, say so and let the human raise it cross-team (a PR comment, a `TODO.md` item, or a `docs/PRD.md` Section 7 risk row) instead of making the change yourself.
 
 ## Git workflow (enforced by hooks/CI, not optional)
 
