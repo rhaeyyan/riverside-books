@@ -16,7 +16,7 @@ added here.
 | Table            | Migrated by | Written by                              | Read by   |
 | ---------------- | ----------- | ---------------------------------------- | --------- |
 | `books`           | A           | A                                         | B, C, D   |
-| `inventory`       | A           | A (`on_hand`/`reserved`), B (`counted_at` via reconciliation) | B, C |
+| `inventory`       | A           | A (`reserved`, via reservations), B (`on_hand` + `counted_at` together, via reconciliation) | B, C |
 | `customers`       | A           | A                                         | —         |
 | `reservations`    | A           | A                                         | B         |
 | `loyalty_stamps`  | A           | A, B (grant at register)                 | —         |
