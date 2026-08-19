@@ -37,26 +37,15 @@ Everything downstream inherits the data assumptions made here.
 
 ### Shared tables and contracts
 
-The bot depends on the store's real source tables. The following are the minimum ones it should
-read from:
+The bot depends on the store's real source tables — `books`, `inventory`, `staff`, `customers`,
+and `events`. The authoritative field lists and ownership for all of them live in
+[`docs/schema.md`](../docs/schema.md); Product C reads that contract rather than restating a
+local copy here, which is how this section drifted out of date once before (missing fields on
+`books` and `customers`, and a provisional `events` shape that predated the shared one).
 
-```
-books           id, isbn13, title, author, format, created_at
-
-inventory       book_id (pk, fk books), on_hand int not null default 0,
-                reserved int not null default 0, counted_at timestamptz not null
-
-staff           user_id (pk), role
-
-customers       id (pk, = auth.uid()), display_name, member_code, created_at
-```
-
-Product C does not own these tables. It reads them as a consumer. The bot must never invent or
-rewrite the source data. Its job is to phrase a response around the facts already present.
-
-The authoritative shared event schema lives in [`docs/schema.md`](../docs/schema.md). Product C
-must read that contract rather than restating a local copy in this file. The `events` table is
-owned by Product A, written by Product B staff workflows, and read by Product C and Product D.
+Product C does not own any of these tables. It reads them as a consumer. The bot must never
+invent or rewrite the source data. Its job is to phrase a response around the facts already
+present.
 
 ### Core integrity rules
 
