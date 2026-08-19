@@ -11,8 +11,11 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  ci:
+  product-c:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: product-c-app
     steps:
       - uses: actions/checkout@v7
 
@@ -20,24 +23,18 @@ jobs:
         with:
           node-version: 22
           cache: npm
+          cache-dependency-path: product-c-app/package-lock.json
 
-      - run: npm install -g npm@latest
-      - run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
       - name: Lint
-        run: |
-          npm run lint
-          npm run lint:md
-
-      - name: Format check
-        run: |
-          npm run format:check
-          npm run format:md:check
+        run: npm run lint
 
       - name: Typecheck
         run: npm run typecheck
 
-      - name: Test with coverage
+      - name: Test
         run: npm test
 
       - name: Build

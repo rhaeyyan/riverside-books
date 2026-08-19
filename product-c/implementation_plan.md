@@ -17,10 +17,11 @@ no chat UI polish, no external provider dependency.
 - Next.js App Router project, TypeScript, Tailwind.
 - Supabase project created and connected.
 - One minimal support page with a single text input and a mock or seeded answer path.
-- One database-backed query for a title lookup and a static FAQ answer.
+- One seeded fact-path for a title lookup and a static FAQ answer, without claiming a live
+  database integration yet.
 - Deployed to Vercel with a preview URL working on a phone.
-- ESLint, Vitest configured, one passing test.
-- CI: lint, then test, then deploy.
+- ESLint, TypeScript, and Vitest configured, with one passing smoke test.
+- CI: lint, then typecheck, then test, then deploy.
 
 **Exit condition.** A teammate opens the preview URL on their own phone and sees a support page
 that can answer a basic greeting or product question without needing a browser-only mock.
@@ -43,7 +44,7 @@ books           id, isbn13, title, author, format, created_at
 inventory       book_id (pk, fk books), on_hand int not null default 0,
                 reserved int not null default 0, counted_at timestamptz not null
 
-events          id, title, description, event_date, start_time, location, created_at
+events          id, title, author_guest, description, event_date, start_time, location, created_at
 
 staff           user_id (pk), role
 
