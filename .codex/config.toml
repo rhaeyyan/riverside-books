@@ -1,0 +1,3 @@
+# Project-scoped Codex CLI config for riverside-books.
+# See AGENTS.md for repo rules and the .codex/agents/*.toml subagent roster
+# (tech-lead, sdet, builder, reviewer) — mirrors .claude/agents/ for Claude Code.
