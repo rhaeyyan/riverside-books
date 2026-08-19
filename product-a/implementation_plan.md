@@ -88,10 +88,10 @@ from here on.
 
 ### Seed data
 
-A fixture set of real titles and ISBNs from a public bibliographic source, labeled as fixture
-data wherever it appears. Roughly 150 titles is enough to make search behave like search, with a
-deliberate mix of in-stock, out-of-stock, and stale-count rows so the status logic has something
-to show.
+A fixture set of real titles and ISBNs, sourced and seeded as decided in
+`tech_stack_recommendation.md` §6, labeled as fixture data wherever it appears. Roughly 150
+titles is enough to make search behave like search, with a deliberate mix of in-stock,
+out-of-stock, and stale-count rows so the status logic has something to show.
 
 ## Phase 2: Catalog search and honest stock display
 
