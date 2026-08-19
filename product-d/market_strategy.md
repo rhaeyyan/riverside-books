@@ -171,7 +171,7 @@ Crystal accepted the Product D defaults on 2026-08-19. These decisions define th
 | Approval | Any authenticated staff user may mark a draft ready; nothing auto-publishes | Decided |
 | Model boundary | Provider-independent streaming interface with a deterministic fake in tests; provider chosen by configuration later | Decided; see [`docs/model-access.md`](../docs/model-access.md) |
 | Data source | Read current books and events from the shared Supabase project; no Product D copy of store data | Decided for Product D |
-| Shared schema fields | Product A must publish the team contract before Product D binds to concrete database columns | Team blocker |
+| Shared schema fields | The team must ratify one shared schema contract and assign its publisher before Product D binds to concrete database columns | Unratified team recommendation |
 | Event ownership | Product D reads events but does not own their migration or staff write surface | Team blocker |
 
 ## Verification status

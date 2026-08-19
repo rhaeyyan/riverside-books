@@ -18,13 +18,9 @@ The build order below is driven by one judgment: fluent text is the easy part; p
 
 Nothing after this phase may break deployment. If a phase cannot ship, split it rather than holding a broken branch.
 
-## Phase 1: Staff access and the shared data boundary
+## Phase 1A: Product D-owned data and access boundaries
 
-Product D reads store data; it does not create a second catalog or events source. This phase replaces the Phase 0 fixture selector with adapters over the shared Supabase project.
-
-### Blocking team contract
-
-The repository does not yet contain the proposed `docs/schema.md`, and event-table ownership remains open in [`TODO.md`](../TODO.md#cross-team--blocks-more-than-one-product). Product D can define its boundary types now, but binding those types to concrete database columns blocks on the team contract.
+Product D reads store data; it does not create a second catalog or events source. This phase defines and tests the Product D boundary without waiting for the team to ratify concrete database columns or staff-role storage.
 
 Product D's accepted position is:
 
@@ -53,21 +49,45 @@ interface EventContentRecord {
 }
 ```
 
-These are Product D's required meanings, not a claim that the shared database already uses these column names. The adapter maps the published team schema into them.
+These are Product D's required meanings, not a claim that the shared database already uses these column names. Define a `ContentSource` interface around them and keep the fixture implementation from Phase 0 as the first adapter.
 
-### Staff access
+### Access boundary
 
-- Reuse Supabase Auth and the shared `staff (user_id, role)` check once the team confirms it.
-- Anonymous and customer sessions cannot read the Product D workspace or saved drafts.
+- Define a server-only `requireStaff` boundary without choosing the shared role table's concrete columns.
+- Use deterministic authorized and unauthorized test doubles until the team ratifies the staff-role contract.
 - API keys and provider calls remain server-only. No model credential is sent to the browser.
 
 ### Tests
 
-- Adapter tests map a book and an event row into the boundary types without dropping required fields.
+- Fixture-adapter tests return a book and an event through the `ContentSource` interface without dropping required fields.
 - Missing optional fields remain `null`; they are never replaced with invented values.
-- A non-staff session is rejected from the Product D page and data endpoints.
+- Access-boundary tests reject the unauthorized test double from the Product D page and data endpoints.
 
-**Exit condition.** An authenticated staff session selects a real book and a real event from the shared project. A non-staff session cannot reach either dataset. Concrete database mappings reference the team's published schema rather than duplicating it in this plan.
+**Exit condition.** The Product D page depends only on `ContentSource` and `requireStaff`, works with deterministic fixture implementations, and has passing mapping and unauthorized-access tests. No guessed database column or role-table name appears in application code.
+
+## Phase 1B: Shared Supabase integration (team-blocked)
+
+This integration phase begins only after the team ratifies the corresponding contracts. The repository does not yet contain the proposed `docs/schema.md`, the shared staff-role check is not confirmed, and event-table ownership remains open in [`TODO.md`](../TODO.md#cross-team--blocks-more-than-one-product).
+
+Required team decisions:
+
+- Ratify one shared schema field list and assign who publishes it.
+- Assign ownership of the events migration and staff write surface.
+- Confirm the shared staff-role table and authorization check.
+
+Once those decisions are recorded:
+
+- Implement a Supabase `ContentSource` adapter that maps the ratified book and event fields into Product D's boundary types.
+- Implement `requireStaff` using the ratified shared Supabase Auth and staff-role contract.
+- Keep all provider credentials and database writes server-only.
+
+### Tests
+
+- Adapter tests map a real-schema book and event row into the boundary types.
+- An authenticated staff session can read both datasets.
+- Anonymous and customer sessions cannot reach the Product D workspace, source records, or saved drafts.
+
+**Exit condition.** An authenticated staff session selects a real book and a real event from the shared project. A non-staff session cannot reach either dataset. The concrete mappings cite the team's ratified contract rather than duplicating or guessing it.
 
 ## Phase 2: Deterministic generation and fact protection
 
@@ -90,7 +110,7 @@ The request contains a selected structured record, the channel, and the fixed Ri
 
 ### Fact protection
 
-Follow [`docs/model-access.md`](../docs/model-access.md#4-fact-protection-mechanically), mechanically rather than through hopeful prompt wording:
+Follow [`docs/model-access.md`](../docs/model-access.md#4-fact-protection-mechanically-product-d), mechanically rather than through hopeful prompt wording:
 
 1. Convert the selected record into an allowlisted fact block.
 2. Generate prose around placeholder tokens such as `{title}`, `{author}`, `{price}`, `{event_date}`, and `{event_time}`.
@@ -249,9 +269,9 @@ Each task should touch at most five files.
 | ---: | --- | ---: |
 | 1 | Scaffold Product D, lint, test, build, and deploy | 0 |
 | 2 | Fixture record selector and deterministic three-variant page | 0 |
-| 3 | Define book/event boundary types and data-source interface | 1 |
-| 4 | Bind adapters to the published shared schema | 1 |
-| 5 | Reuse shared staff auth and add access tests | 1 |
+| 3 | Define boundary types, `ContentSource`, `requireStaff`, and fixture contract tests | 1A |
+| 4 | Bind the Supabase adapter to the team's ratified shared schema | 1B |
+| 5 | Bind `requireStaff` to the ratified shared role check and add access tests | 1B |
 | 6 | Define generator interface and deterministic fixture implementation | 2 |
 | 7 | Implement placeholder allowlist, substitution, and tests | 2 |
 | 8 | Implement unsupported-fact highlighter and tests | 2 |
@@ -265,20 +285,13 @@ Each task should touch at most five files.
 | 16 | Run accessibility, mobile, timing, and edit-burden checks | 6 |
 | 17 | Seed the demo cases and write the demo script | 6 |
 
-## Accepted Product D decisions
+## Product decision source of truth
 
-- **Channels:** Instagram and Facebook.
-- **Output:** three variations per generation.
-- **Voice:** warm, local, knowledgeable, community-focused; avoid big-box hype and invented urgency.
-- **Review actions:** Edit, Copy, Save Draft, and Mark Ready.
-- **Approval:** authenticated staff; no automatic publishing.
-- **Visuals:** text and a post concept in the MVP; image generation and design-tool integrations later.
-- **Data:** shared books and events only; no Product D store-data copy.
-- **Model:** provider-independent streaming interface, deterministic fake in tests, live provider chosen through configuration later.
+The accepted Product D defaults and their status live in [`market_strategy.md`](market_strategy.md#product-decisions-and-team-dependencies). This implementation plan consumes that table instead of maintaining a second copy.
 
 ## Blocking cross-team decisions
 
-- **Publish the shared schema field list.** Product D will not bind to guessed database columns.
+- **Ratify one shared schema field list and assign its publisher.** Product D will not bind to guessed database columns.
 - **Assign ownership of the events migration and staff write surface.** Product D is a reader, not the owner.
 - **Confirm the shared `staff` table and role check.** Product D will reuse it rather than inventing a separate authorization system.
 
