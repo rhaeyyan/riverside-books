@@ -122,16 +122,11 @@ The promise is not "better AI writing." It is a shorter and safer path from a cu
 ### Must have
 
 - Select a specific book or upcoming event from shared team data.
-- Generate at least one short social caption and one post idea.
+- Generate three meaningfully different short social captions, each paired with a post idea.
+- Support Instagram and Facebook in the first release, with channel-appropriate length and tone.
 - Keep hard facts grounded in the selected record.
-- Show a visible review and edit step before any publish or copy action.
-
-### High value if the core path is stable
-
-- Generate three meaningfully different variations.
-- Let staff choose the initial channel so length and tone change appropriately.
 - Apply a small Riverside voice preset: warm, local, knowledgeable, and community-focused without big-box hype.
-- Provide clear Copy, Save Draft, and Mark Ready actions.
+- Show a visible review and edit step with Copy, Save Draft, and Mark Ready actions.
 
 ### Later
 
@@ -162,16 +157,22 @@ The targets above are proposed acceptance criteria, not validated performance re
 - **No separate book or event database.** Shared data is the differentiator and the source of factual truth.
 - **No engagement optimization claims without data.** Best-time recommendations and A/B testing require real publishing and performance history.
 
-## Open questions
+## Product decisions and team dependencies
 
-- Which exact book and event fields will the shared team schema expose to Product D?
-- Which channels are in the first demo: Instagram and Facebook, or one channel if time is tight?
-- What three to five rules define Riverside's voice, and which words or tones should it avoid?
-- Should one generation return three variations, or is one polished draft enough for the first cycle?
-- Does the MVP stop at Copy and Mark Ready, or is Save Draft required?
-- Are visuals required by the instructor, or can the first release remain text plus a post concept?
-- How will Product D receive refreshed book and event data without creating a second source of truth?
-- Who is allowed to mark a draft ready, and does the team need more than one approval role?
+Crystal accepted the Product D defaults on 2026-08-19. These decisions define the implementation plan; they are no longer carried as open questions.
+
+| Decision | Product D call | Status |
+| --- | --- | --- |
+| MVP channels | Instagram and Facebook | Decided |
+| Riverside voice | Warm, local, knowledgeable, community-focused; avoid big-box hype and invented urgency | Decided |
+| Output count | Three variations per generation | Decided |
+| Review actions | Edit, Copy, Save Draft, and Mark Ready | Decided |
+| Visual scope | Text plus a post concept; image generation and design-tool integration later | Decided |
+| Approval | Any authenticated staff user may mark a draft ready; nothing auto-publishes | Decided |
+| Model boundary | Provider-independent streaming interface with a deterministic fake in tests; provider chosen by configuration later | Decided; see [`docs/model-access.md`](../docs/model-access.md) |
+| Data source | Read current books and events from the shared Supabase project; no Product D copy of store data | Decided for Product D |
+| Shared schema fields | Product A must publish the team contract before Product D binds to concrete database columns | Team blocker |
+| Event ownership | Product D reads events but does not own their migration or staff write surface | Team blocker |
 
 ## Verification status
 
