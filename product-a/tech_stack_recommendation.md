@@ -137,8 +137,50 @@ impressive in a demo and adds a whole failure mode for nothing.
 The catalog is the set of titles the store knows about. Stock is a number attached to some of
 them. Keeping those separate is what makes "we can order that for you" expressible.
 
-For the build, seed a fixture set of real titles with real ISBNs from a public bibliographic
-source such as Open Library. Two rules attached to that:
+**Source: Open Library, seeded once into a checked-in fixture.**
+
+Licensing decides this, not features. Open Library's catalog data is CC0 1.0 — libraries
+donated it into the public domain — so the rows can sit in our Postgres indefinitely, be
+committed to a public repo, and be redistributed with no attribution obligation.
+
+Google Books was considered and rejected on terms, not quota. Its API terms say content must
+not be cached beyond the cache header, because Google licenses much of that data rather than
+owning it, and a persistent `books` table is exactly that kind of cache. The same terms forbid
+charging users for an app built on the API, which is a poor fit for a store. ISBNdb is paid,
+and what it sells is coverage and freshness this project does not need for a fixture set.
+Bowker Books In Print, Ingram, and Baker & Taylor are the real trade feeds, contract-only, and
+excluded by the wholesaler rule below. WorldCat requires OCLC membership.
+
+**Seeded, not integrated.** A one-time script queries Open Library and writes
+`product-a/seed/books.fixture.json`, which is committed. The seed script reads that file, so
+nothing touches the network at request time or in CI. Catalog search therefore does not depend
+on a third party's uptime, and search tests stay deterministic when upstream metadata changes.
+Rate limits stop mattering under this shape: Open Library's
+[API docs](https://openlibrary.org/developers/api) put the limit at 1 request per second
+unidentified and 3 per second identified, and 150 titles fetched once, offline, is under a
+minute. Send a
+`User-Agent` naming the app with a contact email, as their docs ask. Skip the monthly bulk
+dumps — they are tens of gigabytes, aimed at rebuilding the corpus.
+
+Three consequences for the schema in `implementation_plan.md`:
+
+- **`price_cents` is invented data.** No bibliographic source carries retail price; that is
+  part of what Bowker and Ingram sell. Prices are fixture data and fall under the labeling rule
+  below.
+- **`isbn13 unique` needs a conversion step.** Open Library editions often carry only an
+  ISBN-10, especially pre-2007 titles. The seed script converts them (978 prefix, recomputed
+  check digit) or filters to records that already have an ISBN-13. Silently dropping half the
+  titles is the likelier failure.
+- **Pull editions, not works.** Open Library separates the abstract Work from the Edition, and
+  the ISBN lives on the edition. The `books` table is edition-level.
+
+**Covers are a separate decision from metadata.** The CC0 grant covers catalog data, not cover
+art, which is publisher artwork. The Covers API is also separately rate-limited — 100 requests
+per IP per five minutes, 403 beyond that — for lookups by ISBN and similar keys, but not for
+lookups by CoverID or OLID. Resolve those identifiers during seeding, hotlink by them, and do
+not rehost the images.
+
+Two rules attached to all of the above:
 
 - **The seed set is fixture data and gets labeled as such** everywhere it is presented. It is
   not Riverside's real inventory, because Riverside's real inventory does not exist in machine
