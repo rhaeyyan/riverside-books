@@ -92,7 +92,7 @@ customer's intent before a visit ever starts.
 | Answers store hours | Yes | Yes | Yes | Yes | Yes | **Yes** |
 | Answers return policy | Yes | Yes | Yes | Yes | Partial | **Yes** |
 | Answers event schedule | Yes | Yes | Yes | Yes | Partial | **Yes** |
-| Answers title stock status | Yes, if staff check | No | Only if connected | No | No | **Yes, using current data** |
+| Answers title stock status | Yes, if staff check | No | Only if connected | No | No | **Yes, when inventory data is fresh; otherwise defer** |
 | Works outside store hours | No | Yes | Yes | Sometimes | Yes | **Yes** |
 | Responds instantly | Usually | Yes | Yes | Often | Yes | **Yes** |
 | Reduces staff load | Limited | Partial | Yes | Limited | N/A | **Yes** |
@@ -124,6 +124,26 @@ Three design consequences follow:
 
 This is a sharp boundary between a useful product and a dangerous one. A chatbot that guesses
 stock is worse than a static FAQ, because it creates a false sense of certainty.
+
+### The Product C confidence rule
+
+For Product C, the confidence rule is explicit and testable:
+
+- If `inventory.counted_at` is within 24 hours, the bot may answer with a confident stock status.
+- If `inventory.counted_at` is older than 24 hours, the bot must say the status is stale and
+  phrase the answer as a likely or last-counted status rather than a fresh guarantee.
+- If the data is missing or the title is unknown, the bot must defer to staff instead of guessing.
+
+This keeps Product C honest without making the bot unusable. It also aligns Product C with the
+same stock-status logic already defined in Product A, so both products share one inventory truth
+boundary.
+
+### MVP surface decision
+
+The Product C MVP is website-only. A website chat widget is the right first surface because it is
+an obvious support entry point and has a clear fallback path to staff. Instagram and WhatsApp are
+valid later expansions once the team has the shared event data and support workflow defined, but
+those channels are not required for the first delivery.
 
 ## Pain point mapping
 

@@ -50,11 +50,11 @@ Owner: **[@Cheewaiyip](https://github.com/Cheewaiyip)** to review.
 
 Owner: **[@humaali-create](https://github.com/humaali-create)** to review.
 
-- [ ] **Resolve the contradiction between the matrix and the truth problem.** The feature matrix claims "Uses real inventory data: **Yes**" and "Answers title stock status: **Yes, using current data**", but the truth-problem section argues the bot must expose staleness and defer when confidence is low. Product A's matrix hedges the equivalent cell with "Only once confirmed" — C's should too, or the strongest section of the document undercuts its own table.
+- [x] **Resolve the contradiction between the matrix and the truth problem.** The feature matrix now makes the stock-status claim conditional on fresh inventory data, and the truth-problem section explicitly describes stale-data and staff-handoff behavior. The product docs are now consistent.
 - [x] **Add the technical research the product actually needs.** There is currently nothing on model choice, grounding architecture, cost per conversation, or latency. For a chatbot that is the research most likely to change what gets built — more than any competitor comparison. **Resolved by [`docs/model-access.md`](docs/model-access.md)** — grounding architecture in §3 (including reusing Product A's stock status function rather than reimplementing the ladder), cost per turn in §5, latency in §6. It also answers "Make 'low confidence' concrete" below: low confidence is `counted_at` older than 24 hours, which is already Product A's boundary.
-- [ ] **Make "low confidence" concrete.** "The bot should defer to staff when confidence is low" needs a rule an implementation can encode — most plausibly a staleness threshold measured against `inventory.counted_at`, in hours.
-- [ ] **Write `tech_stack_recommendation.md` and `implementation_plan.md`.** `product-c/` currently holds a five-line README and the strategy doc.
-- [ ] **Decide the surface: website-only, or Instagram/WhatsApp too.** Already an open question in the doc; it materially changes scope.
+- [x] **Make "low confidence" concrete.** The rule is now explicit in Product C docs: if `inventory.counted_at` is older than 24 hours, the bot must treat the answer as stale and route to staff when it cannot answer with confidence.
+- [x] **Write `tech_stack_recommendation.md` and `implementation_plan.md`.** The Product C docs are now present and include the MVP architecture, confidence rule, and rollout phases.
+- [x] **Decide the surface: website-only, or Instagram/WhatsApp too.** The Product C MVP is website-only. Social surfaces are explicitly deferred so the team can secure event-data ownership and staff-review workflows before expanding beyond the storefront.
 
 ## Product D — Marketing Content Generator
 
