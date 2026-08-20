@@ -59,7 +59,7 @@ npm run test
 npm run build
 ```
 
-There is no `format:check` script — Prettier isn't wired into any app's `package.json` yet, and neither are the markdown commands below.
+There is no `format:check` script — Prettier isn't wired into any app's `package.json` yet. The markdown toolchain (`lint:md`, `format:md`, `format:md:check`) is future state too; see `CLAUDE.md`'s Commands section.
 
 ## Code style
 
