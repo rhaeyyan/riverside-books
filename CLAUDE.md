@@ -87,6 +87,8 @@ This is a four-person team where each collaborator owns one product directory an
 
 **Default flow:** non-trivial ask → `tech-lead` (`[SPEC]`) → `sdet` (red) → `builder` (green) → `sdet` (audit) → `builder` pushes the branch → the human opens the PR under their own account (per Git workflow above). Trivial changes skip straight to `builder`. This composes with, not replaces, the TDD/CI/Conventional-Commits/no-AI-trailer rules above — the agents are how those rules get executed, not an additional layer on top of them.
 
+**Bootstrap exception — a product directory with no app yet.** `sdet`'s red needs something to run a failing test against; Products A, B, and D have no `package.json` or test runner until their own Phase 0 lands, so the loop above can't start on day one. For that one step only — project init (Next.js/TypeScript/Tailwind/ESLint/Vitest), `package.json`, and getting `npm run test` to run, even against zero tests — `builder` scaffolds directly, without a preceding `[SPEC]`/red. `tech-lead` isn't needed for this step; it's mechanical setup, not a planned task. The moment `npm run test` runs, the exception ends: the very next task, including the first real feature, goes through the full `tech-lead` → `sdet` → `builder` loop like any other product. `builder` still reports a `[COMPLETION-REPORT]` for the bootstrap step (`Spec items satisfied: n/a — bootstrap, no [SPEC]`), so `sdet`'s first real audit has a starting point.
+
 ### Handoff Schemas
 
 Canonical location — the agent files in `.claude/agents/` and `.codex/agents/*.toml` reference these by name and must not restate or vary them. If a schema needs to change, change it here first so every agent (and every teammate's tool) stays in sync.
