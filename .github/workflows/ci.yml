@@ -51,3 +51,34 @@ jobs:
       - name: Build Product C app
         working-directory: product-c-app
         run: npm run build
+
+  ci-product-b:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: product-b-app/package-lock.json
+
+      - name: Install Product B app dependencies
+        working-directory: product-b-app
+        run: npm ci
+
+      - name: Lint Product B app
+        working-directory: product-b-app
+        run: npm run lint
+
+      - name: Typecheck Product B app
+        working-directory: product-b-app
+        run: npm run typecheck
+
+      - name: Test Product B app
+        working-directory: product-b-app
+        run: npm test
+
+      - name: Build Product B app
+        working-directory: product-b-app
+        run: npm run build
