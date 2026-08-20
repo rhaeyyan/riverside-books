@@ -70,7 +70,9 @@ Any task — human-driven or agent-dispatched — that touches inventory/reserva
 
 ## Multi-agent build workflow
 
-This is a four-person team where each collaborator owns one product directory and runs their own build sessions independently — not one shared pairing session. The same lean roster applies to whichever product directory a session is scoped to. Role-named agents, defined for Codex CLI in `.codex/agents/*.toml` (mirrored for Claude Code in `.claude/agents/`), so any teammate can tell what an agent does without cross-referencing a roster:
+**This workflow is opt-in, not a repo-wide default.** Working directly — without dispatching any of the agents below — is equally supported for any task, on any product. Nothing here or in CI requires a build session to route through this roster; it exists so a session that wants this structure has one defined, not to replace working directly for teammates who don't.
+
+This is a four-person team where each collaborator owns one product directory and runs their own build sessions independently — not one shared pairing session. The same lean roster applies to whichever product directory a session is scoped to, for teammates who choose to use it. Role-named agents, defined for Codex CLI in `.codex/agents/*.toml` (mirrored for Claude Code in `.claude/agents/`), so any teammate can tell what an agent does without cross-referencing a roster:
 
 | Agent | Role | May edit files? | When |
 | --- | --- | --- | --- |
