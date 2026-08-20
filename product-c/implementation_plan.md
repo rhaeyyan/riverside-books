@@ -30,7 +30,8 @@ still a UI shell; it does not yet assert a live database-backed stock query.
 
 **Status per issue #40's self-review:** the shipped Phase 0 page is a static preview — no
 `onClick`/`onSubmit` handlers, and no seeded fact-path exists yet. Phase 1 should not assume
-either is already built.
+either is already built. The fact-path lands in Phase 2 (Intent classification and fact
+retrieval); interactivity lands in Phase 3 (Product C support UX).
 
 Nothing after this phase is allowed to break deployment.
 
