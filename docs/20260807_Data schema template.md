@@ -31,7 +31,6 @@ Columns are written table-qualified because the same bare name means different t
 | inventory.on_hand | Physical copies believed to be in the shop. **Written only by Product B**, via reconciliation | integer, not null, default 0 | 3 |
 | inventory.reserved | Copies held by active pre-orders. **Written only by Product A**, via the reservation path. Constraint: `reserved >= 0 and reserved <= on_hand` | integer, not null, default 0 | 1 |
 | inventory.counted_at | When `on_hand` was last physically verified. **Must be written in the same statement as `on_hand`** — a count without a fresh timestamp is the bug this column exists to prevent | timestamp (ISO 8601, UTC), not null | 2026-08-19T08:40:00Z |
-| *(derived)* available | `on_hand - reserved`. **Not a column.** Computed in one place, never stored, never recomputed ad hoc per product | integer | 2 |
 | customers.id | Customer identity. Equal to the Supabase Auth user id (`auth.uid()`) — there is no separate customer identity | uuid (string), = auth.uid() | 4f2a1b7c-88de-4a63-b0f1-11c2d3e4f5a6 |
 | customers.display_name | Name the customer chose to be shown by. Not a legal name, not unique | string | Ada R. |
 | customers.member_code | Short human-readable loyalty code a bookseller can read off a phone at the register. Unique | string, unique | RB-4K7Q |
@@ -72,7 +71,7 @@ Columns are written table-qualified because the same bare name means different t
 
 ### Rules that travel with these columns
 
-1. **Availability is computed, never stored.** `on_hand - reserved`, in one function, tested once. No product keeps its own copy.
+1. **Availability is computed, never stored.** `available = on_hand - reserved` (integer, e.g. `2`), in one function, tested once. No product keeps its own copy — it isn't listed as a column above because it isn't one.
 2. **`on_hand` and `counted_at` change in the same write, always.** A stock number without a fresh timestamp is indistinguishable from a stale one.
 3. **Timestamps are UTC on the wire.** `events.start_time` is the one exception and is store-local by definition; each product formats for display itself.
 4. **Money is an integer of US cents.** `price_cents` is USD cents — no floats, no pre-formatted currency strings crossing a product boundary. Each product renders the `$` itself.
