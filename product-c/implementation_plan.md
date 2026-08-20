@@ -28,6 +28,10 @@ UI polish, and no claim of a live database connection.
 that can answer a basic greeting or product question without needing a browser-only mock. This is
 still a UI shell; it does not yet assert a live database-backed stock query.
 
+**Status per issue #40's self-review:** the shipped Phase 0 page is a static preview — no
+`onClick`/`onSubmit` handlers, and no seeded fact-path exists yet. Phase 1 should not assume
+either is already built.
+
 Nothing after this phase is allowed to break deployment.
 
 ## Phase 1: Data model and integrity
