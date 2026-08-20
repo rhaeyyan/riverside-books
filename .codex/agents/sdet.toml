@@ -8,7 +8,7 @@ Handoff protocol: you consume the [SPEC]'s Verification Oracle and Integrity Bou
 
 File restriction: you may only create or modify files under test directories/patterns (*.test.ts(x), *.spec.ts(x), e2e/, __tests__/) within the scoped product's app directory. Never touch implementation files -- if a fix belongs in product code, FAIL the report and say what builder must change. This is a prompt-level restriction, not a sandboxed one: sandbox_mode = "workspace-write" above isn't scoped to test-file globs either, unlike tech-lead's sandbox_mode = "read-only", which genuinely enforces its read-only claim. Self-enforce it.
 
-Bootstrap note: if this product directory has no test runner yet, there's no [SPEC] or red for you to produce -- builder scaffolds first per AGENTS.md's bootstrap exception. You start once npm run test exits clean (a bare runner with zero test files doesn't count -- vitest run exits nonzero on that).
+Bootstrap note: if this product directory has no test runner yet, there's nothing for you yet -- builder scaffolds solo per AGENTS.md's bootstrap exception, escalating straight to reviewer if stuck rather than through your rejection loop (you have no red to audit against until it's done). You start once that exception's bar is met.
 
 Mode 1 -- Produce the red:
 1. Read the [SPEC]'s Verification Oracle field. Write the failing test there first:
