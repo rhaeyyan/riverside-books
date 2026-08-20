@@ -7,7 +7,7 @@
 ## Morning — Product C ships the first app code (11:20 AM–1:51 PM)
 
 - **Huma Ali** scaffolded `product-c-app/` for real (Next.js App Router, ESLint, package-lock) and landed a support-bot prototype in the same PR (#23) — the first application code anywhere in the repo, matching CLAUDE.md's "only `product-c-app/` has a real app" line for the first time instead of just stating it. Two follow-up pushes to the same PR ("align app ci and docs with actual scaffold", "resolve pr review blockers") got it green.
-- **Cheewaiyip** and **Crystal Watson** each closed out their product's planning trio: `product-b/tech_stack_recommendation.md` + `implementation_plan.md` (PR #22) and `product-d/implementation_plan.md` (PR #24) — after this morning, all four products have a complete strategy/stack/plan set, not just Product A and D as of yesterday.
+- **Cheewaiyip** closed out Product B's planning trio: `product-b/tech_stack_recommendation.md` + `implementation_plan.md` (PR #22). **Crystal Watson** landed `product-d/implementation_plan.md` (PR #24) — Product D's market strategy already existed, but it still has no `tech_stack_recommendation.md`, so B is the only product to complete its trio this morning.
 
 ## Afternoon — schema cleanup and the unified PRD (2:04–3:36 PM)
 
@@ -58,7 +58,7 @@ And a harder question: at seven firings in one day, five of them immediately clo
 
 ## Net state
 
-All four products now have complete planning docs, a shared `docs/schema.md`/`docs/PRD.md`/`docs/assumptions.md`/`docs/model-access.md` contract set, and `TODO.md` nearly fully resolved. Product C still has the only scaffolded app and the only application code in the repo — roughly 160 lines. Next gate is unchanged: Product A, B, and D's Phase 0 scaffolding.
+Three of four products now have complete planning docs; Product D still lacks a `tech_stack_recommendation.md`. All four share `docs/schema.md`/`docs/PRD.md`/`docs/assumptions.md`/`docs/model-access.md`, and `TODO.md` is nearly fully resolved. Product C still has the only scaffolded app and the only application code in the repo — roughly 160 lines. Next gate is unchanged: Product A, B, and D's Phase 0 scaffolding.
 
 **Four PRs are open and green, none merged:** the agent pipeline (#31, twice-reviewed), this retro (#32), the doc-commands CI check (#34), and the code-standards proposal (#36). That's the day's real shape — a lot of process built, none of it in effect yet, because everything still needs a teammate's approval.
 
