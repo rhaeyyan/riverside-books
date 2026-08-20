@@ -44,7 +44,7 @@ Coverage is enforced in CI once the test suite exists; the threshold will be set
 Per [`product-a/implementation_plan.md`](./product-a/implementation_plan.md), the cross-account RLS isolation test (customer A cannot read or write customer B's reservations or stamp balance) is a hard exit condition for Phase 1 and runs in CI from that point on — it is not optional coverage.
 
 ```bash
-npm test              # once configured: Vitest with coverage
+npm test              # bare `vitest run` — coverage not collected today, see above
 npm run test:watch
 ```
 

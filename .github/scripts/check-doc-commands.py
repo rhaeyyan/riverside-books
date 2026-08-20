@@ -1,17 +1,19 @@
 #!/usr/bin/env python3
-"""Fail if the docs claim an npm script that no package.json actually defines.
+"""Fail if the docs reference an npm script name that no package.json defines.
 
-Both review rounds on PR #31 found the same defect: a doc confidently describing
-tooling this repo doesn't have — `npm run test` "with coverage" when the script is
-a bare `vitest run`, and `npm run format` / `format:check` when neither script
-exists. Neither was a drift bug; both were wrong in the original. Deduplicating the
-mirrored docs would not have caught either one. Checking the claim against
-package.json does.
+This checks names, not behavior. It catches `npm run format:check` when no such
+script exists anywhere in the repo — the PR #31 defect this was built for. It does
+NOT catch a script that exists but is described incorrectly (e.g. `npm test`
+documented as running "with coverage" when the script is really a bare
+`vitest run`): there's no missing script name for a name-check to find. That class
+of defect still needs a human reading the prose against the actual command.
 
 A doc may still mention a script that doesn't exist yet — that's honest when it's
 flagged as future state (CONTRIBUTING.md's `lint:md`/`format:md`, say). Those go in
-ALLOWLIST_PATH, so writing one down is a deliberate act a reviewer can see rather
-than something that slips through.
+ALLOWLIST_PATH, each with a reason comment directly above the entry (no blank line
+between them) — a bare name with no comment above it fails, same as an entry left
+behind after the real script gets added for real. Silently-stale entries are how a
+later regression (the script gets removed again) would go uncaught.
 """
 
 from __future__ import annotations
@@ -45,18 +47,39 @@ def defined_scripts() -> set[str]:
     return names
 
 
-def allowlisted() -> set[str]:
+def allowlist_entries() -> list[tuple[str, int, bool]]:
+    """Parse ALLOWLIST_PATH into (name, line number, has a reason above it).
+
+    A blank line starts a fresh group. An entry "has a reason" if a comment
+    line appears somewhere in its group before it, with no blank line between
+    — so one comment block can cover several entries, matching how the file
+    is actually written today.
+    """
     if not ALLOWLIST_PATH.exists():
-        return set()
-    return {
-        line.split("#")[0].strip()
-        for line in ALLOWLIST_PATH.read_text().splitlines()
-        if line.split("#")[0].strip()
-    }
+        return []
+    entries: list[tuple[str, int, bool]] = []
+    group_has_reason = False
+    for lineno, raw in enumerate(ALLOWLIST_PATH.read_text().splitlines(), 1):
+        stripped = raw.strip()
+        if not stripped:
+            group_has_reason = False
+            continue
+        if stripped.startswith("#"):
+            group_has_reason = True
+            continue
+        name = stripped.split("#", 1)[0].strip()
+        if name:
+            entries.append((name, lineno, group_has_reason))
+    return entries
+
+
+def allowlisted() -> set[str]:
+    return {name for name, _, _ in allowlist_entries()}
 
 
 def main() -> int:
     defined, allowed = defined_scripts(), allowlisted()
+    rel_allowlist = ALLOWLIST_PATH.relative_to(REPO_ROOT)
 
     failures: list[str] = []
     for glob in DOC_GLOBS:
@@ -68,14 +91,33 @@ def main() -> int:
                     rel = doc.relative_to(REPO_ROOT)
                     failures.append(f"  {rel}:{lineno} — `npm run {script}`")
 
-    if failures:
-        print("Docs reference npm scripts that no package.json defines:\n")
-        print("\n".join(failures))
-        print(
-            f"\nEither add the script, correct the doc, or — if the doc is "
-            f"deliberately describing future state — add the name to "
-            f"{ALLOWLIST_PATH.relative_to(REPO_ROOT)} with a reason."
-        )
+    allowlist_problems: list[str] = []
+    for name, lineno, has_reason in allowlist_entries():
+        if not has_reason:
+            allowlist_problems.append(
+                f"  {rel_allowlist}:{lineno} — `{name}` has no reason comment above it"
+            )
+        if name in defined:
+            allowlist_problems.append(
+                f"  {rel_allowlist}:{lineno} — `{name}` is now a real script in "
+                f"package.json; remove this stale entry so a future regression "
+                f"(the script getting removed again) isn't masked"
+            )
+
+    if failures or allowlist_problems:
+        if failures:
+            print("Docs reference npm scripts that no package.json defines:\n")
+            print("\n".join(failures))
+            print(
+                f"\nEither add the script, correct the doc, or — if the doc is "
+                f"deliberately describing future state — add the name to "
+                f"{rel_allowlist} with a reason."
+            )
+        if allowlist_problems:
+            if failures:
+                print()
+            print(f"Problems in {rel_allowlist}:\n")
+            print("\n".join(allowlist_problems))
         return 1
 
     print(f"OK — every `npm run` in {', '.join(DOC_GLOBS)} resolves.")
