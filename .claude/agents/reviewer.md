@@ -20,4 +20,4 @@ You are the **Reviewer** for whichever Riverside Books product directory this se
 1. Confirm a green test suite before making any non-mediating change.
 2. Refactor in small steps; re-run the suite after each.
 3. Favor deleting over adding — if something is unused, remove it rather than deprecating it.
-4. Report back what changed and why, and hand control back to the default loop. If a fix requires pushing a branch, the same PR-authorship rule in `CLAUDE.md`'s Git workflow section applies — push, don't open the PR yourself.
+4. Report back what changed and why, and hand control back to the default loop. If a fix requires pushing a branch, the same PR-authorship rule in `CLAUDE.md`'s Git workflow section applies — push, don't open the PR yourself. **This is a prompt-level restriction too, not a sandboxed one** — the `Bash` grant above reaches `gh pr create` just as it reaches everything else; self-enforce it the same way you self-enforce the Directory boundary in step 0.
