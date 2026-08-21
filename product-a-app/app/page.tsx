@@ -1,4 +1,30 @@
-export default function Home() {
+import {
+  createBooksRepository,
+  createSupabaseClient,
+} from '../lib/books-repository';
+
+// This route reads a live `books` row on every request rather than being
+// statically prerendered — the featured title changes independently of any
+// build/deploy, and there's no cache invalidation story for it yet.
+export const dynamic = 'force-dynamic';
+
+async function loadFeaturedTitle(): Promise<string | null> {
+  try {
+    const client = createSupabaseClient();
+    const repository = createBooksRepository(client);
+    const book = await repository.getFeaturedBook();
+    return book?.title ?? null;
+  } catch {
+    // Missing/misconfigured env vars, a network error, or a malformed
+    // response all collapse to the same honest empty state below — the raw
+    // error never reaches the DOM.
+    return null;
+  }
+}
+
+export default async function Home() {
+  const title = await loadFeaturedTitle();
+
   return (
     <div className="flex flex-col flex-1 items-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex w-full max-w-3xl flex-1 flex-col gap-6 px-8 py-16">
@@ -13,19 +39,15 @@ export default function Home() {
           <p className="text-sm text-zinc-600 dark:text-zinc-400">
             Featured title
           </p>
-          <p className="mt-2 text-4xl font-semibold text-black dark:text-zinc-50">
-            —
-          </p>
-          <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-500">
-            Not wired to Supabase yet — this is scaffolding, not the live
-            catalog. Phase 0&apos;s exit condition per{" "}
-            <code className="font-mono">
-              product-a/implementation_plan.md
-            </code>{" "}
-            isn&apos;t met until this reads a real{" "}
-            <code className="font-mono">books</code> row from the shared
-            database and is deployed to Vercel.
-          </p>
+          {title ? (
+            <p className="mt-2 text-4xl font-semibold text-black dark:text-zinc-50">
+              {title}
+            </p>
+          ) : (
+            <p className="mt-2 text-lg text-zinc-500 dark:text-zinc-500">
+              No featured title yet.
+            </p>
+          )}
         </section>
       </main>
     </div>
