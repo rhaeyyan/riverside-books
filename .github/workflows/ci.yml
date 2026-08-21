@@ -113,3 +113,34 @@ jobs:
       - name: Build Product A app
         working-directory: product-a-app
         run: npm run build
+
+      # Deploy only runs for pushes to main — never for PR runs, so unmerged
+      # or fork-authored code can't reach production. lint/typecheck/test/build
+      # above still run on every PR as the actual gate.
+      - name: Install Vercel CLI
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: npm install --global vercel@latest
+
+      - name: Pull Vercel project settings
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        working-directory: product-a-app
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      - name: Build for Vercel deployment
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        working-directory: product-a-app
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      - name: Deploy to Vercel
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        working-directory: product-a-app
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
