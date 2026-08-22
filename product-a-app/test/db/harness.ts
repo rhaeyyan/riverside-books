@@ -186,15 +186,81 @@ export async function applyMigrations(): Promise<void> {
 }
 
 /**
- * Empties every base table in `public`, leaving the schema itself intact —
- * truncate, never drop. Tests get a clean slate without paying to rebuild the
- * database, and the constraints/policies under test survive the reset (a reset
- * that dropped them would quietly disarm the tests that matter most).
+ * Resolves the `auth.users` truncate target, or null when this stack has no
+ * auth schema at all (a bare postgres image, say).
  *
- * The table list is read from the catalog rather than hardcoded, so a table
- * added by a later migration is cleaned up without anyone remembering to come
- * back here. `restart identity cascade` clears dependent rows and sequences in
- * one statement.
+ * Throws rather than skipping when the table exists but this role cannot
+ * truncate it: silently leaving auth rows behind is the exact condition this
+ * function was added to remove, and Task 4's cross-account RLS isolation test —
+ * a hard Phase 1 exit condition — has to start from genuinely empty auth state
+ * rather than from whatever an earlier test file left. A loud error names the
+ * missing grant; a skip would hand Task 4 a dirty database and call it clean.
+ *
+ * `has_table_privilege` is only reached when `to_regclass` found the table:
+ * `case` short-circuits, and the function is `stable` rather than `immutable`,
+ * so the planner does not constant-fold it into evaluation on a stack where
+ * `auth.users` is absent.
+ */
+async function authUsersTarget(c: Client): Promise<string | null> {
+  const { rows } = await c.query<{ truncatable: boolean | null }>(
+    `select case
+              when to_regclass('auth.users') is null then null
+              else has_table_privilege('auth.users', 'truncate')
+            end as truncatable`,
+  );
+
+  const truncatable = rows[0]?.truncatable ?? null;
+
+  if (truncatable === null) {
+    return null;
+  }
+
+  if (!truncatable) {
+    throw new Error(
+      'auth.users exists but the current role cannot truncate it, so ' +
+        'resetDb() would leave auth rows behind — the state Task 4 must not ' +
+        'inherit. Connect as the local stack\'s `postgres` role (the harness ' +
+        'default), or grant truncate on auth.users to the role in ' +
+        'DATABASE_URL. This is reported rather than skipped on purpose.',
+    );
+  }
+
+  return 'auth.users';
+}
+
+/**
+ * Empties every base table in `public` plus `auth.users`, leaving the schema
+ * itself intact — truncate, never drop. Tests get a clean slate without paying
+ * to rebuild the database, and the constraints/policies under test survive the
+ * reset (a reset that dropped them would quietly disarm the tests that matter
+ * most).
+ *
+ * The `public` table list is read from the catalog rather than hardcoded, so a
+ * table added by a later migration is cleaned up without anyone remembering to
+ * come back here. `restart identity cascade` clears dependent rows and
+ * sequences in one statement.
+ *
+ * WHY `auth.users` IS IN THE LIST. `customers.id` and `staff.user_id` both
+ * reference `auth.users(id)`, so no fixture can avoid the auth schema, and a
+ * `public`-only truncate leaves those users behind for every later test to
+ * inherit. Cleaning them here is what lets Task 4's cross-account isolation
+ * test start from a known-empty auth state instead of from residue.
+ *
+ * WHY ONE STATEMENT, AND WHY `cascade`. `auth.users` goes into the same
+ * `truncate` as the `public` tables so Postgres resolves the foreign-key
+ * ordering itself and the whole reset is atomic. `cascade` is required, not
+ * cosmetic: `truncate` does not run `on delete cascade` actions, so a table
+ * referencing `auth.users` that was not named would abort the statement.
+ * Cascade therefore also empties the auth schema's own dependents
+ * (`auth.identities`, `auth.sessions`, `auth.refresh_tokens`, `auth.mfa_*`,
+ * and anything else with a foreign key to `auth.users` on this stack) — which
+ * is the intent: a user row without its identity row is not "empty auth state",
+ * it is a different kind of residue. Naming a table twice is harmless;
+ * `truncate` de-duplicates the list.
+ *
+ * Scope is unchanged in kind: this already emptied every `public` table, so it
+ * was already a function to point only at a disposable local database. It now
+ * empties local auth users too.
  */
 export async function resetDb(): Promise<void> {
   await withClient(async (c) => {
@@ -205,12 +271,20 @@ export async function resetDb(): Promise<void> {
         order by tablename`,
     );
 
-    if (rows.length === 0) {
+    const targets = rows.map((r) => r.qualified);
+
+    const authUsers = await authUsersTarget(c);
+
+    if (authUsers !== null) {
+      targets.push(authUsers);
+    }
+
+    if (targets.length === 0) {
       return;
     }
 
     await c.query(
-      `truncate table ${rows.map((r) => r.qualified).join(', ')}
+      `truncate table ${targets.join(', ')}
        restart identity cascade`,
     );
   });
