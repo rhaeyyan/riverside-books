@@ -1,0 +1,36 @@
+name: Auto-open PR
+
+# Turns any push to a non-main branch into a real pull request, so work
+# lands as something rhaeyyan (or whoever CODEOWNERS routes to) can
+# actually review, even if the pusher never runs `gh pr create` themselves.
+# Idempotent: if an open PR already exists for the branch, this no-ops.
+on:
+  push:
+    branches-ignore:
+      - main
+      - "dependabot/**"
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  auto-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Open a PR if none exists for this branch
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git fetch origin main
+          BRANCH="${GITHUB_REF#refs/heads/}"
+          EXISTING=$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$BRANCH" --state open --json number --jq 'length')
+          if [ "$EXISTING" != "0" ]; then
+            echo "PR already open for $BRANCH, nothing to do."
+            exit 0
+          fi
+          gh pr create --repo "$GITHUB_REPOSITORY" --base main --head "$BRANCH" --fill
