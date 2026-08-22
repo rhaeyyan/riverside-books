@@ -270,6 +270,7 @@ over facts the application already fetched — never as the source of a fact.
 | Repo-wide | **No user or staff research exists** — the store is fictional, so every operating assumption in `docs/assumptions.md` is stated, not observed. | Medium (assumptions could be wrong for a real store) | Medium — load-bearing for Product B's reconciliation UI and Product C's staleness threshold | Already mitigated as far as a fictional store allows — assumptions are explicit and reviewable rather than implied per-product. |
 | Repo-wide | **LLM provider not yet chosen for Products C/D; free-tier limits in `docs/model-access.md` §7 are from secondary sources.** | Low | Low — both products are built against a provider-agnostic interface with a deterministic fake, so this is a config change, not a rework | Re-check the chosen vendor's own documentation before demo day per the doc's own caveat. |
 | Product A | **Whether a ticketed event should grant a loyalty stamp is intentionally still open.** | Low | Low — decoupled from event-data ownership on purpose; doesn't block any current phase | Needs a team/store-assumption call whenever it becomes relevant; not urgent. |
+| Repo-wide | **Operational and credential dependencies are not modeled in this register at all.** Every other row concerns data contracts or shared meaning; none covers deploy credentials, CI secrets, or environment provisioning — and neither the per-phase plan review nor the Integrity Boundary check asks whether CI can authenticate to the thing it deploys to. Evidence: Product A's Phase 0 deploy job failed on every run from the moment it landed (`f9935df`) until the token was re-minted, because `VERCEL_TOKEN` was scoped to a single project. A project-scoped token authenticates fine and then fails the project lookup, surfacing as `Could not retrieve Project Settings` — the identical error a wrong project ID produces, which sent the debugging down the wrong path twice. Secrets are also unreviewable by construction: values are write-only and `.vercel/` is gitignored, so nothing about the fault was visible in any artifact a review reads. | High — Products B and D have the same deploy still to wire, and each needs its own token and secret name; Product A's will not work for another project | Medium — costs hours per product, not correctness; the app itself was never broken, only the pipeline that ships it | Two cheap conventions, neither requiring new tooling. **(1) Phase exit conditions should name a CI run, not an artifact.** Product A's read "a teammate opens the preview URL on their own phone and sees the title" — fully satisfiable by a hand-run `vercel deploy`, which is exactly what satisfied it while CI had never once deployed successfully. "Run N deployed commit X to production" cannot be faked by a manual deploy. **(2) Wire the pipeline before the first manual deploy**, since a working hand-deployed URL removes all pressure to check the automation behind it. Owners: each product owner for their own deploy credentials; @rhaeyyan for the exit-condition wording convention, since it changes every product's `implementation_plan.md`. |
 
 ---
 
@@ -284,3 +285,13 @@ docs — this table is the first place all of it is in one list.
 
 Nothing here blocks Phase 0 work for anyone. The `hours`/`policy` gap is the one worth raising at
 the next sync soonest, since it sits on the brief's own pain points and nobody currently owns it.
+
+**Addendum, 2026-08-22.** The operational/credential row above was added after the fact and is the
+second item in this table that was not previously tracked anywhere — the sentence above about
+"everything else already known" predates it. It came out of Product A's Phase 0, where the CI deploy
+job failed for its entire life against a mis-scoped Vercel token while the product's own exit
+condition ("a teammate opens the preview URL on their own phone") passed, because a hand-run deploy
+satisfies it just as well as an automated one. Product A's Phase 0 is now complete and `ci-product-a`
+is a required status check on `main`; the row stays open because Products B and D have the identical
+deploy step still to wire, and because the exit-condition wording it recommends is a convention
+change affecting all four `implementation_plan.md` files, not something Product A can fix alone.
