@@ -42,12 +42,20 @@ Each product app is its own npm project — run these from inside `product-c-app
 - **A safety net exists, but don't rely on it.** `.github/workflows/auto-pr.yml` opens a PR automatically for any push to a non-`main` branch that doesn't already have one open — this catches pushes to an old, already-merged branch name instead of a fresh one (which has happened repeatedly: commits landed with no PR because they were pushed to a branch whose first PR was already merged). It's a backstop for forgetting, not a substitute for opening your own PR: a bot-opened PR is authored by `github-actions[bot]`, and GitHub does **not** run other workflows (including CI) in response to a bot-authored PR-open event — CI only starts once a human pushes a further commit to that branch.
 - **Rebase is the merge strategy**, enforced at the GitHub repo level (squash and merge-commit are disabled). Keep feature branches rebased on `main` before merging.
 - Branches are auto-deleted on merge.
-- **CI** (`.github/workflows/ci.yml`) runs lint, typecheck, test, and build on every push/PR, scoped per product as each app is scaffolded (see Commands above) — format-check and a coverage gate run nowhere: not in the workflow, and not as local commands either, since `product-c-app` has no `format`/`format:check` script and no coverage tooling installed. It is not yet a required status check on `main` — enable that once a given job first runs green:
+- **CI** (`.github/workflows/ci.yml`) runs lint, typecheck, test, and build on every push/PR, scoped per product as each app is scaffolded (see Commands above) — format-check and a coverage gate run nowhere: not in the workflow, and not as local commands either, since `product-c-app` has no `format`/`format:check` script and no coverage tooling installed. `ci`, `docs`, and `ci-product-a` are required status checks on `main` as of 2026-08-22; add each remaining product's job once it first runs green. **This PATCH replaces the entire contexts list rather than appending to it** — pass every context you want required, including the ones already there, or the omitted ones are silently un-gated:
 
   ```bash
+  # 1. Read what's already required — the PATCH below overwrites this list wholesale.
+  gh api repos/rhaeyyan/riverside-books/branches/main/protection/required_status_checks --jq '.contexts'
+
+  # 2. PATCH with the full list: every existing context, plus the new job.
   gh api repos/rhaeyyan/riverside-books/branches/main/protection/required_status_checks \
-    -X PATCH -f strict=true -f 'contexts[]=<job-name>'
+    -X PATCH -F strict=true \
+    -f 'contexts[]=ci' -f 'contexts[]=docs' -f 'contexts[]=ci-product-a' \
+    -f 'contexts[]=<new-job-name>'
   ```
+
+  Note `-F strict=true`, not `-f` — `-f` sends the string `"true"` where the API expects a boolean.
 
 ## Engineering standards
 
