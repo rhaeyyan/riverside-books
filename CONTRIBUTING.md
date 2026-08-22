@@ -2,7 +2,7 @@
 
 Four people build in this repo, each owning a product directory (`product-a` through `product-d` — see `CLAUDE.md`'s ownership table for the mapping). The workflow below is enforced by hooks and CI rather than convention, so it applies regardless of who's committing.
 
-For the full engineering standards, see [`CLAUDE.md`](./CLAUDE.md) (Claude Code) or [`AGENTS.md`](./AGENTS.md) (Codex CLI). They are kept in sync; change both when a rule changes.
+For the full engineering standards, see [`AGENTS.md`](./AGENTS.md) — [`CLAUDE.md`](./CLAUDE.md) is a symlink to it, so Claude Code and Codex CLI read the same document and a rule change lands once.
 
 See [`product-a/implementation_plan.md`](./product-a/implementation_plan.md) for the build order and phase exit conditions, and [`product-a/tech_stack_recommendation.md`](./product-a/tech_stack_recommendation.md) for the reasoning behind the stack.
 
