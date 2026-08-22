@@ -1,6 +1,6 @@
-# Riverside Books — Multi-Product Team Repo (Codex CLI edition)
+# Riverside Books — Multi-Product Team Repo
 
-This file is the Codex-CLI-facing twin of `CLAUDE.md`, which is the canonical source when the two ever disagree — but it is written to be read standalone, so a Codex session never has to open `CLAUDE.md` to follow a rule. Both must stay in sync: a substantive change to one repo rule belongs in both files. Codex CLI reads `AGENTS.md` automatically at session start; it does not read `CLAUDE.md`, `.claude/agents/`, or `.claude/skills/`.
+**One file, two names.** Codex CLI reads `AGENTS.md` and Claude Code reads `CLAUDE.md`, so `CLAUDE.md` is a symlink to this file. Edit either path; there is only one document underneath, and no sync step. It used to be two hand-maintained copies that drifted to 96.4% identical — the same rule had to be fixed twice, and a fix that landed in one file silently missed the other.
 
 Team build for the Cycle 4 "Direct-to-Consumer Retail" project brief (`docs/Cycle 4_ Project briefs.md`), shared across four collaborators in this one repo, each owning a product directory:
 
@@ -12,7 +12,7 @@ Team build for the Cycle 4 "Direct-to-Consumer Retail" project brief (`docs/Cycl
 | C — Customer Support Chatbot (app shell) | `product-c-app/` | [@humaali-create](https://github.com/humaali-create) |
 | D — Marketing Content Generator | `product-d/` | [@crystalwatson-art](https://github.com/crystalwatson-art) |
 
-This file codifies the repo's GitHub protocols, engineering standards, and multi-agent build workflow so they're enforced consistently across all four product directories rather than re-derived each session.
+This file is the standalone, canonical source for this repo's protocols — GitHub workflow, engineering standards, and the multi-agent build workflow below — so any teammate's agent session behaves the same way without cross-referencing a second document.
 
 ## Stack & docs
 
@@ -38,21 +38,30 @@ Each product app is its own npm project — run these from inside `product-c-app
 
 - **Feature branches + PRs only — never commit directly to `main`.** Branch protection on GitHub blocks direct pushes to `main`, including for the repo admin.
 - **Every PR needs at least 1 approving review before merging.** `.github/CODEOWNERS` makes **@rhaeyyan the required reviewer for `product-b/`, `product-c/`, `product-c-app/`, and `product-d/`** — a PR touching one of those gets auto-requested to rhaeyyan and needs their approval to merge. `product-a/` and shared paths (docs, `.github/`, root config) list all four collaborators as eligible reviewers instead, specifically so rhaeyyan's own PRs always have someone else eligible to approve them.
-- **Open your own PR after pushing — don't have someone else, or another account's agent session, open it for you.** GitHub attributes PR authorship to whoever calls `gh pr create` / clicks "New pull request", not whoever authored the commits. If Codex opens a PR under a different account than the one that pushed the branch, GitHub attributes it to whoever's session ran the command — which can exclude the intended teammate from their own required-reviewer list, the exact deadlock `CODEOWNERS` exists to prevent. This applies equally to any agent session, proposed workflow or not: an agent pushes the branch; the human running that session opens the PR themselves, under their own account.
-- **A safety net exists, but don't rely on it.** `.github/workflows/auto-pr.yml` opens a PR automatically for any push to a non-`main` branch that doesn't already have one open — this catches pushes to an old, already-merged branch name instead of a fresh one (which has happened repeatedly: commits landed with no PR because they were pushed to a branch whose first PR was already merged). It's a backstop for forgetting, not a substitute for opening your own PR: a bot-opened PR is authored by `github-actions[bot]`, and GitHub does **not** run other workflows (including CI) in response to a bot-authored PR-open event — CI only starts once a human pushes a further commit to that branch.
+- **Open your own PR after pushing — don't have someone else, or another account's agent session, open it for you.** GitHub attributes PR authorship to whoever calls `gh pr create` / clicks "New pull request", not whoever authored the commits. If an agent session opens a PR under a different account than the branch's author — or rhaeyyan opens one on a teammate's behalf — GitHub attributes it to whoever ran the command, which can exclude the intended teammate from their own required-reviewer list: the exact deadlock `CODEOWNERS` exists to prevent. This applies equally to any agent session, proposed workflow or not: an agent pushes the branch; the human running that session opens the PR themselves, under their own account.
+- **A safety net exists, but don't rely on it.** `.github/workflows/auto-pr.yml` opens a PR automatically for any push to a non-`main` branch that doesn't already have one open — this catches pushes to an old, already-merged branch name instead of a fresh one (which has happened repeatedly: commits landed with no PR because they were pushed to a branch whose first PR was already merged). It's a backstop for forgetting, not a substitute for opening your own PR: a bot-opened PR is authored by `github-actions[bot]`, and GitHub does **not** run other workflows (including CI) in response to a bot-authored PR-open event. **Since `ci`, `docs`, and `ci-product-a` became required checks on `main`, that makes a bot-opened PR unmergeable, not merely unverified** — closing it and reopening it with `gh pr create` under your own account is the fix, and pushing a further commit to the branch also starts CI. Open your own PR and none of this applies.
 - **Rebase is the merge strategy**, enforced at the GitHub repo level (squash and merge-commit are disabled). Keep feature branches rebased on `main` before merging.
+- **Stacked PRs are allowed when a task genuinely depends on an unmerged one** — branch off the open PR's branch and set that branch as the base (`gh pr create --base <branch>`), so the diff shows only the new work instead of dragging its dependency along. Rebase-only merging is what makes this clean: GitHub retargets the stacked PR to `main` on its own once the base PR merges. Two rules keep it from going wrong. **Merge the base PR into `main` first, never the stacked PR into the base branch** — the latter folds the dependent work back into the PR that was split to avoid it. And note that a PR based on a feature branch is **not** covered by branch protection: required checks and the approving review are gates on `main`, so a stacked PR only really passes them after it retargets. If the dependency is a doc change or anything else the new work doesn't actually build on, don't stack — open both against `main` and let them land independently.
 - Branches are auto-deleted on merge.
-- **CI** (`.github/workflows/ci.yml`) runs lint, typecheck, test, and build on every push/PR, scoped per product as each app is scaffolded (see Commands above) — format-check and a coverage gate run nowhere: not in the workflow, and not as local commands either, since `product-c-app` has no `format`/`format:check` script and no coverage tooling installed. It is not yet a required status check on `main` — enable that once a given job first runs green:
+- **CI** (`.github/workflows/ci.yml`) runs lint, typecheck, test, and build on every push/PR, scoped per product as each app is scaffolded (see Commands above) — format-check and a coverage gate run nowhere: not in the workflow, and not as local commands either, since `product-c-app` has no `format`/`format:check` script and no coverage tooling installed. `ci`, `docs`, and `ci-product-a` are required status checks on `main` as of 2026-08-22; add each remaining product's job once it first runs green. **This PATCH replaces the entire contexts list rather than appending to it** — pass every context you want required, including the ones already there, or the omitted ones are silently un-gated:
 
   ```bash
+  # 1. Read what's already required — the PATCH below overwrites this list wholesale.
+  gh api repos/rhaeyyan/riverside-books/branches/main/protection/required_status_checks --jq '.contexts'
+
+  # 2. PATCH with the full list: every existing context, plus the new job.
   gh api repos/rhaeyyan/riverside-books/branches/main/protection/required_status_checks \
-    -X PATCH -f strict=true -f 'contexts[]=<job-name>'
+    -X PATCH -F strict=true \
+    -f 'contexts[]=ci' -f 'contexts[]=docs' -f 'contexts[]=ci-product-a' \
+    -f 'contexts[]=<new-job-name>'
   ```
+
+  Note `-F strict=true`, not `-f` — `-f` sends the string `"true"` where the API expects a boolean.
 
 ## Engineering standards
 
 - **Conventional Commits, enforced at commit time.** Once Husky is installed (`npm install` triggers `prepare`), `.husky/commit-msg` runs `commitlint` (`commitlint.config.cjs`, extends `@commitlint/config-conventional`) — a message without a `type:` prefix is rejected.
-- **No AI `Co-Authored-By` trailers.** The same hook rejects any `Co-Authored-By:` trailer naming an AI tool (Claude, Anthropic, OpenAI, ChatGPT, GPT-, Copilot, Gemini, Codex, or the word "AI"). **When Codex commits in this repo, it must not add a `Co-Authored-By:` trailer naming itself or any AI tool** — the hook will block it once wired up in a given product's app, and the rule applies regardless of whether the hook is live yet.
+- **No AI `Co-Authored-By` trailers.** The same hook rejects any `Co-Authored-By:` trailer naming an AI tool (Claude, Anthropic, OpenAI, ChatGPT, GPT-, Copilot, Gemini, Codex, or the word "AI"). **When Claude Code, Codex, or Copilot commits in this repo, it must not add a `Co-Authored-By:` trailer naming itself or any AI tool** — the hook will block it once wired up in a given product's app, and the rule applies regardless of whether the hook is live yet.
 - **LF line endings everywhere**, enforced via `.gitattributes` (`* text=auto eol=lf`) — don't bypass it.
 - **Pre-commit hook** (`.husky/pre-commit`) runs lint-staged plus the full test suite — a deliberately narrower, fast local gate. CI is the authoritative one; run `npm run typecheck` yourself before pushing since neither Vitest nor ESLint catches type errors.
 - Don't commit with `--no-verify`. If a hook fails, fix the underlying issue.
@@ -72,7 +81,7 @@ Any task — human-driven or agent-dispatched — that touches inventory/reserva
 
 **This is the required workflow for non-trivial work on any product.** Every collaborator's agent sessions — Codex CLI or Claude Code — route non-trivial asks through this roster rather than building ad hoc: it's how a `[SPEC]` gets a stated Integrity Boundary instead of an assumed one, and how a session scoped to one product directory still stays aware of what the other three are doing (see "Where context comes from," below). Trivial one-file changes still skip straight to `builder` — see the roster table.
 
-This is a four-person team where each collaborator owns one product directory and runs their own build sessions independently — not one shared pairing session. The same lean roster applies to whichever product directory a session is scoped to. Role-named agents, defined for Codex CLI in `.codex/agents/*.toml` (mirrored for Claude Code in `.claude/agents/`), so any teammate can tell what an agent does without cross-referencing a roster:
+This is a four-person team where each collaborator owns one product directory and runs their own build sessions independently — not one shared pairing session. The same lean roster applies to whichever product directory a session is scoped to. Role-named agents, defined in `.claude/agents/*.md` for Claude Code and `.codex/agents/*.toml` for Codex CLI — these two must stay in sync by hand, since the tools require different file formats and a symlink can't bridge them:
 
 | Agent | Role | May edit files? | When |
 | --- | --- | --- | --- |
@@ -95,7 +104,7 @@ This covers *only* getting a test runner and CI job to exist — it is not a sho
 
 ### Handoff Schemas
 
-Canonical location — `.codex/agents/*.toml` and `.claude/agents/*.md` reference these by name and must not restate or vary them. If a schema needs to change, change it here first so every agent (and every teammate's tool) stays in sync.
+Canonical location — `.claude/agents/*.md` and `.codex/agents/*.toml` reference these by name and must not restate or vary them. If a schema needs to change, change it here first so every agent (and every teammate's tool) stays in sync.
 
 **`[SPEC]` / `[SPIKE]`** — `tech-lead` → `sdet` → `builder`
 
@@ -152,6 +161,6 @@ No default force is imposed — `tech-lead` states the actual trade-off for the 
 ## Notes
 
 - **Four-person team, one shared multi-agent build roster.** Every collaborator's build sessions — Codex CLI or Claude Code — route non-trivial work through the `tech-lead → sdet → builder → reviewer` workflow and `[SPEC]`/handoff protocol defined above; trivial one-file changes still skip straight to `builder`. This is how a session scoped to one product directory keeps track of the other three, not an extra layer on top of working normally.
-- **`CLAUDE.md` mirrors this file for Claude Code**, which reads `CLAUDE.md`, `.claude/agents/`, and `.claude/skills/` automatically and does not read `AGENTS.md` or `.codex/agents/*.toml`. Keep both files in sync — a substantive rule change belongs in both.
-- **No GitHub Copilot instructions file.** Nothing in this repo's history shows anyone using Copilot (no branch, commit, or PR came from it), so a third copy of these rules would rot unread — it was deliberately not added rather than overlooked. If you do adopt Copilot, add `.github/copilot-instructions.md` (Copilot Chat reads it automatically) and `.github/agents/` profiles for the four roles, and say so here; until then Copilot users should read `CLAUDE.md` directly.
+- **`CLAUDE.md` is a symlink to this file**, so Claude Code and Codex CLI read the same document and there is nothing to keep in sync. The one duplication that remains is the role definitions — `.claude/agents/*.md` and `.codex/agents/*.toml` — which the two tools require in different formats. A rule change belongs here; a role-behaviour change belongs in both agent directories.
+- **No GitHub Copilot instructions file.** Nothing in this repo's history shows anyone using Copilot (no branch, commit, or PR came from it), so a third copy of these rules would rot unread — it was deliberately not added rather than overlooked. If you do adopt Copilot, add `.github/copilot-instructions.md` (Copilot Chat reads it automatically) and `.github/agents/` profiles for the four roles, and say so here; until then Copilot users should read this file directly.
 - See `CONTRIBUTING.md` for the git/commit rules in prose form, and `SECURITY.md` for the data/auth model (Supabase Auth, RLS-scoped customer data) — currently written for Product A; extend it as the other products land auth/data of their own.

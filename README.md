@@ -15,24 +15,26 @@ Full brief: [`docs/Cycle 4_ Project briefs.md`](docs/Cycle%204_%20Project%20brie
 | **C** — Customer Support Chatbot | Answers questions against real inventory, hours, and policies — not a static FAQ | [@humaali-create](https://github.com/humaali-create) | [`product-c/`](product-c/) |
 | **D** — Marketing Content Generator | Turns a book or event into a short social caption and post idea for staff review | [@crystalwatson-art](https://github.com/crystalwatson-art) | [`product-d/`](product-d/) |
 
-The four products are not independent apps that happen to share a repo. A writes the inventory data; B reconciles it; C answers questions against it. That shared dependency is the project's highest-risk open item — see [the cross-team schema contract](product-a/implementation_plan.md#the-cross-team-schema-contract).
+The four products are not independent apps that happen to share a repo. A writes the inventory data; B reconciles it; C answers questions against it. That shared dependency is governed by one contract — [`docs/schema.md`](docs/schema.md), which Product A owns and migrates.
 
 ## Current status
 
-**Planning stage — no application code exists yet.** Every product has market/strategy docs; none is scaffolded.
+**Three of the four products are scaffolded; Product A is deployed and serving real data.**
 
-| Product | Docs | Code |
-| --- | --- | --- |
-| A | market strategy, tech stack recommendation, phased implementation plan | none — Phase 0 is the next gate |
-| B | kickoff context notes, market & feature strategy | none |
-| C | workspace README, market strategy | none |
-| D | market research workbook, market strategy | none |
+| Product | Docs | Code | State |
+| --- | --- | --- | --- |
+| A | market strategy, tech stack, implementation plan | [`product-a-app/`](product-a-app/) | **Phase 0 complete** — live at [product-a-app.vercel.app](https://product-a-app.vercel.app), reading `books` from Supabase, deployed from CI on merge to `main` |
+| B | context notes, market strategy, tech stack, implementation plan | [`product-b-app/`](product-b-app/) | Phase 0 walking skeleton scaffolded ([#38](https://github.com/rhaeyyan/riverside-books/issues/38)) |
+| C | market strategy, tech stack, implementation plan | [`product-c-app/`](product-c-app/) | Phase 0 walking skeleton scaffolded |
+| D | market strategy, implementation plan | none yet | tech stack doc and Phase 0 both open ([#39](https://github.com/rhaeyyan/riverside-books/issues/39)) |
 
-### The open question that blocks everything
+### The shared-data question, and how it was settled
 
-Products A, B, and C all touch the same inventory rows. If each teammate stands up a separate Supabase project, B has nothing real to display and C cannot do what its brief describes — and that failure doesn't surface as an error, it surfaces on the last afternoon before the demo.
+Products A, B, and C all touch the same inventory rows. Separate Supabase projects would have left B with nothing real to display and C unable to do what its brief describes — a failure that surfaces on the last afternoon before the demo rather than as an error.
 
-The proposal on the table is **one shared Supabase project**: Product A owns and migrates `books`, `inventory`, and `reservations`; B and C read them; B gets a write path to `inventory.on_hand` and `counted_at`; the staff role check is shared. **This is unresolved and blocks Product A's Phase 1.** Details and the remaining open decisions are in [`product-a/implementation_plan.md`](product-a/implementation_plan.md).
+That is **resolved: one shared Supabase project.** Product A owns and migrates every table that crosses a product boundary; B and C read them; B gets a write path to `inventory.on_hand` and `counted_at`. The field-level contract is [`docs/schema.md`](docs/schema.md) — read it rather than restating field lists locally, which is how three independently-invented `events` shapes came to exist before that file did.
+
+The live risk log is [Section 7 of `docs/PRD.md`](docs/PRD.md). The one open blocker there belongs to Product C: no table exists for store `hours` or return `policy`, which two of its four intents are specified against.
 
 ## Repo layout
 
@@ -41,7 +43,7 @@ docs/                 Shared: the project brief, look & feel references, retros
 product-a/ … d/       One directory per product, owned by one collaborator
 .github/              CI, auto-PR workflow, CODEOWNERS, issue/PR templates
 CONTRIBUTING.md       Branching, commits, hooks, and test rules in prose
-CLAUDE.md / AGENTS.md The same protocols for coding agents (keep both in sync)
+AGENTS.md             Protocols for coding agents (CLAUDE.md symlinks to it)
 SECURITY.md           Data and auth model (currently Product A's)
 ```
 
@@ -50,12 +52,12 @@ SECURITY.md           Data and auth model (currently Product A's)
 Read [`CONTRIBUTING.md`](CONTRIBUTING.md) before your first PR. The rules that bite most often:
 
 - **Feature branches and PRs only.** Direct pushes to `main` are blocked by branch protection, admins included. Every PR needs one approving review.
-- **Open your own PR.** GitHub attributes authorship to whoever runs `gh pr create`, and an author can't approve their own PR — having someone else open it creates exactly the review deadlock `CODEOWNERS` exists to prevent. A workflow auto-opens a PR if you forget, but a bot-authored PR doesn't trigger CI.
+- **Open your own PR.** GitHub attributes authorship to whoever runs `gh pr create`, and an author can't approve their own PR — having someone else open it creates exactly the review deadlock `CODEOWNERS` exists to prevent. A workflow auto-opens a PR if you forget, but a bot-authored PR doesn't trigger CI — and since CI is now required on `main`, that PR can't merge until someone closes and reopens it. Open your own and you never hit this.
 - **Conventional Commits**, enforced by a `commit-msg` hook. No AI `Co-Authored-By` trailers.
 - **Rebase is the merge strategy** — squash and merge commits are disabled. Keep branches rebased on `main`.
 - **Don't use `--no-verify`.** If a hook fails, fix the cause.
 
-CI (lint, format, typecheck, test with coverage, build) runs on every push and PR. It won't do anything useful until Phase 0 scaffolding lands.
+CI runs lint, typecheck, test, and build on every push and PR, as one job per scaffolded app (`ci` for Product C, `ci-product-a`, `ci-product-b`) plus a repo-wide `docs` check. There is **no format check and no coverage gate** — neither is wired up in any app, so nothing here can report a coverage figure. `ci`, `docs`, and `ci-product-a` are required checks on `main`; `ci-product-a` also deploys Product A to production on merge.
 
 ## The non-negotiable rule
 
