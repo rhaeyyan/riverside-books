@@ -39,9 +39,9 @@ The proposal on the table is **one shared Supabase project**: Product A owns and
 ```
 docs/                 Shared: the project brief, look & feel references, retros
 product-a/ … d/       One directory per product, owned by one collaborator
-.github/              CI, auto-PR workflow, CODEOWNERS, issue/PR templates
+.github/              CI, CODEOWNERS, issue/PR templates
 CONTRIBUTING.md       Branching, commits, hooks, and test rules in prose
-CLAUDE.md / AGENTS.md The same protocols for coding agents (keep both in sync)
+AGENTS.md             Protocols for coding agents (CLAUDE.md symlinks to it)
 SECURITY.md           Data and auth model (currently Product A's)
 ```
 
