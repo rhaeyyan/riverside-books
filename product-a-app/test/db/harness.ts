@@ -237,8 +237,8 @@ async function authUsersTarget(c: Client): Promise<string | null> {
  *
  * The `public` table list is read from the catalog rather than hardcoded, so a
  * table added by a later migration is cleaned up without anyone remembering to
- * come back here. `restart identity cascade` clears dependent rows and
- * sequences in one statement.
+ * come back here. `cascade` clears dependent rows in one statement; see the
+ * note at the truncate itself for why identity is deliberately not restarted.
  *
  * WHY `auth.users` IS IN THE LIST. `customers.id` and `staff.user_id` both
  * reference `auth.users(id)`, so no fixture can avoid the auth schema, and a
@@ -283,9 +283,14 @@ export async function resetDb(): Promise<void> {
       return;
     }
 
-    await c.query(
-      `truncate table ${targets.join(', ')}
-       restart identity cascade`,
-    );
+    // `cascade` but deliberately NOT `restart identity`: restarting identity
+    // requires ownership of every sequence on every truncated table, and the
+    // cascade reaches `auth.refresh_tokens`, whose `refresh_tokens_id_seq` is
+    // owned by `supabase_auth_admin`, not `postgres` — which failed in CI with
+    // `42501 must be owner of sequence refresh_tokens_id_seq`. Nothing needs
+    // it: every table in `public` uses a uuid primary key, so there is no
+    // sequence here whose value anything observes. Keeping it to one statement
+    // keeps the reset atomic.
+    await c.query(`truncate table ${targets.join(', ')} cascade`);
   });
 }
