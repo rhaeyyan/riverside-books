@@ -41,7 +41,7 @@ The live risk log is [Section 7 of `docs/PRD.md`](docs/PRD.md). The one open blo
 ```
 docs/                 Shared: the project brief, look & feel references, retros
 product-a/ … d/       One directory per product, owned by one collaborator
-.github/              CI, auto-PR workflow, CODEOWNERS, issue/PR templates
+.github/              CI, CODEOWNERS, issue/PR templates
 CONTRIBUTING.md       Branching, commits, hooks, and test rules in prose
 AGENTS.md             Protocols for coding agents (CLAUDE.md symlinks to it)
 SECURITY.md           Data and auth model (currently Product A's)
@@ -52,7 +52,7 @@ SECURITY.md           Data and auth model (currently Product A's)
 Read [`CONTRIBUTING.md`](CONTRIBUTING.md) before your first PR. The rules that bite most often:
 
 - **Feature branches and PRs only.** Direct pushes to `main` are blocked by branch protection, admins included. Every PR needs one approving review.
-- **Open your own PR.** GitHub attributes authorship to whoever runs `gh pr create`, and an author can't approve their own PR — having someone else open it creates exactly the review deadlock `CODEOWNERS` exists to prevent. A workflow auto-opens a PR if you forget, but a bot-authored PR doesn't trigger CI — and since CI is now required on `main`, that PR can't merge until someone closes and reopens it. Open your own and you never hit this.
+- **Open your own PR.** GitHub attributes authorship to whoever runs `gh pr create`, and an author can't approve their own PR — having someone else open it creates exactly the review deadlock `CODEOWNERS` exists to prevent. Nothing catches a forgotten PR — the workflow that used to do it was removed for opening bot-authored PRs that CI never runs on.
 - **Conventional Commits**, enforced by a `commit-msg` hook. No AI `Co-Authored-By` trailers.
 - **Rebase is the merge strategy** — squash and merge commits are disabled. Keep branches rebased on `main`.
 - **Don't use `--no-verify`.** If a hook fails, fix the cause.
