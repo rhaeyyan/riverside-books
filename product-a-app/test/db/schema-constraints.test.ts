@@ -130,18 +130,15 @@ async function rejected(sql: string, params: unknown[] = []): Promise<PgError> {
  * Seeds the rows every constraint test needs: two `auth.users`, one `books`
  * row, one `customers` row, one `staff` row.
  *
- * KNOWN HARNESS GAP, reported rather than papered over: `resetDb()` truncates
- * only the `public` schema, so these `auth.users` rows survive every reset and
- * would accumulate across tests. `customers.id` and `staff.user_id` both
- * reference `auth.users(id)`, so the fixtures cannot avoid the auth schema.
+ * `customers.id` and `staff.user_id` both reference `auth.users(id)`, so these
+ * fixtures cannot avoid the auth schema. `resetDb()` truncates `auth.users`
+ * alongside the `public` tables, so each `beforeEach` starts from genuinely
+ * empty auth state and this seed rebuilds both users from scratch.
  *
- * The fix used here is deterministic ids plus `on conflict (id) do nothing`:
- * the seed is idempotent, nothing accumulates, and no unique-email collision is
- * possible because the same two rows are re-asserted every time. Randomizing an
- * email per run would also dodge the collision, but it would hide the real
- * finding — that `resetDb()` leaves auth state behind — and would leave a
- * growing pile of orphan users in a long CI run. If PR #59 later extends
- * `resetDb()` to clean `auth.users`, this seed keeps working unchanged.
+ * Deterministic ids plus `on conflict (id) do nothing` are kept anyway: they
+ * cost nothing, they keep the seed idempotent if it is ever called twice within
+ * one test, and they are what makes the ids above usable as stable references
+ * in the assertions rather than values that have to be threaded through.
  */
 async function seedFixtures(): Promise<void> {
   await withClient(async (c) => {
@@ -527,5 +524,103 @@ describe('staff and rewards — the remaining pinned check constraints', () => {
     );
 
     expect(err.code).toBe('23514');
+  });
+});
+
+describe('foreign keys — what deliberately does NOT cascade', () => {
+  // Both rules below are enforced only by the ABSENCE of an `on delete` clause
+  // in the migration, which is invisible: adding `on delete cascade` in a later
+  // task would silently reverse a decision the migration argues for at length.
+  // The `counted_at` test above exists for exactly this reason — an omission
+  // that matters needs an assertion, or it can be undone quietly. These are the
+  // other two.
+
+  it('refuses to delete a book that a customer is holding', async () => {
+    // reservations.book_id does not cascade: deleting a book with live
+    // reservations must error, not silently drop commitments the store told
+    // customers it would honour.
+    await exec(
+      `insert into public.reservations (book_id, customer_id, status)
+       values ($1, $2, 'confirmed')`,
+      [BOOK_ID, AUTH_CUSTOMER_ID],
+    );
+
+    const err = await rejected('delete from public.books where id = $1', [
+      BOOK_ID,
+    ]);
+
+    expect(err.code).toBe('23503');
+    expect(err.table).toBe('reservations');
+
+    const [count] = await rows<{ n: number }>(
+      'select count(*)::int as n from public.reservations where book_id = $1',
+      [BOOK_ID],
+    );
+
+    expect(count.n).toBe(1);
+  });
+
+  it('refuses to delete a staff member whose grants are on the record', async () => {
+    // loyalty_stamps.granted_by does not cascade: every stamp keeps its
+    // attribution. Note the consequence this pins, which is stronger than
+    // "the record survives" — the staff row cannot be deleted at all while
+    // grants reference it, and because staff.user_id cascades from
+    // auth.users, deleting that auth user fails the same way.
+    await exec(
+      `insert into public.loyalty_stamps (customer_id, granted_by, request_id)
+       values ($1, $2, $3)`,
+      [AUTH_CUSTOMER_ID, AUTH_STAFF_ID, '00000000-0000-4000-8000-00000000e003'],
+    );
+
+    const err = await rejected('delete from public.staff where user_id = $1', [
+      AUTH_STAFF_ID,
+    ]);
+
+    expect(err.code).toBe('23503');
+    expect(err.table).toBe('loyalty_stamps');
+
+    const [count] = await rows<{ n: number }>(
+      'select count(*)::int as n from public.loyalty_stamps where granted_by = $1',
+      [AUTH_STAFF_ID],
+    );
+
+    expect(count.n).toBe(1);
+  });
+
+  it('declares both as NO ACTION in the catalog, not RESTRICT or CASCADE', async () => {
+    // The behavioural tests above would also pass under RESTRICT, and the
+    // difference is load-bearing elsewhere: NO ACTION defers its check to the
+    // end of the statement, which is what lets deleting a customer cascade
+    // through rewards and loyalty_stamps in one statement without tripping
+    // consumed_by_reward_id. RESTRICT fires immediately and would break it.
+    const declared = await rows<{
+      child: string;
+      column_name: string;
+      on_delete: string;
+    }>(
+      `select rel.relname as child,
+              att.attname as column_name,
+              con.confdeltype as on_delete
+         from pg_constraint con
+         join pg_class rel on rel.oid = con.conrelid
+         join pg_namespace nsp on nsp.oid = rel.relnamespace
+         join pg_attribute att
+           on att.attrelid = con.conrelid
+          and att.attnum = con.conkey[1]
+        where con.contype = 'f'
+          and array_length(con.conkey, 1) = 1
+          and nsp.nspname = 'public'
+          and (rel.relname, att.attname) in (
+                ('reservations', 'book_id'),
+                ('loyalty_stamps', 'granted_by')
+              )
+        order by rel.relname`,
+    );
+
+    // 'a' is NO ACTION; 'c' would be CASCADE and 'r' RESTRICT.
+    expect(declared).toEqual([
+      { child: 'loyalty_stamps', column_name: 'granted_by', on_delete: 'a' },
+      { child: 'reservations', column_name: 'book_id', on_delete: 'a' },
+    ]);
   });
 });
