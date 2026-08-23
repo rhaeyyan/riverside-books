@@ -14,7 +14,9 @@ The build order below is driven by one judgment: fluent text is the easy part; p
 - One server-rendered page with a record selector, Instagram/Facebook selector, Generate action, and three visibly different results.
 - CI runs lint, format check, typecheck, tests with coverage, and build using the root commands once the shared scaffold exists.
 
-**Exit condition.** A teammate opens the preview URL on their phone, selects the fixture book, switches channels, and sees three deterministic variations. Refreshing or rebuilding produces the same outputs.
+**Exit condition.** A CI run on `main` deployed a named commit to production — cite the run number and the commit SHA. A hand-run `vercel deploy` does not satisfy this: it produces a working URL without proving the pipeline behind it works. Then, on that deployed commit, a teammate opens the URL on their phone, selects the fixture book, switches channels, and sees three deterministic variations. Refreshing or rebuilding produces the same outputs.
+
+Wire the deploy pipeline before the first manual deploy, and note that Product D needs **its own** Vercel token and its own secret name — Product A's is scoped to Product A's project and will not work here. See the scope comment on the deploy step in [`ci.yml`](../.github/workflows/ci.yml).
 
 Nothing after this phase may break deployment. If a phase cannot ship, split it rather than holding a broken branch.
 

@@ -18,7 +18,15 @@ auth, no styling worth defending.
 - ESLint with `eslint-plugin-jsx-a11y`, Vitest configured, one passing test.
 - CI: lint, then test, then deploy.
 
-**Exit condition.** A teammate opens the preview URL on their own phone and sees the title.
+**Exit condition.** A CI run on `main` deployed a named commit to production — cite the run
+number and the commit SHA, e.g. "run 214 deployed `f9935df` to production." A hand-run
+`vercel deploy` does not satisfy this: it produces a working URL without proving the pipeline
+behind it works. Then, on that deployed commit, a teammate opens the URL on their own phone and
+sees the title.
+
+Wire the deploy pipeline before the first manual deploy. A working hand-deployed URL removes all
+pressure to check the automation behind it — which is how Product A's deploy job came to fail on
+every run from `f9935df` until the token was re-minted, while this phase read as complete.
 
 Nothing after this phase is allowed to break deployment. If a phase cannot ship, it gets split
 rather than held.
