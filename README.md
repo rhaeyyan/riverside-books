@@ -19,14 +19,14 @@ The four products are not independent apps that happen to share a repo. A writes
 
 ## Current status
 
-**Three of the four products are scaffolded; Product A is deployed and serving real data.**
+**Three of the four products are scaffolded; Product A is deployed and building out the shared data model.**
 
 | Product | Docs | Code | State |
 | --- | --- | --- | --- |
-| A | market strategy, tech stack, implementation plan | [`product-a-app/`](product-a-app/) | **Phase 0 complete** — live at [product-a-app.vercel.app](https://product-a-app.vercel.app), reading `books` from Supabase, deployed from CI on merge to `main` |
+| A | market strategy, tech stack, implementation plan | [`product-a-app/`](product-a-app/) | **Phase 1 in progress** — live at [product-a-app.vercel.app](https://product-a-app.vercel.app), deployed from CI on merge to `main`. All seven shared tables are migrated with their constraints enforced in Postgres, verified by a real-database test suite that runs in `ci-product-a`. RLS is enabled on all seven but no policies are written yet, so they are deny-all to client roles; the policies and the cross-account isolation test that gates this phase are the next step. |
 | B | context notes, market strategy, tech stack, implementation plan | [`product-b-app/`](product-b-app/) | Phase 0 walking skeleton scaffolded ([#38](https://github.com/rhaeyyan/riverside-books/issues/38)) |
 | C | market strategy, tech stack, implementation plan | [`product-c-app/`](product-c-app/) | Phase 0 walking skeleton scaffolded |
-| D | market strategy, implementation plan | none yet | tech stack doc and Phase 0 both open ([#39](https://github.com/rhaeyyan/riverside-books/issues/39)) |
+| D | market strategy, implementation plan | none on `main` yet | tech stack doc and a Phase 0 walking skeleton are proposed in [#49](https://github.com/rhaeyyan/riverside-books/pull/49), still unmerged ([#39](https://github.com/rhaeyyan/riverside-books/issues/39)) |
 
 ### The shared-data question, and how it was settled
 
@@ -34,7 +34,7 @@ Products A, B, and C all touch the same inventory rows. Separate Supabase projec
 
 That is **resolved: one shared Supabase project.** Product A owns and migrates every table that crosses a product boundary; B and C read them; B gets a write path to `inventory.on_hand` and `counted_at`. The field-level contract is [`docs/schema.md`](docs/schema.md) — read it rather than restating field lists locally, which is how three independently-invented `events` shapes came to exist before that file did.
 
-The live risk log is [Section 7 of `docs/PRD.md`](docs/PRD.md). The one open blocker there belongs to Product C: no table exists for store `hours` or return `policy`, which two of its four intents are specified against.
+The live risk log is [Section 7 of `docs/PRD.md`](docs/PRD.md). Three items there are open. Product C's is the oldest and the only true blocker: no table exists for store `hours` or return `policy`, which two of its four intents are specified against. Product B is waiting on Product A to approve the `reservations` staff-read RLS policy its pre-order queue needs. And a repo-wide row now covers deploy credentials and CI secrets, added after Product A's deploy job failed on every run for days against a mis-scoped Vercel token — Products B and D each need their own, and Product A's will not work for them.
 
 ## Repo layout
 
