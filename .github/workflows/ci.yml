@@ -244,6 +244,17 @@ jobs:
       # Deploy only runs for pushes to main — never for PR runs, so unmerged
       # or fork-authored code can't reach production. lint/typecheck/test/build
       # above still run on every PR as the actual gate.
+      # Credential scope, stated here because secret values are unreviewable by
+      # construction — they're write-only in GitHub and `.vercel/` is gitignored,
+      # so nothing about a mis-scoped token is visible in any artifact a review
+      # reads. VERCEL_TOKEN must be an ACCOUNT-scoped token, not one scoped to a
+      # single project: a project-scoped token authenticates fine and then fails
+      # the project lookup with `Could not retrieve Project Settings` — the same
+      # error a wrong VERCEL_PROJECT_ID produces, which is what made this job
+      # fail on every run from f9935df until the token was re-minted.
+      # VERCEL_ORG_ID / VERCEL_PROJECT_ID identify Product A's project only.
+      # Products B, C, and D each need their own token and their own secret
+      # names; these will not work for another project.
       - name: Install Vercel CLI
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: npm install --global vercel@latest

@@ -24,9 +24,16 @@ UI polish, and no claim of a live database connection.
 - ESLint, TypeScript, and Vitest configured, with one passing smoke test.
 - CI: lint, then typecheck, then test, then deploy.
 
-**Exit condition.** A teammate opens the preview URL on their own phone and sees a support page
-that can answer a basic greeting or product question without needing a browser-only mock. This is
-still a UI shell; it does not yet assert a live database-backed stock query.
+**Exit condition.** A CI run on `main` deployed a named commit to production — cite the run
+number and the commit SHA. A hand-run `vercel deploy` does not satisfy this: it produces a
+working URL without proving the pipeline behind it works. Then, on that deployed commit, a
+teammate opens the URL on their own phone and sees a support page that can answer a basic
+greeting or product question without needing a browser-only mock. This is still a UI shell; it
+does not yet assert a live database-backed stock query.
+
+Wire the deploy pipeline before the first manual deploy, and note that Product C needs **its own**
+Vercel token and its own secret name — Product A's is scoped to Product A's project and will not
+work here. See the scope comment on the deploy step in [`ci.yml`](../.github/workflows/ci.yml).
 
 **Status per issue #40's self-review:** the shipped Phase 0 page is a static preview — no
 `onClick`/`onSubmit` handlers, and no seeded fact-path exists yet. Phase 1 should not assume
