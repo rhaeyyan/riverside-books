@@ -11,13 +11,3 @@
 lint:md
 format:md
 format:md:check
-
-# TEMPORARY — delete both lines when PR #31 merges.
-#
-# These two are not future state, they're wrong: CLAUDE.md and AGENTS.md list
-# `npm run format` / `format:check` as if product-c-app had them, and it never has.
-# PR #31 already rewrites both of those lines, so fixing them here too would
-# guarantee a rebase conflict on a PR that rewrites those files wholesale.
-# Allowlisted only so this check can land first; #31 removes the claims for real.
-format
-format:check
