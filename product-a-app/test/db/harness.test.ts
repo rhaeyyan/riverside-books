@@ -1,3 +1,7 @@
+import { readdir } from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 import { applyMigrations, resetDb, withClient } from './harness';
@@ -18,6 +22,18 @@ import { applyMigrations, resetDb, withClient } from './harness';
 // (CI) it exists to protect. If the stack is not up, these tests MUST fail and
 // take the `ci-product-a` job red with them.
 // ---------------------------------------------------------------------------
+
+/**
+ * The real migrations directory, resolved the same way the harness resolves it
+ * — `test/db/` up two levels to `product-a-app/`.
+ */
+const MIGRATIONS_DIR = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  '..',
+  '..',
+  'supabase',
+  'migrations',
+);
 
 // The eight `books` columns fixed by docs/schema.md. Not a restatement of the
 // migration — the migration is checked against this list, not the reverse.
@@ -138,19 +154,43 @@ describe('db harness — migrations', () => {
   });
 
   it('applies every file in supabase/migrations, not just the first', async () => {
-    // The harness must apply the whole directory in filename order. Today that
-    // directory holds one file; this asserts the applied set tracks the
-    // directory rather than a hardcoded single migration.
-    const applied = await withClient(async (c) => {
+    // The applied set must track the migrations DIRECTORY, not a hardcoded
+    // file. The expectation is read off the filesystem here rather than
+    // imported from the harness on purpose: importing the harness's own file
+    // list would make this test blind to the harness filtering or sorting that
+    // list wrongly, which is half the failure mode it exists to catch.
+    const expected = (await readdir(MIGRATIONS_DIR))
+      .filter((f) => f.endsWith('.sql'))
+      .map((f) => path.basename(f, '.sql').split('_')[0])
+      .sort();
+
+    // More than one file has to be there for this assertion to mean anything;
+    // with a single migration it degrades into the tautology it replaced.
+    expect(expected.length).toBeGreaterThan(1);
+
+    const ledger = await withClient(async (c) => {
       const { rows } = await c.query(
-        `select count(*)::int as n
-           from information_schema.tables
-          where table_schema = 'public' and table_name = 'books'`,
+        `select version
+           from supabase_migrations.schema_migrations
+          order by version`,
       );
-      return rows[0].n as number;
+      return rows.map((r: { version: string }) => r.version);
     });
 
-    expect(applied).toBe(1);
+    expect(ledger).toEqual(expected);
+
+    // The ledger row and the SQL land in one transaction, so a version present
+    // above means that file's statements ran. Spot-checking a table from a
+    // migration OTHER than the first is what makes "not just the first"
+    // observable rather than inferred.
+    const later = await withClient(async (c) => {
+      const { rows } = await c.query('select to_regclass($1) as t', [
+        'public.inventory',
+      ]);
+      return rows[0].t as string | null;
+    });
+
+    expect(later).toBe('inventory');
   });
 
   it('is safe to call applyMigrations() more than once in a run', async () => {
