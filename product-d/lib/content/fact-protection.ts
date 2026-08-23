@@ -16,6 +16,20 @@ const datePattern = /\b\d{4}-\d{2}-\d{2}\b/g;
 const timePattern = /\b\d{1,2}:\d{2}\b/g;
 const numberPattern = /\b\d+(?:\.\d+)?\b/g;
 const properNamePattern = /\b[A-Z][A-Za-z'’.\-]*(?:\s+[A-Z][A-Za-z'’.\-]*)*/g;
+const knownNonNameSentenceStarters = new Set([
+  "A",
+  "Ask",
+  "Bring",
+  "Find",
+  "For",
+  "Looking",
+  "Meet",
+  "Only",
+  "Our",
+  "Read",
+  "Readers",
+  "This",
+]);
 
 interface MatchRange {
   value: string;
@@ -121,11 +135,11 @@ function overlaps(candidate: MatchRange, ranges: MatchRange[]): boolean {
   );
 }
 
-function isSentenceLeadingSingleWord(
+function isKnownSentenceStarter(
   caption: string,
   candidate: MatchRange,
 ): boolean {
-  if (candidate.value.includes(" ")) return false;
+  if (!knownNonNameSentenceStarters.has(candidate.value)) return false;
 
   const prefix = caption.slice(0, candidate.start).trimEnd();
   return prefix.length === 0 || /[.!?]$/.test(prefix);
@@ -148,7 +162,7 @@ export function findUnsupportedFacts(
   for (const candidate of collectMatches(caption, properNamePattern)) {
     if (
       overlaps(candidate, supported) ||
-      isSentenceLeadingSingleWord(caption, candidate)
+      isKnownSentenceStarter(caption, candidate)
     ) {
       continue;
     }

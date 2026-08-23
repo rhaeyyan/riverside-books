@@ -121,6 +121,14 @@ describe("renderFactTemplate", () => {
 });
 
 describe("findUnsupportedFacts", () => {
+  it("flags an unsupported single-word proper name at the start of a sentence", () => {
+    const caption = renderFactTemplate("Alice recommends {title}.", bookRecord);
+
+    expect(findUnsupportedFacts(caption, bookRecord)).toEqual([
+      'Unsupported proper name: "Alice"',
+    ]);
+  });
+
   it("returns deterministic warnings for unsupported names, dates, times, and numbers", () => {
     expect(
       findUnsupportedFacts(
