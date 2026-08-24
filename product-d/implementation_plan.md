@@ -8,13 +8,13 @@ The build order below is driven by one judgment: fluent text is the easy part; p
 
 **Goal.** A teammate opens a real URL, selects one fixture book, and sees three deterministic caption cards.
 
-- Next.js App Router project, TypeScript, Tailwind, Vitest, ESLint, Prettier, and the repository's Markdown checks.
+- Next.js App Router project, TypeScript, Tailwind, Vitest, ESLint, and the repository's Markdown checks.
 - Separate Vercel deployment for Product D, following the same deployable-at-every-phase rule as Products A and B.
 - One committed fixture book and one deterministic fake generator. No Supabase or live model dependency yet.
 - One server-rendered page with a record selector, Instagram/Facebook selector, Generate action, and three visibly different results.
-- CI runs lint, format check, typecheck, tests with coverage, and build using the root commands once the shared scaffold exists.
+- The separate `ci-product-d` job runs lint, typecheck, tests, and build from `product-d/`; a push to `main` also deploys the Product D Vercel project.
 
-**Exit condition.** A teammate opens the preview URL on their phone, selects the fixture book, switches channels, and sees three deterministic variations. Refreshing or rebuilding produces the same outputs.
+**Exit condition.** The `ci-product-d` run for the merged commit deploys successfully to production. A teammate then opens that URL on their phone, selects the fixture book, switches channels, and sees three deterministic variations. Refreshing or rebuilding produces the same outputs.
 
 Nothing after this phase may break deployment. If a phase cannot ship, split it rather than holding a broken branch.
 

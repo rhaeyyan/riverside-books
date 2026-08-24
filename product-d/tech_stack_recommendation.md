@@ -19,7 +19,7 @@ Phase 0 is a deterministic walking skeleton. It has no Supabase client, Supabase
 
 ## 3. Code quality and exact scripts
 
-Product D will use ESLint with the Next.js configuration and Prettier while inheriting the repository root [`.prettierrc.json`](../.prettierrc.json). Product D intentionally owns local format and coverage tooling even though the currently scaffolded app does not yet provide those capabilities.
+Product D uses ESLint with the Next.js configuration and follows the repository-wide toolchain in [`AGENTS.md`](../AGENTS.md). The app has no local formatting command or coverage collection; CI runs the canonical lint, typecheck, test, and build gates.
 
 The future `product-d/package.json` will define these exact scripts:
 
@@ -29,19 +29,17 @@ The future `product-d/package.json` will define these exact scripts:
 | `build`        | `next build`                   |
 | `start`        | `next start`                   |
 | `lint`         | `eslint .`                     |
-| `format`       | `prettier --write .`           |
-| `format:check` | `prettier --check .`           |
 | `typecheck`    | `next typegen && tsc --noEmit` |
-| `test`         | `vitest run --coverage`        |
+| `test`         | `vitest run`                   |
 | `test:watch`   | `vitest`                       |
 
 `next typegen` precedes TypeScript checking so generated App Router types are present. The repository's Markdown checks remain a separate repository concern; current root guidance mentions future Markdown npm commands, but there is no root `package.json` providing them today. This document therefore does not claim that a root Markdown npm script is currently runnable.
 
-## 4. Testing and coverage policy
+## 4. Testing policy
 
 Vitest is the test runner. Deterministic unit and contract tests cover the generator, channel behavior, output validation, placeholder allowlisting and substitution, and unsupported-fact warnings. UI behavior uses Testing Library with `jsdom` only where a browser-like DOM is needed.
 
-Product D will install and configure `@vitest/coverage-v8`. CI will enforce an initial minimum of **80% each for statements, branches, functions, and lines** across Product D's testable source modules. Generated files, declaration files, framework/bootstrap-only entry points, fixture data, build output, and configuration files are excluded from the denominator; application and integrity-boundary logic are not. Thresholds may increase when the suite provides evidence for doing so, but they must not be lowered merely to make CI pass. CI tests use deterministic fixtures and make no live database, model-provider, or other network calls.
+Product D does not collect coverage, matching the repository-wide policy. CI runs the complete deterministic Vitest suite without a numeric gate. Tests use committed fixtures and make no live database, model-provider, or other network calls; the model-fact boundary remains directly covered by contract and regression tests.
 
 ## 5. Deterministic Phase 0 generator
 
@@ -70,9 +68,9 @@ The Phase 0 fixture generator exercises this same template, validation, substitu
 
 ## 7. Deployment and CI direction
 
-Product D will have a separate Vercel project whose root directory is `product-d/`, independent of the other three products. It will explicitly use Node.js `22.x`, overriding Vercel's platform default so a default-runtime change cannot silently move the deployed app off the version tested in CI. It will install with `npm ci`, build with `npm run build`, and create preview deployments for branches and pull requests. The Phase 0 exit condition is a deployable phone-width workflow, and every later phase must preserve deployment. Creating or linking the Vercel project is deferred to the scaffold/deployment task; this documentation task performs no deployment setup.
+Product D has a separate Vercel project whose root directory is `product-d/`, independent of the other products. It uses Node.js `22.x`, installs with `npm ci`, and builds with `npm run build`. Pull requests validate the app without production credentials; production deployment runs only after a push to `main`.
 
-When the app is scaffolded, the shared workflow will gain a Product D job scoped to the `product-d/` working directory. That job will install from Product D's lockfile and run lint, format check, typecheck, coverage-enforced tests, and build. The shared [CI workflow](../.github/workflows/ci.yml) is deliberately not modified in this task.
+The shared [CI workflow](../.github/workflows/ci.yml) provides an independent `ci-product-d` job scoped to `product-d/`. It installs from Product D's lockfile and runs lint, typecheck, tests, and build on every pull request. On a push to `main`, the same job pulls the Product D Vercel settings, creates a prebuilt production artifact, and deploys it using `VERCEL_PRODUCT_D_TOKEN`, `VERCEL_PRODUCT_D_PROJECT_ID`, and the shared `VERCEL_ORG_ID`. Missing credentials fail that main run visibly. Phase 0 is complete only after the merged commit deploys successfully from this job and a teammate verifies the phone-width workflow.
 
 ## 8. Current documentation inconsistency
 

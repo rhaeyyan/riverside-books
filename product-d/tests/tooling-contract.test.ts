@@ -5,6 +5,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { describe, expect, it } from "vitest";
 
 const productRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const repositoryRoot = resolve(productRoot, "..");
 
 interface ProductPackage {
   scripts?: Record<string, string>;
@@ -23,31 +24,30 @@ interface DocumentedExport {
   declaration: string;
 }
 
-interface V8CoverageConfig {
-  provider: "v8";
-  include?: string[];
-  exclude?: string[];
-  thresholds?: {
-    statements?: number;
-    branches?: number;
-    functions?: number;
-    lines?: number;
-  };
-}
-
-function isV8CoverageConfig(value: unknown): value is V8CoverageConfig {
-  return (
-    typeof value === "object" &&
-    value !== null &&
-    "provider" in value &&
-    value.provider === "v8"
-  );
-}
-
 async function readPackage(): Promise<ProductPackage> {
   const contents = await readFile(resolve(productRoot, "package.json"), "utf8");
 
   return JSON.parse(contents) as ProductPackage;
+}
+
+function yamlJob(workflow: string, jobName: string): string {
+  const lines = workflow.split("\n");
+  const start = lines.indexOf(`  ${jobName}:`);
+  if (start === -1) return "";
+
+  const nextJob = lines.findIndex(
+    (line, index) => index > start && /^  [A-Za-z0-9_-]+:$/.test(line),
+  );
+
+  return lines.slice(start, nextJob === -1 ? undefined : nextJob).join("\n");
+}
+
+function yamlStepForCommand(job: string, command: string): string {
+  return (
+    job
+      .split(/(?=^      - )/m)
+      .find((step) => step.includes(`run: ${command}`)) ?? ""
+  );
 }
 
 async function readVitestConfig() {
@@ -199,70 +199,77 @@ describe("Product D toolchain contract", () => {
     });
   });
 
-  it("provides the documented npm commands and Node 22 runtime", async () => {
+  it("uses the canonical Product D test and script policy", async () => {
     const packageJson = await readPackage();
+    const vitestConfig = await readVitestConfig();
 
     expect(packageJson.scripts).toEqual({
       dev: "next dev",
       build: "next build",
       start: "next start",
       lint: "eslint .",
-      format: "prettier --write .",
-      "format:check": "prettier --check .",
       typecheck: "next typegen && tsc --noEmit",
-      test: "vitest run --coverage",
+      test: "vitest run",
       "test:watch": "vitest",
     });
     expect(packageJson.engines?.node).toBe("22.x");
+    expect(packageJson.devDependencies).not.toHaveProperty(
+      "@vitest/coverage-v8",
+    );
+    expect(packageJson.devDependencies).not.toHaveProperty("prettier");
+    expect(vitestConfig.test).not.toHaveProperty("coverage");
   });
 
-  it("keeps the V8 coverage plugin compatible with Vitest", async () => {
-    const packageJson = await readPackage();
-    const vitestVersion = packageJson.devDependencies?.vitest;
-    const coverageVersion =
-      packageJson.devDependencies?.["@vitest/coverage-v8"];
+  it("wires Product D CI and main-only deployment", async () => {
+    const workflow = await readFile(
+      resolve(repositoryRoot, ".github/workflows/ci.yml"),
+      "utf8",
+    );
+    const productDJob = yamlJob(workflow, "ci-product-d");
 
-    expect(vitestVersion).toBeDefined();
-    expect(coverageVersion).toBeDefined();
-    expect(
-      coverageVersion,
-      "@vitest/coverage-v8 must use the same version range as vitest",
-    ).toBe(vitestVersion);
-  });
+    expect(productDJob).not.toBe("");
+    expect(productDJob).toContain("runs-on: ubuntu-latest");
+    expect(productDJob).toContain("node-version: 22");
+    expect(productDJob).toContain("cache: npm");
+    expect(productDJob).toContain(
+      "cache-dependency-path: product-d/package-lock.json",
+    );
 
-  it("collects V8 coverage from Product D source with the agreed exclusions", async () => {
-    const config = await readVitestConfig();
-    const coverage = config.test?.coverage;
+    for (const command of [
+      "npm ci",
+      "npm run lint",
+      "npm run typecheck",
+      "npm test",
+      "npm run build",
+    ]) {
+      const step = yamlStepForCommand(productDJob, command);
 
-    expect(coverage?.provider).toBe("v8");
-    if (!isV8CoverageConfig(coverage)) return;
+      expect(step, `Product D CI must run ${command}`).not.toBe("");
+      expect(step).toContain("working-directory: product-d");
+    }
 
-    expect(coverage?.include).toEqual([
-      "app/**/*.{ts,tsx}",
-      "lib/**/*.{ts,tsx}",
-    ]);
-    expect(coverage?.exclude).toEqual([
-      "app/layout.tsx",
-      "**/*.d.ts",
-      "**/*.config.*",
-      "**/*.fixture.ts",
-      ".next/**",
-      "coverage/**",
-    ]);
-  });
+    const mainOnlyGuard =
+      "github.event_name == 'push' && github.ref == 'refs/heads/main'";
+    const deploymentCommands = [
+      "npm install --global vercel@latest",
+      "vercel pull --yes --environment=production --token=${{ secrets.VERCEL_PRODUCT_D_TOKEN }}",
+      "vercel build --prod --token=${{ secrets.VERCEL_PRODUCT_D_TOKEN }}",
+      "vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_PRODUCT_D_TOKEN }}",
+    ];
 
-  it("enforces the initial 80 percent coverage floor for every metric", async () => {
-    const config = await readVitestConfig();
-    const coverage = config.test?.coverage;
+    for (const command of deploymentCommands) {
+      const step = yamlStepForCommand(productDJob, command);
 
-    expect(coverage?.provider).toBe("v8");
-    if (!isV8CoverageConfig(coverage)) return;
+      expect(step, `Product D deployment must run ${command}`).not.toBe("");
+      expect(step.match(/^        if: (.+)$/m)?.[1]).toBe(mainOnlyGuard);
 
-    expect(coverage.thresholds).toEqual({
-      statements: 80,
-      branches: 80,
-      functions: 80,
-      lines: 80,
-    });
+      if (!command.startsWith("npm install")) {
+        expect(step).toContain("working-directory: product-d");
+        expect(step).toContain("VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}");
+        expect(step).toContain(
+          "VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PRODUCT_D_PROJECT_ID }}",
+        );
+      }
+    }
   });
 });

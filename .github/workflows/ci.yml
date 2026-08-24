@@ -237,3 +237,65 @@ jobs:
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+  ci-product-d:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: product-d/package-lock.json
+
+      - name: Install Product D dependencies
+        working-directory: product-d
+        run: npm ci
+
+      - name: Lint Product D app
+        working-directory: product-d
+        run: npm run lint
+
+      - name: Typecheck Product D app
+        working-directory: product-d
+        run: npm run typecheck
+
+      - name: Test Product D app
+        working-directory: product-d
+        run: npm test
+
+      - name: Build Product D app
+        working-directory: product-d
+        run: npm run build
+
+      # Production credentials are never exposed to pull-request code. A push
+      # to main must deploy successfully; missing Product D credentials fail
+      # visibly instead of turning deployment into a silent no-op.
+      - name: Install Vercel CLI
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: npm install --global vercel@latest
+
+      - name: Pull Product D Vercel project settings
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        working-directory: product-d
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_PRODUCT_D_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PRODUCT_D_PROJECT_ID }}
+
+      - name: Build Product D for Vercel deployment
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        working-directory: product-d
+        run: vercel build --prod --token=${{ secrets.VERCEL_PRODUCT_D_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PRODUCT_D_PROJECT_ID }}
+
+      - name: Deploy Product D to Vercel
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        working-directory: product-d
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_PRODUCT_D_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PRODUCT_D_PROJECT_ID }}
