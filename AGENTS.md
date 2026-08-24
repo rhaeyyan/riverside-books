@@ -30,10 +30,10 @@ This file is the standalone, canonical source for this repo's protocols — GitH
 | A | `product-a-app/` | `ci-product-a` | yes |
 | B | `product-b-app/` | `ci-product-b` | yes |
 | C | `product-c-app/` | `ci` | yes |
-| D | — | — | no |
+| D | `product-d/` | `ci-product-d` | yes |
 <!-- scaffolding-state:end -->
 
-  A product with no app yet has its Phase 0 scaffold as the next unit of work, via `builder`'s bootstrap exception below. **Docs are tracked separately from apps** and are not part of that check: A, B, and C have all three planning docs (`market_strategy.md`, `implementation_plan.md`, `tech_stack_recommendation.md`); Product D has not written a `tech_stack_recommendation.md` yet.
+  **Docs are tracked separately from apps** and are not part of that check: all four products now have all three planning docs (`market_strategy.md`, `implementation_plan.md`, `tech_stack_recommendation.md`).
 
 ## Commands
 
