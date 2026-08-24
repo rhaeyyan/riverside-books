@@ -50,3 +50,4 @@ export { HOURS_FACTS, POLICY_FACTS };
 export type { HoursFact, PolicyFact };
 export { SAMPLE_QUESTIONS } from './sample-questions';
 export type { SampleQuestion, SupportIntent } from './sample-questions';
+export { classifyIntent } from './classify-intent';
