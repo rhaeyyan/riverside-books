@@ -13,6 +13,9 @@ interface RootLayoutProps {
   children: ReactNode;
 }
 
+/**
+ * Establishes the document shell shared by the Product D staff workspace.
+ */
 export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
   return (
     <html lang="en">

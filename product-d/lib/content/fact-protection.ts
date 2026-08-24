@@ -78,6 +78,15 @@ function placeholderValues(
   };
 }
 
+/**
+ * Substitutes only approved placeholders with values from a trusted record so
+ * protected facts never depend on model phrasing.
+ *
+ * @param template - Caption template containing approved fact placeholders.
+ * @param record - Structured source record for deterministic substitution.
+ * @returns The rendered caption with whitespace normalized.
+ * @throws {@link FactProtectionError} When a placeholder is unknown or malformed.
+ */
 export function renderFactTemplate(
   template: string,
   record: FactRecord,
@@ -149,6 +158,14 @@ function pushUnique(warnings: string[], warning: string): void {
   if (!warnings.includes(warning)) warnings.push(warning);
 }
 
+/**
+ * Finds fact-like values in a caption that are not supported by the supplied
+ * structured record, preserving staff review at the model boundary.
+ *
+ * @param caption - Rendered caption to inspect for unsupported facts.
+ * @param record - Trusted source record whose facts may appear in the caption.
+ * @returns Deterministically ordered warnings for unsupported values.
+ */
 export function findUnsupportedFacts(
   caption: string,
   record: FactRecord,

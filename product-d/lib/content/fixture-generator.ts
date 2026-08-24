@@ -62,7 +62,17 @@ function templatesFor(channel: Channel): readonly FixtureTemplate[] {
   throw new Error(`Unsupported channel: "${String(channel)}"`);
 }
 
+/**
+ * Provides stable local variants for UI development and CI without calling a
+ * live model or crossing the structured fact boundary.
+ */
 export class FixtureContentGenerator implements ContentGenerator {
+  /**
+   * Streams the three deterministic templates for the selected channel.
+   *
+   * @param request - Trusted record and supported destination channel.
+   * @returns An asynchronous stream of grounded fixture variants.
+   */
   async *generate(request: GenerationRequest): AsyncIterable<GeneratedVariant> {
     for (const template of templatesFor(request.channel)) {
       const caption = renderFactTemplate(
