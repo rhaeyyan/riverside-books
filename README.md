@@ -26,7 +26,7 @@ The four products are not independent apps that happen to share a repo. A writes
 | A | market strategy, tech stack, implementation plan | [`product-a-app/`](product-a-app/) | **Phase 1 in progress** — live at [product-a-app.vercel.app](https://product-a-app.vercel.app), deployed from CI on merge to `main`. All seven shared tables are migrated with their constraints enforced in Postgres, verified by a real-database test suite that runs in `ci-product-a`. RLS is enabled on all seven, but only `books` has a read policy (`books_public_read`) written so far. The other six tables are deny-all to client roles; the remaining policies and the cross-account isolation test that gates this phase are the next step. |
 | B | context notes, market strategy, tech stack, implementation plan | [`product-b-app/`](product-b-app/) | Phase 0 walking skeleton scaffolded ([#38](https://github.com/rhaeyyan/riverside-books/issues/38)) |
 | C | market strategy, tech stack, implementation plan | [`product-c-app/`](product-c-app/) | Phase 0 walking skeleton scaffolded |
-| D | market strategy, implementation plan | none on `main` yet | tech stack doc and a Phase 0 walking skeleton are proposed in [#49](https://github.com/rhaeyyan/riverside-books/pull/49), still unmerged ([#39](https://github.com/rhaeyyan/riverside-books/issues/39)) |
+| D | market strategy, implementation plan | none on `main` yet | tech stack doc and a Phase 0 walking skeleton are proposed in [#74](https://github.com/rhaeyyan/riverside-books/pull/74), still unmerged ([#39](https://github.com/rhaeyyan/riverside-books/issues/39)) |
 
 ### The shared-data question, and how it was settled
 
