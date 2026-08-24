@@ -75,7 +75,10 @@ decision above.
 - [x] Write `product-b/tech_stack_recommendation.md` and `product-b/implementation_plan.md`
       mirroring Product A's docs, phased with exit conditions.
 - [ ] Phase 0 scaffold: Next.js project, connect to the shared Supabase project, one real metric
-      rendered on a deployed URL.
+      rendered on a deployed URL. Code-complete and deployed (PR #98,
+      <https://product-b-app.vercel.app>) but not yet met — the page shows the honest fallback
+      because this Vercel project's `SUPABASE_URL`/`SUPABASE_ANON_KEY` env vars aren't set yet.
+      See `implementation_plan.md` Phase 0 for the current status.
 
 `docs/assumptions.md` is also drafted (proposed default for the POS assumption and the store's
 operating profile) — open for review by all four owners, not yet team-confirmed.

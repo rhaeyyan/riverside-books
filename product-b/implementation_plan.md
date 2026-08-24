@@ -23,8 +23,18 @@ URL.
   query against Product A's existing tables.
 - ESLint, Vitest configured, one passing test. CI: lint, then test, then deploy.
 
-**Exit condition.** A teammate opens the preview URL and sees a real number that matches the
-current seed data in the shared Supabase project.
+**Exit condition.** A CI run on `main` deployed a named commit to production — cite the run
+number and the commit SHA. A hand-run `vercel deploy` does not satisfy this. Then, on that
+deployed commit, a teammate opens the URL and sees a real number that matches the current seed
+data in the shared Supabase project.
+
+**Status: deployed, not yet met.** [PR #98](https://github.com/rhaeyyan/riverside-books/pull/98)
+wired the live query and the `ci-product-b` deploy step; [run 32770706467](https://github.com/rhaeyyan/riverside-books/actions/runs/32770706467),
+commit `251c14f`, deployed to production at <https://product-b-app.vercel.app>. The page currently
+shows the honest fallback ("No stock total available — unable to load inventory right now"), not
+a real number: this Vercel project is separate from Product A's and does not inherit its
+`SUPABASE_URL`/`SUPABASE_ANON_KEY` environment variables. Setting them on the Vercel project is
+the one remaining step — code-complete, blocked on Vercel dashboard configuration only.
 
 Nothing after this phase is allowed to break deployment, per [`CLAUDE.md`](../CLAUDE.md).
 
