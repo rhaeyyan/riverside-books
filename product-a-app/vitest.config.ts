@@ -36,11 +36,12 @@ export default defineConfig({
           exclude: ['**/node_modules/**'],
           // Every db test file shares one database, so they run one file at a
           // time: parallel files would truncate each other's fixtures mid-test
-          // and turn a real failure into a flake. A single fork is how a
-          // project (rather than the whole run) opts out of file parallelism —
-          // `fileParallelism` is a root-level option only.
+          // and turn a real failure into a flake. Vitest 4 accepts
+          // `fileParallelism` per project, so this states the requirement
+          // directly; under Vitest 3 it was root-level only and this had to be
+          // spelled `poolOptions: { forks: { singleFork: true } }` instead.
           pool: 'forks',
-          poolOptions: { forks: { singleFork: true } },
+          fileParallelism: false,
           // Migrations against a cold stack are slow; the assertions
           // themselves are not.
           hookTimeout: 120_000,
