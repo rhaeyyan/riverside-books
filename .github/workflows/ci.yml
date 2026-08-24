@@ -21,6 +21,71 @@ jobs:
       - name: Check docs don't claim npm scripts that don't exist
         run: python3 .github/scripts/check-doc-commands.py
 
+  # The commit rules, checked where they actually hold.
+  #
+  # `.husky/commit-msg` is not installed in any clone of this repo: no
+  # package.json declares husky, commitlint, or lint-staged, none has a
+  # `prepare` script, and `.git/hooks/` holds nothing but samples. Conventional
+  # Commits and the no-AI-trailer rule have therefore been documentation, not
+  # enforcement, in every doc that claims otherwise. Behaviour held anyway (zero
+  # AI trailers in the whole history), which is exactly why it went unnoticed.
+  #
+  # Checking the PR's own commit range in CI makes both rules true for every
+  # contributor and every agent session with no local install step, and it
+  # survives `--no-verify`, which a local hook cannot. The hooks stay as a fast
+  # pre-flight for whoever does wire them up; this is the authoritative gate,
+  # matching the split AGENTS.md already describes.
+  #
+  # Skipped on pushes to main: there is no PR range to check, and a job skipped
+  # by a job-level `if` still satisfies a required status check.
+  commits:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # commitlint needs both ends of the range, not just a shallow tip.
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      # `npx --package` rather than an install: there is no root package.json to
+      # install into, and creating one would change what Dependabot and
+      # check-doc-commands.py see. Verified to resolve commitlint.config.cjs's
+      # `extends` from the npx cache and to leave the working tree untouched.
+      - name: Conventional Commits
+        run: >
+          npx --yes
+          --package @commitlint/cli
+          --package @commitlint/config-conventional
+          -- commitlint
+          --from ${{ github.event.pull_request.base.sha }}
+          --to ${{ github.event.pull_request.head.sha }}
+          --verbose
+
+      # Same regex as .husky/commit-msg, applied per commit in the range so a
+      # trailer cannot slip in on any commit but the last.
+      - name: No AI Co-Authored-By trailers
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          fail=0
+          for sha in $(git rev-list "$BASE".."$HEAD"); do
+            if git show -s --format='%B' "$sha" \
+              | grep -qiE '^co-authored-by:.*(claude|anthropic|openai|chatgpt|gpt-|copilot|gemini|codex|\bai\b)'; then
+              echo "::error::$sha $(git show -s --format='%s' "$sha") — AI Co-Authored-By trailer"
+              fail=1
+            fi
+          done
+          if [ "$fail" -ne 0 ]; then
+            echo "Remove the Co-Authored-By line attributing the commit to an AI tool." >&2
+            exit 1
+          fi
+          echo "OK — no AI Co-Authored-By trailers in this PR's commits."
+
   ci:
     runs-on: ubuntu-latest
     steps:
