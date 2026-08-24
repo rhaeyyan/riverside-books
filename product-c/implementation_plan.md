@@ -31,9 +31,7 @@ teammate opens the URL on their own phone and sees a support page that can answe
 greeting or product question without needing a browser-only mock. This is still a UI shell; it
 does not yet assert a live database-backed stock query.
 
-Wire the deploy pipeline before the first manual deploy, and note that Product C needs **its own**
-Vercel token and its own secret name — Product A's is scoped to Product A's project and will not
-work here. See the scope comment on the deploy step in [`ci.yml`](../.github/workflows/ci.yml).
+Wire the deploy pipeline before the first manual deploy. Product C needs **its own** Vercel token and secret name for isolation and rotation, and the token's scope must include the Personal Account or Team owning the project. Product A's token cannot be reused here. See the scope comment on the deploy step in [`ci.yml`](../.github/workflows/ci.yml).
 
 **Status per issue #40's self-review:** the shipped Phase 0 page is a static preview — no
 `onClick`/`onSubmit` handlers, and no seeded fact-path exists yet. Phase 1 should not assume

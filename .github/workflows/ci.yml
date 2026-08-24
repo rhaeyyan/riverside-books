@@ -247,14 +247,19 @@ jobs:
       # Credential scope, stated here because secret values are unreviewable by
       # construction — they're write-only in GitHub and `.vercel/` is gitignored,
       # so nothing about a mis-scoped token is visible in any artifact a review
-      # reads. VERCEL_TOKEN must be an ACCOUNT-scoped token, not one scoped to a
-      # single project: a project-scoped token authenticates fine and then fails
-      # the project lookup with `Could not retrieve Project Settings` — the same
-      # error a wrong VERCEL_PROJECT_ID produces, which is what made this job
-      # fail on every run from f9935df until the token was re-minted.
+      # reads. Vercel tokens scope to a Personal Account or Team, not to an
+      # individual project — there is no such thing as a project-scoped token.
+      # VERCEL_TOKEN's scope must include the Personal Account or Team that owns
+      # VERCEL_PROJECT_ID: a token scoped to the wrong Team authenticates fine
+      # and then fails the project lookup with `Could not retrieve Project
+      # Settings` — the same error a wrong VERCEL_PROJECT_ID produces, which is
+      # what made this job fail on every run from f9935df until the token was
+      # re-minted.
       # VERCEL_ORG_ID / VERCEL_PROJECT_ID identify Product A's project only.
-      # Products B, C, and D each need their own token and their own secret
-      # names; these will not work for another project.
+      # Products B, C, and D each need their own token (scoped to their own
+      # Team/Personal Account) and their own secret names — this repo's
+      # rotation/isolation convention, not a Vercel platform requirement; these
+      # values will not work for another project.
       - name: Install Vercel CLI
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: npm install --global vercel@latest
