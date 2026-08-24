@@ -317,7 +317,17 @@ And the staff role check has to be shared, or A and B will each invent one.
 
 ## Open decisions
 
-- **Shared Supabase project or four separate ones.** Blocks Phase 1.
+- ~~**Shared Supabase project or four separate ones.**~~ **Resolved.** One shared project; `docs/schema.md` is the contract and Product A owns and migrates every table in it. The seven core tables and their RLS policies are migrated and enforced in CI, so this no longer blocks anything.
+
+### Phase 1 hardening, carried out of the Tasks 3+4 RLS audit
+
+Four items the cross-account isolation work surfaced. None is exploitable today — there is no client write path until Phase 3 — but the first has a hard deadline and the rest are cheap while the surface is small.
+
+- **`expires_at` is client-settable on `reservations_customer_insert`, and must close before Task 10.** The policy's `with check` constrains only `customer_id` and `status`, so a customer inserting their own reservation may also set `expires_at`, `confirmed_at`, and `picked_up_at`. `expires_at` is the sharp one: it decides how long a scarce copy is held, and it is the expiry sweep's input. Reservation state taken from client input is exactly what the data-integrity form of the Integrity Boundary forbids. Fix by extending the `with check` to require those three columns be null, or by setting `expires_at` from a database default. Unreachable until Task 10 opens the insert path — which is also the deadline.
+- **Three grants are backed by no policy**: `update`/`delete` on `loyalty_stamps` and `delete` on `reservations`, all to `authenticated`. They exist because the denial tests assert "zero rows affected" and would otherwise see a `42501` raised instead. Inert as written, but a grant that pre-authorizes a table-wide write is one line of a future migration away from being live. Fix from the test side first: accept either a zero-row result or a `42501` as a valid denial, then drop the grants.
+- **The absent write grants are unpinned, because `42501` is ambiguous.** Postgres returns `42501` for both "permission denied for table" and "new row violates row-level security policy", so `rejects A granting themselves a stamp` would still pass if someone later added `grant insert on loyalty_stamps`. The same blindness covers `staff`, which has no write test at all — the privilege-escalation path (insert yourself into `staff`, then read every reservation) is held shut by an absent grant that nothing observes. Pin the whole absent-write matrix with `has_table_privilege` assertions.
+- **Any future policy on the six private tables must name its roles explicitly.** `anon` holds SELECT on all of them — required, since it is what makes them answer "zero rows" rather than raising — so a policy written without a `to` clause applies to PUBLIC and opens the table in one line. The anon test block catches this for SELECT; it does not catch a `to`-less INSERT policy paired with a write grant. This constrains `events` in particular, which Products C and D read.
+
 - **Does the store already run a POS with loyalty?** If so, Phase 4 changes shape or disappears.
 - **One stamp per transaction or per item**, and whether event tickets count.
 - **Is online payment required?** This plan assumes pay at pickup and says so in the UI.
@@ -327,9 +337,7 @@ And the staff role check has to be shared, or A and B will each invent one.
 
 ## Unverified
 
-None of the SQL in this document has been executed. There is no Postgres in the authoring
-environment. The statements are standard and the reasoning behind them is the load-bearing part,
-but the syntax has not been run and should be treated as unverified until it is.
+The schema and RLS SQL is no longer unverified: the seven core tables, their constraints, and the nine policies in `20260824121500_rls_policies.sql` are applied against a real Postgres by `ci-product-a` on every push, and 79 database tests run against them. What remains unverified here is any SQL still only described in prose in this document — the Phase 2 search index and the Phase 3 reservation and expiry statements — which has not been executed and should be treated as unverified until it is.
 
 Four findings here are carried forward from the previous cycle's review rather than rediscovered:
 enforcing correctness at the database instead of the client, `not null` on any column a partial
