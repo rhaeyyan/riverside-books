@@ -21,6 +21,9 @@ jobs:
       - name: Check AGENTS.md's scaffolding state matches the tree
         run: python3 .github/scripts/check-scaffolding-state.py
 
+      - name: Regression tests for the scaffolding-state check itself
+        run: python3 .github/scripts/test_check_scaffolding_state.py
+
       - name: Check docs don't claim npm scripts that don't exist
         run: python3 .github/scripts/check-doc-commands.py
 

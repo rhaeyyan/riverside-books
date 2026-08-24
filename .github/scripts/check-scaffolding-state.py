@@ -94,7 +94,7 @@ def expected_table(apps: set[str], mapping: dict[str, set[str]]) -> str:
     for letter in PRODUCTS:
         app_candidates = [f"product-{letter}-app", f"product-{letter}"]
         app = next((c for c in app_candidates if c in apps), None)
-        
+
         if app:
             jobs = ", ".join(f"`{j}`" for j in sorted(mapping.get(app, ()))) or "**none**"
             rows.append(f"| {letter.upper()} | `{app}/` | {jobs} | yes |")
