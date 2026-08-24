@@ -23,8 +23,7 @@ absent: no app in this repo collects it, so there is no figure to report. -->
 
 ## Agent workflow
 
-<!-- PROPOSED, not yet ratified — see the PR that introduced this section. Delete
-this whole block for a hand-written or docs-only change; it applies only to work
+<!-- Delete this whole block for a hand-written or docs-only change; it applies only to work
 that came out of the tech-lead → sdet → builder loop.
 
 Paste the [COMPLETION-REPORT] and [COMPLIANCE-REPORT] blocks below. The field
