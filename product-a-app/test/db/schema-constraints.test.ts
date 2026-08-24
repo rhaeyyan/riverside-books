@@ -38,14 +38,22 @@ import { applyMigrations, resetDb, withClient } from './harness';
 // contract is actually written in.
 //
 // WHY THIS CONNECTS AS THE OWNER ROLE (`postgres`), NOT `anon`/`authenticated`:
-// this migration enables RLS on all seven tables with ZERO policies — the
-// policies are Task 3. A non-owner connection would therefore be rejected with
-// 42501 (insufficient privilege) BEFORE any constraint was ever evaluated, and
-// every "the database rejected the bad write" assertion below would pass for
-// the wrong reason: a green that proves nothing. The harness's connection
-// string is the local stack's `postgres` superuser role, and the first test in
-// this file asserts that the session really is exempt from RLS, so this cannot
-// silently stop being true.
+// RLS is enabled on all seven tables. From a client role, a bad write is
+// rejected by a POLICY — 42501, or a row simply filtered out of reach — BEFORE
+// its constraint is ever evaluated, so every "the database rejected the bad
+// write" assertion below would pass for the wrong reason: a green that proves
+// nothing about the constraint it names. The owner role is exempt from RLS, so
+// a rejection reaching this file is a constraint and nothing else. The
+// harness's connection string is the local stack's `postgres` superuser role,
+// and the first test in this file asserts the session really is exempt, so
+// this cannot silently stop being true.
+//
+// The consequence is that this file cannot say anything about the policies
+// themselves, and does not try to. Task 3's policies are proven in
+// rls-isolation.test.ts, from genuinely unprivileged `anon` and
+// `authenticated` sessions. The single catalog assertion below is the one
+// exception, and it deliberately checks only what a catalog can honestly
+// support: that RLS is armed everywhere, and that two tables have no policy.
 //
 // There is deliberately NO `skipIf`, no `.skip`, and no `.todo` in this file,
 // and none must ever be added — same rule as Task 2a. If the Supabase local
@@ -62,6 +70,14 @@ const NEW_TABLES = [
   'rewards',
   'staff',
 ] as const;
+
+/**
+ * The two tables that keep ZERO policies after Task 3 — deny-all to every
+ * client role, on purpose. `rewards` has no customer-facing read path until
+ * redemption ships, and `events` is Product C/D's read surface, not A's.
+ * Pinned here so a blanket policy swept across every table is caught.
+ */
+const STILL_DENY_ALL = new Set<string>(['events', 'rewards']);
 
 /**
  * The five reservation statuses, fixed by docs/schema.md ("`reservations.status`
@@ -244,11 +260,26 @@ describe('schema migration — the seven tables', () => {
     expect(present.map((r) => r.tablename)).toEqual([...NEW_TABLES]);
   });
 
-  it('enables RLS on all seven with zero policies — the policies are Task 3', async () => {
+  it('arms RLS on all seven, and leaves rewards and events with no policy at all', async () => {
     // Catalog introspection rather than a write, because no write from THIS
     // connection can observe RLS: the owner role is exempt by definition. The
-    // rule is "RLS is armed and deny-by-default until Task 3 adds policies",
-    // and the catalog is the only place that is visible from here.
+    // rule is "RLS is armed on every table Product A owns", and the catalog is
+    // the only place that is visible from here.
+    //
+    // WHY THE COUNTS ARE COLLAPSED TO none/some RATHER THAN COMPARED AS
+    // NUMBERS. An exact per-table count would pin builder's decomposition —
+    // whether the customer reservations rules land as one policy or two is a
+    // style choice with no observable difference — and would go red on a
+    // refactor that changed nothing a customer could notice. It would also be
+    // a weak assertion in the direction that matters: a count cannot tell a
+    // correct policy from a broken one. What each policy actually DOES is
+    // proven in rls-isolation.test.ts, from a hostile unprivileged session,
+    // which is the only place it can be proven.
+    //
+    // The two zeroes ARE pinned, because they are a deliberate decision rather
+    // than an omission: `rewards` and `events` stay deny-all after Task 3, and
+    // a blanket `using (true)` swept across every table would otherwise land on
+    // them unnoticed.
     const state = await rows<{
       relname: string;
       rls_enabled: boolean;
@@ -266,11 +297,17 @@ describe('schema migration — the seven tables', () => {
       [[...NEW_TABLES]],
     );
 
-    expect(state).toEqual(
+    const observed = state.map((row) => ({
+      relname: row.relname,
+      rls_enabled: row.rls_enabled,
+      policies: row.policy_count > 0 ? 'some' : 'none',
+    }));
+
+    expect(observed).toEqual(
       NEW_TABLES.map((relname) => ({
         relname,
         rls_enabled: true,
-        policy_count: 0,
+        policies: STILL_DENY_ALL.has(relname) ? 'none' : 'some',
       })),
     );
   });
