@@ -50,16 +50,16 @@ END = "<!-- scaffolding-state:end -->"
 # A job key sits at exactly two spaces of indent under `jobs:`.
 JOB_KEY = re.compile(r"^  ([A-Za-z][\w-]*):\s*$")
 # Both are how a job names the app it operates on.
-APP_REF = re.compile(r"(?:working-directory|cache-dependency-path):\s*(product-[a-z]-app)")
+APP_REF = re.compile(r"(?:working-directory|cache-dependency-path):\s*(product-[a-z](?:-app)?)")
 
 PRODUCTS = ("a", "b", "c", "d")
 
 
 def scaffolded_apps() -> set[str]:
-    """Every product-*-app/ that holds a package.json."""
+    """Every product-*/ that holds a package.json."""
     return {
         pkg.parent.name
-        for pkg in REPO_ROOT.glob("product-*-app/package.json")
+        for pkg in REPO_ROOT.glob("product-*/package.json")
         if "node_modules" not in pkg.parts
     }
 
@@ -92,8 +92,10 @@ def expected_table(apps: set[str], mapping: dict[str, set[str]]) -> str:
         "| --- | --- | --- | --- |",
     ]
     for letter in PRODUCTS:
-        app = f"product-{letter}-app"
-        if app in apps:
+        app_candidates = [f"product-{letter}-app", f"product-{letter}"]
+        app = next((c for c in app_candidates if c in apps), None)
+        
+        if app:
             jobs = ", ".join(f"`{j}`" for j in sorted(mapping.get(app, ()))) or "**none**"
             rows.append(f"| {letter.upper()} | `{app}/` | {jobs} | yes |")
         else:
