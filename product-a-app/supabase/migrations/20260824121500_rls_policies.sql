@@ -169,12 +169,24 @@ create policy "reservations_customer_insert"
 -- Staff read the whole book. `exists` against `public.staff` is the
 -- authorization test used from here on: staff membership is a row in a table,
 -- never a claim in a token the client could set.
+--
+-- THE ALIAS IN `staff s` IS LOAD-BEARING, in both policies below and in every
+-- staff gate written after them. An unqualified `user_id` resolves to
+-- `staff.user_id` only for as long as the OUTER table has no column by that
+-- name; the day a migration adds `reservations.user_id`, Postgres silently
+-- prefers the outer one and the subquery stops meaning "am I staff" and starts
+-- meaning "does any staff row exist, and is this reservation's user_id mine" —
+-- handing staff-level read and update of every customer's reservations to any
+-- customer whose own row matches. Nothing raises, no test moves, and the diff
+-- that causes it is a column addition in another file. Qualifying the column
+-- is what makes the predicate's meaning independent of what `reservations`
+-- grows later.
 create policy "reservations_staff_read"
   on public.reservations
   for select
   to authenticated
   using (
-    exists (select 1 from public.staff where user_id = auth.uid())
+    exists (select 1 from public.staff s where s.user_id = auth.uid())
   );
 
 -- No `with check` clause: for an UPDATE policy Postgres reuses `using` as the
@@ -186,7 +198,7 @@ create policy "reservations_staff_update"
   for update
   to authenticated
   using (
-    exists (select 1 from public.staff where user_id = auth.uid())
+    exists (select 1 from public.staff s where s.user_id = auth.uid())
   );
 
 -- ---------------------------------------------------------------------------
@@ -205,7 +217,7 @@ create policy "loyalty_stamps_customer_read"
 --
 -- THE PREDICATE MUST NOT SUBQUERY `staff`. Writing this the way the
 -- reservations policies above are written — `using (exists (select 1 from
--- public.staff where ...))` — is infinite recursion (SQLSTATE 42P17): the
+-- public.staff s where ...))` — is infinite recursion (SQLSTATE 42P17): the
 -- policy on `staff` would have to consult the policy on `staff` to decide
 -- whether it may consult `staff`. `user_id = auth.uid()` compares a column to
 -- a function and reads nothing, so it terminates. Everything depends on this:
