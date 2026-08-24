@@ -33,14 +33,15 @@ Nothing after this phase is allowed to break deployment, per [`CLAUDE.md`](../CL
 The most consequential phase — everything downstream, both read and write, depends on staff
 identity being resolved correctly.
 
-### Blocking dependency
+### Blocking dependency (resolved)
 
-**Confirm the shared `staff (user_id pk, role)` table with [@rhaeyyan](https://github.com/rhaeyyan)
-before writing any auth code in this phase.** This is listed as a blocking open item in
-[`context.md`](context.md) and is still unresolved. If it is not confirmed by the time this phase
-starts, Product B needs an explicit interim decision (a duplicate table, flagged as temporary) —
-building against an assumed table Product A might not actually expose is the failure this
-confirmation step exists to prevent.
+The shared `staff (user_id pk, role)` table is confirmed. Product A's migration
+(`20260822165200_create_core_tables.sql`) and RLS policies
+(`20260824121500_rls_policies.sql`) are merged, and the deployed shape matches
+[`docs/schema.md#staff`](../docs/schema.md#staff) exactly: `user_id uuid primary key
+references auth.users(id)`, `role text not null check (role in ('owner', 'bookseller'))`.
+Product B reads this table for its own staff-role checks rather than defining a parallel
+one — see [`context.md`](context.md).
 
 ### The reconciliation write
 

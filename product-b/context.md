@@ -66,8 +66,9 @@ decision above.
 
 ## Next steps
 
-- [ ] Confirm the shared `staff` table / role check with @rhaeyyan before writing any auth code.
-      Still blocking — see the open item in `implementation_plan.md` Phase 1.
+- [x] Confirm the shared `staff` table / role check with @rhaeyyan before writing any auth code.
+      Resolved — Product A's migration and RLS policies are merged, and the canonical shape
+      matches `docs/schema.md#staff` exactly. See `implementation_plan.md` Phase 1.
 - [x] Resolve the sales/demand-tracking gap. Settled by the cross-team recommended resolution:
       cut "recently sold titles," derive "most frequently requested" from `reservations`
       (30-day window) — see `implementation_plan.md` Phase 2.
