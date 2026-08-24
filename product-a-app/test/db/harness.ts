@@ -294,3 +294,66 @@ export async function resetDb(): Promise<void> {
     await c.query(`truncate table ${targets.join(', ')} cascade`);
   });
 }
+
+// ---------------------------------------------------------------------------
+// Product A, Phase 1, Tasks 3+4 — persona impersonation.
+//
+// Everything above this line runs as the local stack's `postgres` role, which
+// is exempt from RLS by definition. That connection can therefore prove
+// constraints (Task 2) but can prove NOTHING about policies: it never has a
+// policy applied to it. The two helpers below are what let a test speak to
+// Postgres as the roles a browser actually reaches it with — PostgREST's
+// `anon` and `authenticated` — so an RLS assertion is a real observation
+// rather than a restatement of the migration.
+//
+// HOW THIS MIRRORS SUPABASE. PostgREST verifies a JWT, stashes its claims in
+// the `request.jwt.claims` GUC, and switches to the role named in the token.
+// `auth.uid()` is a plain SQL function reading `sub` back out of that GUC —
+// which is precisely why these two statements, in this order, reproduce a
+// signed-in session without a running API gateway, a GoTrue token, or a
+// network hop. Nothing is faked here except the token issuance: the role, the
+// claims, the policies, and the planner are all the real ones.
+//
+// WHY SESSION SCOPE (`set_config(..., false)`) IS SAFE. `withClient` dedicates
+// one connection per call and closes it in a `finally`, so a session setting
+// dies with the connection it was set on. There is no pool for it to leak
+// into. The rule that keeps it that way: every impersonated block gets its own
+// `withClient` call, and no test may impersonate and then expect a later
+// superuser query on the same connection to be privileged.
+// ---------------------------------------------------------------------------
+
+/**
+ * Impersonates a signed-in Supabase Auth user: the `authenticated` role with
+ * `auth.uid()` resolving to `userId`.
+ *
+ * `reset role` first so the helper is callable on a connection that is already
+ * disguised — a non-superuser cannot `set role` its way back out, but
+ * `reset role` (which returns to the session user) is always permitted.
+ *
+ * The claims are set BEFORE the role switch, while the session is still the
+ * owner role, so the helper never depends on `authenticated` being allowed to
+ * write a custom GUC.
+ */
+export async function asUser(c: Client, userId: string): Promise<void> {
+  await c.query('reset role');
+  await c.query('select set_config($1, $2, false)', [
+    'request.jwt.claims',
+    JSON.stringify({ sub: userId, role: 'authenticated' }),
+  ]);
+  await c.query('set role authenticated');
+}
+
+/**
+ * Impersonates an anonymous visitor: the `anon` role with NO claims, so
+ * `auth.uid()` is null.
+ *
+ * The claims GUC is explicitly blanked rather than left alone. `auth.uid()`
+ * maps empty string to null via `nullif`, and blanking is what makes this
+ * helper correct even on a connection a previous call already gave claims to —
+ * an anon session that inherited a `sub` would quietly test the wrong thing.
+ */
+export async function asAnon(c: Client): Promise<void> {
+  await c.query('reset role');
+  await c.query("select set_config('request.jwt.claims', '', false)");
+  await c.query('set role anon');
+}
