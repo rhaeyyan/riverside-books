@@ -148,6 +148,40 @@ jobs:
         working-directory: product-b-app
         run: npm run build
 
+      # Deploy only runs for pushes to main — never for PR runs, so unmerged
+      # or fork-authored code can't reach production. lint/typecheck/test/build
+      # above still run on every PR as the actual gate. `VERCEL_PRODUCT_B_TOKEN`
+      # scopes to a Personal Account or Team, not to an individual project —
+      # `VERCEL_PRODUCT_B_PROJECT_ID` (paired with the shared `VERCEL_ORG_ID`)
+      # is what actually targets this deploy at Product B's own Vercel project.
+      - name: Install Vercel CLI
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: npm install --global vercel@latest
+
+      - name: Pull Product B Vercel project settings
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        working-directory: product-b-app
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_PRODUCT_B_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PRODUCT_B_PROJECT_ID }}
+
+      - name: Build Product B for Vercel deployment
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        working-directory: product-b-app
+        run: vercel build --prod --token=${{ secrets.VERCEL_PRODUCT_B_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PRODUCT_B_PROJECT_ID }}
+
+      - name: Deploy Product B to Vercel
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        working-directory: product-b-app
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_PRODUCT_B_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PRODUCT_B_PROJECT_ID }}
+
   ci-product-a:
     runs-on: ubuntu-latest
     steps:
