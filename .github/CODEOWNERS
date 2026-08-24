@@ -5,10 +5,13 @@
 # a review from a PR's own author).
 * @rhaeyyan @Cheewaiyip @crystalwatson-art @humaali-create
 
-# Teammate-owned product directories require rhaeyyan's review and approval
-# specifically, since rhaeyyan is never the author of these.
-/product-b/ @rhaeyyan
-/product-b-app/ @rhaeyyan
-/product-c/ @rhaeyyan
-/product-c-app/ @rhaeyyan
-/product-d/ @rhaeyyan
+# Teammate-owned product directories are co-owned with rhaeyyan. GitHub
+# satisfies "require review from code owners" with an approval from ANY one
+# listed owner, and never counts the PR's own author — so a teammate's PR into
+# their own directory still routes to rhaeyyan, while rhaeyyan's PRs into that
+# directory can be approved by the teammate who owns it.
+/product-b/ @rhaeyyan @Cheewaiyip
+/product-b-app/ @rhaeyyan @Cheewaiyip
+/product-c/ @rhaeyyan @humaali-create
+/product-c-app/ @rhaeyyan @humaali-create
+/product-d/ @rhaeyyan @crystalwatson-art
