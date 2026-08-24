@@ -7,6 +7,10 @@ const workflowSteps = [
   "Review three grounded variations",
 ];
 
+/**
+ * Introduces the grounded content workflow and supplies its deterministic
+ * Phase 0 source record.
+ */
 export default function HomePage() {
   return (
     <main className="min-h-dvh bg-[var(--canvas)] px-4 py-6 text-[var(--ink)] sm:px-6 sm:py-10 lg:px-8">

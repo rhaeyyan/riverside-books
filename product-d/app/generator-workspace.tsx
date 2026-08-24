@@ -20,6 +20,10 @@ const channelLabels: Record<Channel, string> = {
   facebook: "Facebook",
 };
 
+/**
+ * Presents the staff-only generate-and-review workflow while keeping all
+ * protected record facts visible beside the generated variants.
+ */
 export function GeneratorWorkspace({ record }: GeneratorWorkspaceProps) {
   const [channel, setChannel] = useState<Channel>("instagram");
   const [variants, setVariants] = useState<GeneratedVariant[]>([]);
