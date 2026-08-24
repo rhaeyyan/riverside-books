@@ -2,7 +2,15 @@ version: 2
 
 updates:
   - package-ecosystem: npm
-    directory: /
+    # One entry per scaffolded app, not `directory: /`. There is no root
+    # package.json, so the previous `/` matched nothing: in this repo's life
+    # Dependabot has opened exactly one PR (#1, the actions group below, which
+    # does resolve from `/`), while ~90 npm dependencies across three lockfiles
+    # went unchecked. Add the next product's app here when it scaffolds.
+    directories:
+      - /product-a-app
+      - /product-b-app
+      - /product-c-app
     schedule:
       interval: weekly
       day: monday
@@ -11,8 +19,9 @@ updates:
       - dependencies
     reviewers:
       - rhaeyyan
-    # Conventional Commits are enforced by commitlint in .husky/commit-msg.
-    # Without this prefix every Dependabot PR would be rejected at commit time.
+    # Conventional Commits are enforced by the `commits` job in ci.yml (the
+    # .husky/commit-msg hook this used to cite is not installed in any clone).
+    # Without this prefix every Dependabot PR would fail that check.
     commit-message:
       prefix: chore
       include: scope
