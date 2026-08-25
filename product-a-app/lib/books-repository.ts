@@ -19,6 +19,12 @@ export interface Book {
 const BOOK_COLUMNS =
   'id, isbn13, title, author, format, price_cents, published_on, created_at';
 
+/**
+ * The read surface over `books`, kept behind an interface so callers depend on
+ * this shape rather than on a Supabase client — the integration-boundary
+ * inversion `AGENTS.md` asks for. `createBooksRepository` is the real
+ * implementation; tests substitute a fake.
+ */
 export interface BooksRepository {
   getFeaturedBook(): Promise<Book | null>;
 }
@@ -49,6 +55,10 @@ export function createBooksRepository(client: SupabaseClient): BooksRepository {
 
 /** Thrown by `createSupabaseClient` when a required env var is missing. */
 export class MissingSupabaseEnvError extends Error {
+  /**
+   * @param variableName - The environment variable that was absent. It is
+   * named in the message so the fix is unambiguous at the call site.
+   */
   constructor(variableName: string) {
     super(`Missing required environment variable: ${variableName}`);
     this.name = 'MissingSupabaseEnvError';

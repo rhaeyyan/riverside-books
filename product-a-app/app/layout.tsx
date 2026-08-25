@@ -17,6 +17,11 @@ export const metadata: Metadata = {
   description: "Customer ordering & loyalty app for Riverside Books.",
 };
 
+/**
+ * The `html`/`body` shell every route renders inside. Applies the two font
+ * variables and the full-height flex column the pages lay themselves out in;
+ * it holds no data access of its own.
+ */
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html

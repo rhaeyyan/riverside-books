@@ -22,6 +22,11 @@ async function loadFeaturedTitle(): Promise<string | null> {
   }
 }
 
+/**
+ * The catalog landing page. Renders the featured title when one is available
+ * and the honest empty state when it is not — `loadFeaturedTitle` collapses
+ * every failure to `null` rather than surfacing an error to the DOM.
+ */
 export default async function Home() {
   const title = await loadFeaturedTitle();
 

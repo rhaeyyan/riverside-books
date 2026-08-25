@@ -261,11 +261,11 @@ async function affectedAs(
 }
 
 /**
- * Runs a write that RLS is required to REJECT outright (an insert whose `with
- * check` fails, or an insert against a table with no insert policy at all) and
- * returns the error for assertion. A write that SUCCEEDS throws here with the
- * offending SQL: a missing or too-permissive policy must surface as a failure,
- * never as a silently skipped assertion.
+ * Runs a write that RLS is required to REJECT outright (an insert whose
+ * `with check` fails, or an insert against a table with no insert policy at
+ * all) and returns the error for assertion. A write that SUCCEEDS throws here
+ * with the offending SQL: a missing or too-permissive policy must surface as
+ * a failure, never as a silently skipped assertion.
  *
  * Every such write below is otherwise entirely valid — real foreign keys, no
  * null in a `not null` column, no check constraint violated — so the only
