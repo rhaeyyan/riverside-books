@@ -22,17 +22,29 @@ This file is the standalone, canonical source for this repo's protocols — GitH
 - **`docs/assumptions.md`** records the store's stated operating assumptions (no POS exists, staffing, catalog size, reconciliation cadence) once, for all four products to build against — the store is fictional, so these are stated rather than researched.
 - **`docs/model-access.md`** is the shared LLM-access research for Products C and D: which products need a model (only C and D, and narrowly), cost, latency, provider options, and the grounding/fact-protection architecture both products build against. Read this before writing model-calling code in either product.
 - **Per-product build plans**: each product's own `implementation_plan.md` is phased, with exit conditions per phase. Nothing after a product's Phase 0 is allowed to break that product's deployment.
-- **Current scaffolding state**: only `product-c-app/` has a real Next.js app as of this writing. `product-a/`, `product-b/`, and `product-d/` have docs (`market_strategy.md`, `implementation_plan.md`, and `tech_stack_recommendation.md` for A and B — Product D hasn't written one yet) but no scaffolded app — their Phase 0 is the next unit of work in each case.
+- **Current scaffolding state** — the table below is generated from the tree and checked by `.github/scripts/check-scaffolding-state.py` in the `docs` CI job. It stated that only `product-c-app/` existed for three days after Products A and B both scaffolded and both added CI jobs, which is why it is now mechanical rather than hand-maintained. Don't edit it by hand; if it's wrong, the script prints the correct table.
+
+<!-- scaffolding-state:start -->
+| Product | App directory | CI job | Scaffolded |
+| --- | --- | --- | --- |
+| A | `product-a-app/` | `ci-product-a` | yes |
+| B | `product-b-app/` | `ci-product-b` | yes |
+| C | `product-c-app/` | `ci` | yes |
+| D | `product-d/` | `ci-product-d` | yes |
+<!-- scaffolding-state:end -->
+
+  **Docs are tracked separately from apps** and are not part of that check: all four products now have all three planning docs (`market_strategy.md`, `implementation_plan.md`, `tech_stack_recommendation.md`).
 
 ## Commands
 
-Each product app is its own npm project — run these from inside `product-c-app/` today, and from inside the equivalent `product-X-app/` (or `product-a/`, if that ends up unprefixed) once the other three scaffold theirs. There is no root-level `package.json`.
+Each product app is its own npm project — run these from inside whichever app directory you're working in (see the scaffolding-state table above for which exist). There is no root-level `package.json`, so none of these work from the repo root.
 
 - `npm run dev` — local dev server. `npm run build` / `npm run start` — production build/serve.
-- `npm run lint` — app code (ESLint). There is **no `format`/`format:check` script** in `product-c-app` — `.prettierrc.json` exists at the repo root, but nothing currently runs it (see the markdown bullet below).
+- `npm run lint` — app code (ESLint). There is **no `format`/`format:check` script** in any app — `.prettierrc.json` exists at the repo root, but nothing currently runs it (see the markdown bullet below).
 - `npm run typecheck` — Vitest and ESLint do **not** type-check; a type error in a test file is invisible without this. For a Next.js app, run `next typegen` first (or as part of the script) — a bare `tsc --noEmit` can't see Next's generated route/layout types otherwise.
-- `npm run test` — Vitest (`vitest run`). **No coverage is collected** — no `--coverage` flag, no `coverage` block in `vitest.config.ts`, and no `@vitest/coverage-v8` installed — so nothing in this repo can report a coverage figure today.
-- Root-level `lint:md` / `format:md` / `format:md:check` (markdownlint-cli2/Prettier for docs) are referenced by `CONTRIBUTING.md` but not yet wired into any `package.json` — `.github/workflows/ci.yml` currently only runs `product-c-app`'s steps. When you scaffold your own product's app, add your own CI job to that workflow following `product-c-app`'s job as the template (working-directory-scoped steps, its own job name) rather than assuming a shared root job exists.
+- `npm run test` — Vitest. **No coverage is collected** in any app — no `--coverage` flag, no `coverage` block in any `vitest.config.ts`, and no `@vitest/coverage-v8` installed — so nothing in this repo can report a coverage figure today.
+- `npm run test:db` — **Product A only.** Its Vitest config declares two projects: `unit` (jsdom, fakes, no database — what `npm run test` runs, and what stays green on a laptop with no Docker) and `db` (node, a real Postgres via the Supabase CLI local stack). Constraints, RLS policies, and transaction races are enforced by Postgres or not at all, so they are unobservable against a fake. `ci-product-a` runs it with no skip guard on purpose: a database test that skips itself when the database is missing is not an oracle. Any product that later adds a database oracle should follow the same split.
+- Root-level `lint:md` / `format:md` / `format:md:check` (markdownlint-cli2/Prettier for docs) are referenced by `CONTRIBUTING.md` but not yet wired into any `package.json`, so nothing runs them. `.github/workflows/ci.yml` runs one job per scaffolded app plus the repo-wide `docs` job. When you scaffold your own product's app, add your own CI job to that workflow following an existing product job as the template (working-directory-scoped steps, its own job name) rather than assuming a shared root job exists — the `docs` job fails if a scaffolded app has no job.
 
 ## Git workflow
 
