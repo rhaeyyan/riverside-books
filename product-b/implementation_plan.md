@@ -24,9 +24,12 @@ URL.
 - ESLint, Vitest configured, one passing test. CI: lint, then test, then deploy.
 
 **Exit condition.** A CI run on `main` deployed a named commit to production — cite the run
-number and the commit SHA. A hand-run `vercel deploy` does not satisfy this. Then, on that
-deployed commit, a teammate opens the URL and sees a real number that matches the current seed
-data in the shared Supabase project.
+number and the commit SHA. A hand-run `vercel deploy` does not satisfy this: it produces a
+working URL without proving the pipeline behind it works. Then, on that deployed commit, a
+teammate opens the URL and sees a real number that matches the current seed data in the shared
+Supabase project.
+
+Wire the deploy pipeline before the first manual deploy. Product B needs **its own** Vercel token and secret name for isolation and rotation, and the token's scope must include the Personal Account or Team owning the project. Product A's token cannot be reused here. See the scope comment on the deploy step in [`ci.yml`](../.github/workflows/ci.yml).
 
 **Status: deployed, not yet met.** [PR #98](https://github.com/rhaeyyan/riverside-books/pull/98)
 wired the live query and the `ci-product-b` deploy step; [run 32770706467](https://github.com/rhaeyyan/riverside-books/actions/runs/32770706467),

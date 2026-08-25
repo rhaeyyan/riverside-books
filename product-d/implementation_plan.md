@@ -14,7 +14,9 @@ The build order below is driven by one judgment: fluent text is the easy part; p
 - One server-rendered page with a record selector, Instagram/Facebook selector, Generate action, and three visibly different results.
 - The separate `ci-product-d` job runs lint, typecheck, tests, and build from `product-d/`; a push to `main` also deploys the Product D Vercel project.
 
-**Exit condition.** The `ci-product-d` run for the merged commit deploys successfully to production. A teammate then opens that URL on their phone, selects the fixture book, switches channels, and sees three deterministic variations. Refreshing or rebuilding produces the same outputs.
+**Exit condition.** A CI run on `main` deployed a named commit to production — cite the run number and the commit SHA. A hand-run `vercel deploy` does not satisfy this: it produces a working URL without proving the pipeline behind it works. Then, on that deployed commit, a teammate opens the URL on their phone, selects the fixture book, switches channels, and sees three deterministic variations. Refreshing or rebuilding produces the same outputs.
+
+Wire the deploy pipeline before the first manual deploy. Product D needs **its own** Vercel token and secret name for isolation and rotation, and the token's scope must include the Personal Account or Team owning the project. Product A's token cannot be reused here. See the scope comment on the deploy step in [`ci.yml`](../.github/workflows/ci.yml).
 
 Nothing after this phase may break deployment. If a phase cannot ship, split it rather than holding a broken branch.
 
