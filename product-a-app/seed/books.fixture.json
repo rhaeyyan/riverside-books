@@ -1,0 +1,2223 @@
+{
+  "$fixture": {
+    "notice": "FIXTURE DATA — not a real bookshop catalogue. Bibliographic fields (isbn13, title, author, format, published_on, ol_edition_key) were retrieved from Open Library and are real. Everything commercial and physical (price_cents and the whole stock block) is INVENTED for demonstration: Riverside Books is a fictional store with no POS system to take a price or a shelf count from (docs/assumptions.md). Label this data as fixture data wherever it is displayed.",
+    "catalog_source": "Open Library (https://openlibrary.org) — search.json and works/*/editions.json",
+    "catalog_license": "https://openlibrary.org/developers/licensing — \"The Internet Archive does not assert any new copyright or other proprietary rights over any of the material in the Open Library database.\"",
+    "retrieved_at": "2026-08-24T18:53:31.098Z",
+    "generated_by": "product-a-app/seed/fetch-open-library.ts",
+    "invented_fields": [
+      "price_cents",
+      "stock.shape",
+      "stock.on_hand",
+      "stock.reserved",
+      "stock.counted_hours_ago"
+    ],
+    "search_probes": [
+      {
+        "query": "halldor laxness",
+        "isbn13": "9780844669496"
+      },
+      {
+        "query": "antoine de saint-exupery",
+        "isbn13": "9780451500465"
+      },
+      {
+        "query": "heinrich boll",
+        "isbn13": "9780070064096"
+      },
+      {
+        "query": "kenzaburo oe",
+        "isbn13": "9780802150615"
+      },
+      {
+        "query": "haruki muarkami",
+        "isbn13": "9780385352123"
+      },
+      {
+        "query": "orahn pamuk",
+        "isbn13": "9780571200474"
+      },
+      {
+        "query": "italo cavlino",
+        "isbn13": "9780060956585"
+      }
+    ]
+  },
+  "books": [
+    {
+      "isbn13": "9780060002107",
+      "title": "Ignorance",
+      "author": "Milan Kundera",
+      "format": "paperback",
+      "published_on": "2003-09-30",
+      "ol_edition_key": "/books/OL9229022M",
+      "price_cents": 1299,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 4,
+        "reserved": 2,
+        "counted_hours_ago": 15
+      }
+    },
+    {
+      "isbn13": "9780060511951",
+      "title": "City of the Beasts (Large Print)",
+      "author": "Isabel Allende",
+      "format": "paperback",
+      "published_on": "2002-11-01",
+      "ol_edition_key": "/books/OL9232164M",
+      "price_cents": 2699,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 2,
+        "reserved": 1,
+        "counted_hours_ago": 4459
+      }
+    },
+    {
+      "isbn13": "9780060787219",
+      "title": "Zorro LP",
+      "author": "Isabel Allende",
+      "format": "paperback",
+      "published_on": "2005-05-03",
+      "ol_edition_key": "/books/OL9236466M",
+      "price_cents": 2899,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 5,
+        "reserved": 0,
+        "counted_hours_ago": 6
+      }
+    },
+    {
+      "isbn13": "9780060906375",
+      "title": "End of the Game",
+      "author": "Julio Cortázar",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL9238718M",
+      "price_cents": 699,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 5,
+        "reserved": 0,
+        "counted_hours_ago": 3297
+      }
+    },
+    {
+      "isbn13": "9780060919641",
+      "title": "In Evil Hour",
+      "author": "Gabriel García Márquez",
+      "format": "paperback",
+      "published_on": "1991-11-20",
+      "ol_edition_key": "/books/OL9239125M",
+      "price_cents": 2699,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 1,
+        "reserved": 0,
+        "counted_hours_ago": 18
+      }
+    },
+    {
+      "isbn13": "9780060927516",
+      "title": "Testaments Betrayed",
+      "author": "Milan Kundera",
+      "format": "paperback",
+      "published_on": "1996-09-11",
+      "ol_edition_key": "/books/OL9239523M",
+      "price_cents": 2099,
+      "stock": {
+        "shape": "none_on_hand",
+        "on_hand": 0,
+        "reserved": 0,
+        "counted_hours_ago": 2
+      }
+    },
+    {
+      "isbn13": "9780060928414",
+      "title": "Slowness",
+      "author": "Milan Kundera",
+      "format": "paperback",
+      "published_on": "1997-05-21",
+      "ol_edition_key": "/books/OL9239571M",
+      "price_cents": 2699,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 5,
+        "reserved": 0,
+        "counted_hours_ago": 11
+      }
+    },
+    {
+      "isbn13": "9780060930172",
+      "title": "Aphrodite",
+      "author": "Isabel Allende",
+      "format": "paperback",
+      "published_on": "1999-05-01",
+      "ol_edition_key": "/books/OL9239683M",
+      "price_cents": 1499,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 1,
+        "reserved": 0,
+        "counted_hours_ago": 2333
+      }
+    },
+    {
+      "isbn13": "9780060932381",
+      "title": "Immortality (Perennial Classics)",
+      "author": "Milan Kundera",
+      "format": "paperback",
+      "published_on": "1999-11-01",
+      "ol_edition_key": "/books/OL9239809M",
+      "price_cents": 2499,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 5,
+        "reserved": 2,
+        "counted_hours_ago": 18
+      }
+    },
+    {
+      "isbn13": "9780060956585",
+      "title": "The Path to the Spiders' Nests",
+      "author": "Italo Calvino",
+      "format": "paperback",
+      "published_on": "2000-05-30",
+      "ol_edition_key": "/books/OL9240281M",
+      "price_cents": 1699,
+      "stock": null
+    },
+    {
+      "isbn13": "9780061161544",
+      "title": "Inés of my soul",
+      "author": "Isabel Allende",
+      "format": "paperback",
+      "published_on": "2007-08-28",
+      "ol_edition_key": "/books/OL9243630M",
+      "price_cents": 1099,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 5,
+        "reserved": 0,
+        "counted_hours_ago": 12
+      }
+    },
+    {
+      "isbn13": "9780061161575",
+      "title": "Ines of My Soul LP",
+      "author": "Isabel Allende",
+      "format": "paperback",
+      "published_on": "2006-11-07",
+      "ol_edition_key": "/books/OL9243633M",
+      "price_cents": 2699,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 1,
+        "reserved": 0,
+        "counted_hours_ago": 499
+      }
+    },
+    {
+      "isbn13": "9780061564901",
+      "title": "Paula",
+      "author": "Isabel Allende",
+      "format": "paperback",
+      "published_on": "2008-04-01",
+      "ol_edition_key": "/books/OL9953128M",
+      "price_cents": 2499,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 5,
+        "reserved": 0,
+        "counted_hours_ago": 14
+      }
+    },
+    {
+      "isbn13": "9780061565335",
+      "title": "Daughter of Fortune",
+      "author": "Isabel Allende",
+      "format": "paperback",
+      "published_on": "2008-06-10",
+      "ol_edition_key": "/books/OL9953132M",
+      "price_cents": 899,
+      "stock": {
+        "shape": "fully_reserved",
+        "on_hand": 5,
+        "reserved": 5,
+        "counted_hours_ago": 10
+      }
+    },
+    {
+      "isbn13": "9780062356895",
+      "title": "The Festival of Insignificance",
+      "author": "Milan Kundera",
+      "format": "hardcover",
+      "published_on": null,
+      "ol_edition_key": "/books/OL25893326M",
+      "price_cents": 1099,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 5,
+        "reserved": 0,
+        "counted_hours_ago": 18
+      }
+    },
+    {
+      "isbn13": "9780066214016",
+      "title": "Portrait in Sepia",
+      "author": "Isabel Allende",
+      "format": "paperback",
+      "published_on": "2001-10-23",
+      "ol_edition_key": "/books/OL9248081M",
+      "price_cents": 2499,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 5,
+        "reserved": 0,
+        "counted_hours_ago": 7973
+      }
+    },
+    {
+      "isbn13": "9780070064096",
+      "title": "Adam and the Train",
+      "author": "Heinrich Böll",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL9248617M",
+      "price_cents": 1699,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 2,
+        "reserved": 1,
+        "counted_hours_ago": 7
+      }
+    },
+    {
+      "isbn13": "9780091758967",
+      "title": "The open work",
+      "author": "Umberto Eco",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL9268538M",
+      "price_cents": 2499,
+      "stock": {
+        "shape": "none_on_hand",
+        "on_hand": 0,
+        "reserved": 0,
+        "counted_hours_ago": 3523
+      }
+    },
+    {
+      "isbn13": "9780099430896",
+      "title": "If on a winter's night a traveller",
+      "author": "Italo Calvino",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL18056654M",
+      "price_cents": 1499,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 1,
+        "reserved": 0,
+        "counted_hours_ago": 18
+      }
+    },
+    {
+      "isbn13": "9780099461654",
+      "title": "THE DOUBLE",
+      "author": "José Saramago",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL9273143M",
+      "price_cents": 2499,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 3,
+        "reserved": 2,
+        "counted_hours_ago": 4271
+      }
+    },
+    {
+      "isbn13": "9780099481379",
+      "title": "Mysterious Flame Of Queen Loana",
+      "author": "Umberto Eco",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL9273574M",
+      "price_cents": 2099,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 1,
+        "reserved": 0,
+        "counted_hours_ago": 3
+      }
+    },
+    {
+      "isbn13": "9780140096927",
+      "title": "The Joke",
+      "author": "Milan Kundera",
+      "format": "paperback",
+      "published_on": "1987-03-01",
+      "ol_edition_key": "/books/OL9302199M",
+      "price_cents": 2899,
+      "stock": null
+    },
+    {
+      "isbn13": "9780140096934",
+      "title": "The Book of Laughter and Forgetting",
+      "author": "Milan Kundera",
+      "format": "paperback",
+      "published_on": "1987-03-03",
+      "ol_edition_key": "/books/OL9302200M",
+      "price_cents": 2099,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 3,
+        "reserved": 0,
+        "counted_hours_ago": 9
+      }
+    },
+    {
+      "isbn13": "9780140157512",
+      "title": "One Hundred Years of Solitude",
+      "author": "Gabriel García Márquez",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL33990002M",
+      "price_cents": 1299,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 3,
+        "reserved": 0,
+        "counted_hours_ago": 2413
+      }
+    },
+    {
+      "isbn13": "9780141185231",
+      "title": "The First Man",
+      "author": "Albert Camus",
+      "format": "paperback",
+      "published_on": "2001-12-06",
+      "ol_edition_key": "/books/OL7359077M",
+      "price_cents": 899,
+      "stock": {
+        "shape": "none_on_hand",
+        "on_hand": 0,
+        "reserved": 0,
+        "counted_hours_ago": 1
+      }
+    },
+    {
+      "isbn13": "9780141186580",
+      "title": "A Happy Death",
+      "author": "Albert Camus",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL18479852M",
+      "price_cents": 699,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 3,
+        "reserved": 0,
+        "counted_hours_ago": 2385
+      }
+    },
+    {
+      "isbn13": "9780151403608",
+      "title": "His Master’s Voice",
+      "author": "Stanisław Lem",
+      "format": "hardcover",
+      "published_on": null,
+      "ol_edition_key": "/books/OL3495750M",
+      "price_cents": 2699,
+      "stock": null
+    },
+    {
+      "isbn13": "9780151421862",
+      "title": "Hospital of the Transfiguration",
+      "author": "Stanisław Lem",
+      "format": "hardcover",
+      "published_on": null,
+      "ol_edition_key": "/books/OL2403275M",
+      "price_cents": 1699,
+      "stock": {
+        "shape": "fully_reserved",
+        "on_hand": 1,
+        "reserved": 1,
+        "counted_hours_ago": 6967
+      }
+    },
+    {
+      "isbn13": "9780151588565",
+      "title": "Memoirs of a space traveler",
+      "author": "Stanisław Lem",
+      "format": "hardcover",
+      "published_on": null,
+      "ol_edition_key": "/books/OL3785097M",
+      "price_cents": 899,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 5,
+        "reserved": 0,
+        "counted_hours_ago": 5973
+      }
+    },
+    {
+      "isbn13": "9780156001250",
+      "title": "How to Travel with a Salmon and Other Essays",
+      "author": "Umberto Eco",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL26403606M",
+      "price_cents": 2099,
+      "stock": {
+        "shape": "none_on_hand",
+        "on_hand": 0,
+        "reserved": 0,
+        "counted_hours_ago": 2431
+      }
+    },
+    {
+      "isbn13": "9780156035347",
+      "title": "Peeling the Onion",
+      "author": "Günter Grass",
+      "format": "paperback",
+      "published_on": "2008-06-02",
+      "ol_edition_key": "/books/OL9642790M",
+      "price_cents": 1899,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 2,
+        "reserved": 1,
+        "counted_hours_ago": 10
+      }
+    },
+    {
+      "isbn13": "9780156035583",
+      "title": "Blindness",
+      "author": "José Saramago",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL33329037M",
+      "price_cents": 1699,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 5,
+        "reserved": 0,
+        "counted_hours_ago": 3413
+      }
+    },
+    {
+      "isbn13": "9780192822611",
+      "title": "La bête humaine",
+      "author": "Émile Zola",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL810477M",
+      "price_cents": 699,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 3,
+        "reserved": 0,
+        "counted_hours_ago": 9
+      }
+    },
+    {
+      "isbn13": "9780199677870",
+      "title": "Earth",
+      "author": "Émile Zola",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL25934384M",
+      "price_cents": 2499,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 5,
+        "reserved": 2,
+        "counted_hours_ago": 2887
+      }
+    },
+    {
+      "isbn13": "9780241467992",
+      "title": "The Cyberiad",
+      "author": "Stanisław Lem",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL51493344M",
+      "price_cents": 1899,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 5,
+        "reserved": 0,
+        "counted_hours_ago": 4
+      }
+    },
+    {
+      "isbn13": "9780330284141",
+      "title": "The Name of the Rose",
+      "author": "Umberto Eco",
+      "format": "paperback",
+      "published_on": "1984-10-26",
+      "ol_edition_key": "/books/OL52972117M",
+      "price_cents": 1499,
+      "stock": {
+        "shape": "none_on_hand",
+        "on_hand": 0,
+        "reserved": 0,
+        "counted_hours_ago": 19
+      }
+    },
+    {
+      "isbn13": "9780330319089",
+      "title": "Cosmicomics",
+      "author": "Italo Calvino",
+      "format": "hardcover",
+      "published_on": null,
+      "ol_edition_key": "/books/OL10489733M",
+      "price_cents": 1899,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 3,
+        "reserved": 0,
+        "counted_hours_ago": 17
+      }
+    },
+    {
+      "isbn13": "9780380585786",
+      "title": "Return from the Stars",
+      "author": "Stanisław Lem",
+      "format": "paperback",
+      "published_on": "1982-05-01",
+      "ol_edition_key": "/books/OL28160628M",
+      "price_cents": 2099,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 1,
+        "reserved": 0,
+        "counted_hours_ago": 3519
+      }
+    },
+    {
+      "isbn13": "9780385352123",
+      "title": "Wind/Pinball",
+      "author": "Haruki Murakami",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL60103157M",
+      "price_cents": 1099,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 5,
+        "reserved": 4,
+        "counted_hours_ago": 7
+      }
+    },
+    {
+      "isbn13": "9780394424248",
+      "title": "The Fall",
+      "author": "Albert Camus",
+      "format": "hardcover",
+      "published_on": null,
+      "ol_edition_key": "/books/OL39221192M",
+      "price_cents": 699,
+      "stock": null
+    },
+    {
+      "isbn13": "9780415006699",
+      "title": "UND SAGTE KEIN EINZIGES WORT",
+      "author": "Heinrich Böll",
+      "format": "paperback",
+      "published_on": "1988-04-07",
+      "ol_edition_key": "/books/OL10186301M",
+      "price_cents": 699,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 3,
+        "reserved": 0,
+        "counted_hours_ago": 5
+      }
+    },
+    {
+      "isbn13": "9780435383701",
+      "title": "Katz Und Maus",
+      "author": "Günter Grass",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL9658453M",
+      "price_cents": 899,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 3,
+        "reserved": 0,
+        "counted_hours_ago": 8373
+      }
+    },
+    {
+      "isbn13": "9780451500465",
+      "title": "Night Flight",
+      "author": "Antoine de Saint-Exupéry",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL10273730M",
+      "price_cents": 2099,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 5,
+        "reserved": 0,
+        "counted_hours_ago": 10
+      }
+    },
+    {
+      "isbn13": "9780517107478",
+      "title": "The General & His Labyrinth",
+      "author": "Gabriel García Márquez",
+      "format": "hardcover",
+      "published_on": "1995-01-22",
+      "ol_edition_key": "/books/OL7676713M",
+      "price_cents": 1699,
+      "stock": {
+        "shape": "fully_reserved",
+        "on_hand": 5,
+        "reserved": 5,
+        "counted_hours_ago": 4
+      }
+    },
+    {
+      "isbn13": "9780517198933",
+      "title": "Love & Other Demons of",
+      "author": "Gabriel García Márquez",
+      "format": "hardcover",
+      "published_on": "1997-12-23",
+      "ol_edition_key": "/books/OL7681134M",
+      "price_cents": 1499,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 5,
+        "reserved": 0,
+        "counted_hours_ago": 12
+      }
+    },
+    {
+      "isbn13": "9780517699386",
+      "title": "Story of a Shipwrecked Sailor",
+      "author": "Gabriel García Márquez",
+      "format": "hardcover",
+      "published_on": "1989-09-02",
+      "ol_edition_key": "/books/OL7707421M",
+      "price_cents": 2299,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 5,
+        "reserved": 0,
+        "counted_hours_ago": 819
+      }
+    },
+    {
+      "isbn13": "9780525564454",
+      "title": "The Myth of Sisyphus",
+      "author": "Albert Camus",
+      "format": "paperback",
+      "published_on": "2018-11-06",
+      "ol_edition_key": "/books/OL27361579M",
+      "price_cents": 1899,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 6,
+        "reserved": 2,
+        "counted_hours_ago": 4
+      }
+    },
+    {
+      "isbn13": "9780544959101",
+      "title": "Nonexistent Knight",
+      "author": "Italo Calvino",
+      "format": "paperback",
+      "published_on": "2017-08-15",
+      "ol_edition_key": "/books/OL27395711M",
+      "price_cents": 1499,
+      "stock": {
+        "shape": "none_on_hand",
+        "on_hand": 0,
+        "reserved": 0,
+        "counted_hours_ago": 3729
+      }
+    },
+    {
+      "isbn13": "9780548226568",
+      "title": "The Story Of Gosta Berling",
+      "author": "Selma Lagerlöf",
+      "format": "hardcover",
+      "published_on": "2007-07-25",
+      "ol_edition_key": "/books/OL10567479M",
+      "price_cents": 2299,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 5,
+        "reserved": 0,
+        "counted_hours_ago": 11
+      }
+    },
+    {
+      "isbn13": "9780571190065",
+      "title": "Blood Wedding",
+      "author": "Federico García Lorca",
+      "format": "paperback",
+      "published_on": "1997-02-06",
+      "ol_edition_key": "/books/OL7857021M",
+      "price_cents": 1499,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 3,
+        "reserved": 0,
+        "counted_hours_ago": 723
+      }
+    },
+    {
+      "isbn13": "9780571195671",
+      "title": "Identity",
+      "author": "Milan Kundera",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL28426467M",
+      "price_cents": 1699,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 1,
+        "reserved": 0,
+        "counted_hours_ago": 4
+      }
+    },
+    {
+      "isbn13": "9780571200474",
+      "title": "My Name is Red",
+      "author": "Orhan Pamuk",
+      "format": "hardcover",
+      "published_on": null,
+      "ol_edition_key": "/books/OL32806082M",
+      "price_cents": 1699,
+      "stock": null
+    },
+    {
+      "isbn13": "9780571200832",
+      "title": "The unbearable lightness of being",
+      "author": "Milan Kundera",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL22145099M",
+      "price_cents": 2699,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 5,
+        "reserved": 0,
+        "counted_hours_ago": 11
+      }
+    },
+    {
+      "isbn13": "9780571203871",
+      "title": "Book of Laughter and Forgetting",
+      "author": "Milan Kundera",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL7857550M",
+      "price_cents": 1299,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 6,
+        "reserved": 4,
+        "counted_hours_ago": 1921
+      }
+    },
+    {
+      "isbn13": "9780571216529",
+      "title": "Crabwalk",
+      "author": "Günter Grass",
+      "format": "paperback",
+      "published_on": "2004-04-01",
+      "ol_edition_key": "/books/OL7857965M",
+      "price_cents": 2899,
+      "stock": {
+        "shape": "none_on_hand",
+        "on_hand": 0,
+        "reserved": 0,
+        "counted_hours_ago": 10
+      }
+    },
+    {
+      "isbn13": "9780571311576",
+      "title": "Solaris",
+      "author": "Stanisław Lem",
+      "format": "paperback",
+      "published_on": "2001-06-03",
+      "ol_edition_key": "/books/OL28179710M",
+      "price_cents": 1899,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 1,
+        "reserved": 0,
+        "counted_hours_ago": 7755
+      }
+    },
+    {
+      "isbn13": "9780573606694",
+      "title": "Caligula;",
+      "author": "Albert Camus",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL10643308M",
+      "price_cents": 2099,
+      "stock": null
+    },
+    {
+      "isbn13": "9780593310854",
+      "title": "Love in the Time of Cholera",
+      "author": "Gabriel García Márquez",
+      "format": "paperback",
+      "published_on": "2020-10-27",
+      "ol_edition_key": "/books/OL32476167M",
+      "price_cents": 1699,
+      "stock": {
+        "shape": "fully_reserved",
+        "on_hand": 5,
+        "reserved": 5,
+        "counted_hours_ago": 5939
+      }
+    },
+    {
+      "isbn13": "9780613799614",
+      "title": "Wonderful Adventures of Nils",
+      "author": "Selma Lagerlöf",
+      "format": "hardcover",
+      "published_on": null,
+      "ol_edition_key": "/books/OL10955693M",
+      "price_cents": 1099,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 1,
+        "reserved": 0,
+        "counted_hours_ago": 1365
+      }
+    },
+    {
+      "isbn13": "9780674810518",
+      "title": "Six Walks in the Fictional Woods",
+      "author": "Umberto Eco",
+      "format": "paperback",
+      "published_on": "1998-07-21",
+      "ol_edition_key": "/books/OL7693536M",
+      "price_cents": 1099,
+      "stock": {
+        "shape": "none_on_hand",
+        "on_hand": 0,
+        "reserved": 0,
+        "counted_hours_ago": 361
+      }
+    },
+    {
+      "isbn13": "9780679733843",
+      "title": "The Rebel",
+      "author": "Albert Camus",
+      "format": "paperback",
+      "published_on": "1992-01-01",
+      "ol_edition_key": "/books/OL7699992M",
+      "price_cents": 2099,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 2,
+        "reserved": 1,
+        "counted_hours_ago": 13
+      }
+    },
+    {
+      "isbn13": "9780714526393",
+      "title": "All Fires the Fire and Other Stories",
+      "author": "Julio Cortázar",
+      "format": "hardcover",
+      "published_on": null,
+      "ol_edition_key": "/books/OL9652519M",
+      "price_cents": 2699,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 1,
+        "reserved": 0,
+        "counted_hours_ago": 1803
+      }
+    },
+    {
+      "isbn13": "9780719007644",
+      "title": "Bodas De Sangre (Hispanic Texts)",
+      "author": "Federico García Lorca",
+      "format": "paperback",
+      "published_on": "1988-01-15",
+      "ol_edition_key": "/books/OL7839098M",
+      "price_cents": 1299,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 3,
+        "reserved": 0,
+        "counted_hours_ago": 18
+      }
+    },
+    {
+      "isbn13": "9780719008368",
+      "title": "El coronel no tiene quien le escriba",
+      "author": "Gabriel García Márquez",
+      "format": "paperback",
+      "published_on": "1988-01-15",
+      "ol_edition_key": "/books/OL7839109M",
+      "price_cents": 699,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 1,
+        "reserved": 0,
+        "counted_hours_ago": 697
+      }
+    },
+    {
+      "isbn13": "9780749305291",
+      "title": "The Futurological Congress",
+      "author": "Stanisław Lem",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL7965943M",
+      "price_cents": 2299,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 5,
+        "reserved": 0,
+        "counted_hours_ago": 10
+      }
+    },
+    {
+      "isbn13": "9780749394509",
+      "title": "Dog Years",
+      "author": "Günter Grass",
+      "format": "hardcover",
+      "published_on": "1999-03-03",
+      "ol_edition_key": "/books/OL7966653M",
+      "price_cents": 899,
+      "stock": {
+        "shape": "none_on_hand",
+        "on_hand": 0,
+        "reserved": 0,
+        "counted_hours_ago": 15
+      }
+    },
+    {
+      "isbn13": "9780749394554",
+      "title": "From the Diary of a Snail",
+      "author": "Günter Grass",
+      "format": "hardcover",
+      "published_on": "1998-08-11",
+      "ol_edition_key": "/books/OL7966655M",
+      "price_cents": 2699,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 3,
+        "reserved": 0,
+        "counted_hours_ago": 13
+      }
+    },
+    {
+      "isbn13": "9780749395445",
+      "title": "The Island of the Day Before",
+      "author": "Umberto Eco",
+      "format": "paperback",
+      "published_on": "1996-03-01",
+      "ol_edition_key": "/books/OL7966674M",
+      "price_cents": 699,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 5,
+        "reserved": 4,
+        "counted_hours_ago": 6791
+      }
+    },
+    {
+      "isbn13": "9780749397647",
+      "title": "Invisible Cities",
+      "author": "Italo Calvino",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL7966738M",
+      "price_cents": 2099,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 3,
+        "reserved": 2,
+        "counted_hours_ago": 10
+      }
+    },
+    {
+      "isbn13": "9780749398781",
+      "title": "Call of the Toad",
+      "author": "Günter Grass",
+      "format": "paperback",
+      "published_on": "1997-06-16",
+      "ol_edition_key": "/books/OL7966777M",
+      "price_cents": 2699,
+      "stock": null
+    },
+    {
+      "isbn13": "9780766174450",
+      "title": "Miracles of Antichrist",
+      "author": "Selma Lagerlöf",
+      "format": "paperback",
+      "published_on": "2003-07-14",
+      "ol_edition_key": "/books/OL9528238M",
+      "price_cents": 1899,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 3,
+        "reserved": 0,
+        "counted_hours_ago": 15
+      }
+    },
+    {
+      "isbn13": "9780802150615",
+      "title": "A Personal Matter",
+      "author": "Kenzaburō Ōe",
+      "format": "paperback",
+      "published_on": "1994-01-13",
+      "ol_edition_key": "/books/OL7875229M",
+      "price_cents": 1499,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 1,
+        "reserved": 0,
+        "counted_hours_ago": 3343
+      }
+    },
+    {
+      "isbn13": "9780802151858",
+      "title": "Teach Us to Outgrow Our Madness: Four Short Novels",
+      "author": "Kenzaburō Ōe",
+      "format": "paperback",
+      "published_on": "1994-10-13",
+      "ol_edition_key": "/books/OL7875298M",
+      "price_cents": 1099,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 5,
+        "reserved": 0,
+        "counted_hours_ago": 4
+      }
+    },
+    {
+      "isbn13": "9780811214025",
+      "title": "Cronopios and Famas",
+      "author": "Julio Cortázar",
+      "format": "paperback",
+      "published_on": "1999-04-01",
+      "ol_edition_key": "/books/OL7999950M",
+      "price_cents": 1299,
+      "stock": {
+        "shape": "fully_reserved",
+        "on_hand": 5,
+        "reserved": 5,
+        "counted_hours_ago": 7
+      }
+    },
+    {
+      "isbn13": "9780811214377",
+      "title": "62",
+      "author": "Julio Cortázar",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL7999957M",
+      "price_cents": 1499,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 1,
+        "reserved": 0,
+        "counted_hours_ago": 2
+      }
+    },
+    {
+      "isbn13": "9780811216227",
+      "title": "The Selected Poems of Federico Garcia Lorca",
+      "author": "Federico García Lorca",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL8000038M",
+      "price_cents": 2299,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 1,
+        "reserved": 0,
+        "counted_hours_ago": 1991
+      }
+    },
+    {
+      "isbn13": "9780816492831",
+      "title": "The Star Diaries",
+      "author": "Stanisław Lem",
+      "format": "hardcover",
+      "published_on": null,
+      "ol_edition_key": "/books/OL21422280M",
+      "price_cents": 1299,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 2,
+        "reserved": 1,
+        "counted_hours_ago": 19
+      }
+    },
+    {
+      "isbn13": "9780828825634",
+      "title": "Final del Juego",
+      "author": "Julio Cortázar",
+      "format": "hardcover",
+      "published_on": null,
+      "ol_edition_key": "/books/OL9314183M",
+      "price_cents": 1099,
+      "stock": {
+        "shape": "none_on_hand",
+        "on_hand": 0,
+        "reserved": 0,
+        "counted_hours_ago": 629
+      }
+    },
+    {
+      "isbn13": "9780844667058",
+      "title": "The Flounder",
+      "author": "Günter Grass",
+      "format": "hardcover",
+      "published_on": null,
+      "ol_edition_key": "/books/OL8244802M",
+      "price_cents": 2899,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 5,
+        "reserved": 0,
+        "counted_hours_ago": 15
+      }
+    },
+    {
+      "isbn13": "9780844669496",
+      "title": "Independent People",
+      "author": "Halldór Laxness",
+      "format": "hardcover",
+      "published_on": null,
+      "ol_edition_key": "/books/OL8244849M",
+      "price_cents": 2099,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 5,
+        "reserved": 0,
+        "counted_hours_ago": 3203
+      }
+    },
+    {
+      "isbn13": "9780847826469",
+      "title": "History of Beauty",
+      "author": "Umberto Eco",
+      "format": "hardcover",
+      "published_on": "2004-11-13",
+      "ol_edition_key": "/books/OL8247939M",
+      "price_cents": 2299,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 3,
+        "reserved": 0,
+        "counted_hours_ago": 10
+      }
+    },
+    {
+      "isbn13": "9780848801120",
+      "title": "Cat and Mouse",
+      "author": "Günter Grass",
+      "format": "hardcover",
+      "published_on": null,
+      "ol_edition_key": "/books/OL8258107M",
+      "price_cents": 2699,
+      "stock": null
+    },
+    {
+      "isbn13": "9780848804442",
+      "title": "Exile and the Kingdom",
+      "author": "Albert Camus",
+      "format": "hardcover",
+      "published_on": null,
+      "ol_edition_key": "/books/OL9538454M",
+      "price_cents": 1299,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 3,
+        "reserved": 0,
+        "counted_hours_ago": 16
+      }
+    },
+    {
+      "isbn13": "9780856687860",
+      "title": "Lorca",
+      "author": "Federico García Lorca",
+      "format": "hardcover",
+      "published_on": "2007-09-30",
+      "ol_edition_key": "/books/OL9732514M",
+      "price_cents": 1899,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 1,
+        "reserved": 0,
+        "counted_hours_ago": 6251
+      }
+    },
+    {
+      "isbn13": "9780856687891",
+      "title": "Lorca: The House of Bernarda Alba",
+      "author": "Federico García Lorca",
+      "format": "paperback",
+      "published_on": "2008-01-30",
+      "ol_edition_key": "/books/OL11653604M",
+      "price_cents": 699,
+      "stock": {
+        "shape": "none_on_hand",
+        "on_hand": 0,
+        "reserved": 0,
+        "counted_hours_ago": 17
+      }
+    },
+    {
+      "isbn13": "9780865472044",
+      "title": "Around the Day in Eighty Worlds",
+      "author": "Julio Cortázar",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL8317164M",
+      "price_cents": 1299,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 2,
+        "reserved": 1,
+        "counted_hours_ago": 627
+      }
+    },
+    {
+      "isbn13": "9780870112324",
+      "title": "The Silent Cry",
+      "author": "Kenzaburō Ōe",
+      "format": "hardcover",
+      "published_on": null,
+      "ol_edition_key": "/books/OL8333018M",
+      "price_cents": 2299,
+      "stock": null
+    },
+    {
+      "isbn13": "9780872320499",
+      "title": "Journey To the Center of the Earth",
+      "author": "Jules Verne",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL8374832M",
+      "price_cents": 1299,
+      "stock": {
+        "shape": "fully_reserved",
+        "on_hand": 1,
+        "reserved": 1,
+        "counted_hours_ago": 3811
+      }
+    },
+    {
+      "isbn13": "9780880011891",
+      "title": "Calvino",
+      "author": "Italo Calvino",
+      "format": "paperback",
+      "published_on": "1976-04-04",
+      "ol_edition_key": "/books/OL8132500M",
+      "price_cents": 1099,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 1,
+        "reserved": 0,
+        "counted_hours_ago": 1583
+      }
+    },
+    {
+      "isbn13": "9780881842135",
+      "title": "A Manual for Manuel",
+      "author": "Julio Cortázar",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL8175331M",
+      "price_cents": 2099,
+      "stock": {
+        "shape": "none_on_hand",
+        "on_hand": 0,
+        "reserved": 0,
+        "counted_hours_ago": 7215
+      }
+    },
+    {
+      "isbn13": "9780891905189",
+      "title": "Master of the World",
+      "author": "Jules Verne",
+      "format": "hardcover",
+      "published_on": null,
+      "ol_edition_key": "/books/OL9531411M",
+      "price_cents": 1299,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 3,
+        "reserved": 2,
+        "counted_hours_ago": 18
+      }
+    },
+    {
+      "isbn13": "9780899682976",
+      "title": "The Wisdom of the Sands",
+      "author": "Antoine de Saint-Exupéry",
+      "format": "hardcover",
+      "published_on": null,
+      "ol_edition_key": "/books/OL8276869M",
+      "price_cents": 1499,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 5,
+        "reserved": 0,
+        "counted_hours_ago": 4189
+      }
+    },
+    {
+      "isbn13": "9780965451796",
+      "title": "Baudolino",
+      "author": "Umberto Eco",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL8529888M",
+      "price_cents": 2499,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 3,
+        "reserved": 0,
+        "counted_hours_ago": 11
+      }
+    },
+    {
+      "isbn13": "9781400034253",
+      "title": "Iceland's Bell",
+      "author": "Halldór Laxness",
+      "format": "paperback",
+      "published_on": "2003-10-14",
+      "ol_edition_key": "/books/OL8362785M",
+      "price_cents": 2099,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 5,
+        "reserved": 0,
+        "counted_hours_ago": 8017
+      }
+    },
+    {
+      "isbn13": "9781400034697",
+      "title": "Strange Pilgrims",
+      "author": "Gabriel García Márquez",
+      "format": "paperback",
+      "published_on": "2006-11-14",
+      "ol_edition_key": "/books/OL8362803M",
+      "price_cents": 899,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 5,
+        "reserved": 0,
+        "counted_hours_ago": 18
+      }
+    },
+    {
+      "isbn13": "9781400034925",
+      "title": "Of Love and Other Demons (Vintage International)",
+      "author": "Gabriel García Márquez",
+      "format": "paperback",
+      "published_on": "2008-06-10",
+      "ol_edition_key": "/books/OL11586047M",
+      "price_cents": 1699,
+      "stock": {
+        "shape": "none_on_hand",
+        "on_hand": 0,
+        "reserved": 0,
+        "counted_hours_ago": 5
+      }
+    },
+    {
+      "isbn13": "9781400044603",
+      "title": "Memories of My Melancholy Whores",
+      "author": "Gabriel García Márquez",
+      "format": "hardcover",
+      "published_on": null,
+      "ol_edition_key": "/books/OL38241724M",
+      "price_cents": 899,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 3,
+        "reserved": 0,
+        "counted_hours_ago": 7
+      }
+    },
+    {
+      "isbn13": "9781404317413",
+      "title": "The Master of the World",
+      "author": "Jules Verne",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL11644915M",
+      "price_cents": 1699,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 3,
+        "reserved": 0,
+        "counted_hours_ago": 141
+      }
+    },
+    {
+      "isbn13": "9781406500080",
+      "title": "The Fortune of the Rougons",
+      "author": "Émile Zola",
+      "format": "paperback",
+      "published_on": "2005-10-31",
+      "ol_edition_key": "/books/OL8407818M",
+      "price_cents": 2099,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 6,
+        "reserved": 5,
+        "counted_hours_ago": 12
+      }
+    },
+    {
+      "isbn13": "9781406525687",
+      "title": "The Emperor of Portugalia (Dodo Press)",
+      "author": "Selma Lagerlöf",
+      "format": "paperback",
+      "published_on": "2007-05-04",
+      "ol_edition_key": "/books/OL9338818M",
+      "price_cents": 2099,
+      "stock": null
+    },
+    {
+      "isbn13": "9781406705799",
+      "title": "Flight To Arras",
+      "author": "Antoine de Saint-Exupéry",
+      "format": "paperback",
+      "published_on": "2007-03-15",
+      "ol_edition_key": "/books/OL11679106M",
+      "price_cents": 1299,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 1,
+        "reserved": 0,
+        "counted_hours_ago": 3
+      }
+    },
+    {
+      "isbn13": "9781414201894",
+      "title": "The Three Cities Trilogy",
+      "author": "Émile Zola",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL11727464M",
+      "price_cents": 2499,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 2,
+        "reserved": 1,
+        "counted_hours_ago": 159
+      }
+    },
+    {
+      "isbn13": "9781417703432",
+      "title": "Clown (Penguin Twentieth Century Classics)",
+      "author": "Heinrich Böll",
+      "format": "hardcover",
+      "published_on": null,
+      "ol_edition_key": "/books/OL11762710M",
+      "price_cents": 699,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 3,
+        "reserved": 0,
+        "counted_hours_ago": 8
+      }
+    },
+    {
+      "isbn13": "9781419188459",
+      "title": "The Wonderful Adventures Of Nils",
+      "author": "Selma Lagerlöf",
+      "format": "paperback",
+      "published_on": "2004-06-17",
+      "ol_edition_key": "/books/OL9806669M",
+      "price_cents": 699,
+      "stock": {
+        "shape": "fully_reserved",
+        "on_hand": 3,
+        "reserved": 3,
+        "counted_hours_ago": 18
+      }
+    },
+    {
+      "isbn13": "9781421941127",
+      "title": "The Emperor of Portugalia",
+      "author": "Selma Lagerlöf",
+      "format": "paperback",
+      "published_on": "2005-05-30",
+      "ol_edition_key": "/books/OL11826762M",
+      "price_cents": 1099,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 5,
+        "reserved": 0,
+        "counted_hours_ago": 15
+      }
+    },
+    {
+      "isbn13": "9781421975849",
+      "title": "The Three Cities Trilogy--lourdes",
+      "author": "Émile Zola",
+      "format": "hardcover",
+      "published_on": "2006-05-30",
+      "ol_edition_key": "/books/OL11828713M",
+      "price_cents": 2899,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 1,
+        "reserved": 0,
+        "counted_hours_ago": 901
+      }
+    },
+    {
+      "isbn13": "9781421975900",
+      "title": "Lourdes (The Three Cities Trilogy)",
+      "author": "Émile Zola",
+      "format": "paperback",
+      "published_on": "2006-05-30",
+      "ol_edition_key": "/books/OL11828719M",
+      "price_cents": 899,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 4,
+        "reserved": 2,
+        "counted_hours_ago": 15
+      }
+    },
+    {
+      "isbn13": "9781425051464",
+      "title": "Therese Raquin [EasyRead Large Edition]",
+      "author": "Émile Zola",
+      "format": "paperback",
+      "published_on": "2006-12-01",
+      "ol_edition_key": "/books/OL8502069M",
+      "price_cents": 1899,
+      "stock": {
+        "shape": "none_on_hand",
+        "on_hand": 0,
+        "reserved": 0,
+        "counted_hours_ago": 6175
+      }
+    },
+    {
+      "isbn13": "9781426432170",
+      "title": "The Three Cities Trilogy (large Print Edition)",
+      "author": "Émile Zola",
+      "format": "paperback",
+      "published_on": "2006-09-27",
+      "ol_edition_key": "/books/OL9746828M",
+      "price_cents": 2499,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 3,
+        "reserved": 0,
+        "counted_hours_ago": 2
+      }
+    },
+    {
+      "isbn13": "9781426489228",
+      "title": "Jerusalem",
+      "author": "Selma Lagerlöf",
+      "format": "paperback",
+      "published_on": "2007-02-22",
+      "ol_edition_key": "/books/OL11881152M",
+      "price_cents": 1899,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 3,
+        "reserved": 0,
+        "counted_hours_ago": 6203
+      }
+    },
+    {
+      "isbn13": "9781434653383",
+      "title": "Five Weeks in a Balloon (Large Print Edition)",
+      "author": "Jules Verne",
+      "format": "paperback",
+      "published_on": "2007-09-04",
+      "ol_edition_key": "/books/OL11978653M",
+      "price_cents": 1899,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 5,
+        "reserved": 0,
+        "counted_hours_ago": 6
+      }
+    },
+    {
+      "isbn13": "9781439571057",
+      "title": "Chronicle of a Death Foretold",
+      "author": "Gabriel García Márquez",
+      "format": "hardcover",
+      "published_on": "2008-11-05",
+      "ol_edition_key": "/books/OL32821248M",
+      "price_cents": 1899,
+      "stock": null
+    },
+    {
+      "isbn13": "9781501117015",
+      "title": "The House of the Spirits",
+      "author": "Isabel Allende",
+      "format": "paperback",
+      "published_on": "2015-12-15",
+      "ol_edition_key": "/books/OL28206277M",
+      "price_cents": 2099,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 1,
+        "reserved": 0,
+        "counted_hours_ago": 16
+      }
+    },
+    {
+      "isbn13": "9781501117046",
+      "title": "Of Love and Shadows",
+      "author": "Isabel Allende",
+      "format": "paperback",
+      "published_on": "2016-03-29",
+      "ol_edition_key": "/books/OL27438564M",
+      "price_cents": 1299,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 3,
+        "reserved": 0,
+        "counted_hours_ago": 1547
+      }
+    },
+    {
+      "isbn13": "9781501117138",
+      "title": "The Stories of Eva Luna",
+      "author": "Isabel Allende",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL34900903M",
+      "price_cents": 1899,
+      "stock": {
+        "shape": "none_on_hand",
+        "on_hand": 0,
+        "reserved": 0,
+        "counted_hours_ago": 14
+      }
+    },
+    {
+      "isbn13": "9781523708703",
+      "title": "Journey to the center of the Earth/Voyage au centre de la Terre",
+      "author": "Jules Verne",
+      "format": "paperback",
+      "published_on": "2016-01-26",
+      "ol_edition_key": "/books/OL32834862M",
+      "price_cents": 1699,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 3,
+        "reserved": 0,
+        "counted_hours_ago": 4093
+      }
+    },
+    {
+      "isbn13": "9781526648358",
+      "title": "Violeta",
+      "author": "Isabel Allende",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL36265895M",
+      "price_cents": 1499,
+      "stock": null
+    },
+    {
+      "isbn13": "9781557423740",
+      "title": "Round the Moon",
+      "author": "Jules Verne",
+      "format": "hardcover",
+      "published_on": "2005-09-20",
+      "ol_edition_key": "/books/OL9767949M",
+      "price_cents": 2499,
+      "stock": {
+        "shape": "fully_reserved",
+        "on_hand": 5,
+        "reserved": 5,
+        "counted_hours_ago": 1247
+      }
+    },
+    {
+      "isbn13": "9781567231458",
+      "title": "Futurological Congress",
+      "author": "Stanisław Lem",
+      "format": "hardcover",
+      "published_on": "1999-04-01",
+      "ol_edition_key": "/books/OL12166147M",
+      "price_cents": 899,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 6,
+        "reserved": 2,
+        "counted_hours_ago": 3369
+      }
+    },
+    {
+      "isbn13": "9781592243204",
+      "title": "Further Adventures of Nils",
+      "author": "Selma Lagerlöf",
+      "format": "paperback",
+      "published_on": "2003-09-01",
+      "ol_edition_key": "/books/OL8860826M",
+      "price_cents": 2499,
+      "stock": {
+        "shape": "none_on_hand",
+        "on_hand": 0,
+        "reserved": 0,
+        "counted_hours_ago": 4489
+      }
+    },
+    {
+      "isbn13": "9781592243211",
+      "title": "The Treasure",
+      "author": "Selma Lagerlöf",
+      "format": "paperback",
+      "published_on": "2003-09-01",
+      "ol_edition_key": "/books/OL12376644M",
+      "price_cents": 2699,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 2,
+        "reserved": 1,
+        "counted_hours_ago": 9
+      }
+    },
+    {
+      "isbn13": "9781593082918",
+      "title": "Germinal (Barnes & Noble Classics Series) (Barnes & Noble Classics)",
+      "author": "Émile Zola",
+      "format": "paperback",
+      "published_on": "2005-12-01",
+      "ol_edition_key": "/books/OL8870300M",
+      "price_cents": 2899,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 5,
+        "reserved": 0,
+        "counted_hours_ago": 5649
+      }
+    },
+    {
+      "isbn13": "9781598181456",
+      "title": "Invisible Links",
+      "author": "Selma Lagerlöf",
+      "format": "hardcover",
+      "published_on": "2006-08-01",
+      "ol_edition_key": "/books/OL8898073M",
+      "price_cents": 699,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 3,
+        "reserved": 0,
+        "counted_hours_ago": 10
+      }
+    },
+    {
+      "isbn13": "9781598183306",
+      "title": "The Miracles of Antichrist",
+      "author": "Selma Lagerlöf",
+      "format": "hardcover",
+      "published_on": "2006-08-01",
+      "ol_edition_key": "/books/OL9726584M",
+      "price_cents": 2899,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 5,
+        "reserved": 0,
+        "counted_hours_ago": 795
+      }
+    },
+    {
+      "isbn13": "9781604240351",
+      "title": "Nana",
+      "author": "Émile Zola",
+      "format": "paperback",
+      "published_on": "2007-08-06",
+      "ol_edition_key": "/books/OL12557668M",
+      "price_cents": 1699,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 1,
+        "reserved": 0,
+        "counted_hours_ago": 12
+      }
+    },
+    {
+      "isbn13": "9781604240412",
+      "title": "Therese Raquin",
+      "author": "Émile Zola",
+      "format": "paperback",
+      "published_on": "2007-08-06",
+      "ol_edition_key": "/books/OL12557673M",
+      "price_cents": 2499,
+      "stock": {
+        "shape": "none_on_hand",
+        "on_hand": 0,
+        "reserved": 0,
+        "counted_hours_ago": 5
+      }
+    },
+    {
+      "isbn13": "9781606800737",
+      "title": "The Mysterious Island",
+      "author": "Jules Verne",
+      "format": "paperback",
+      "published_on": "2008-10-15",
+      "ol_edition_key": "/books/OL32444363M",
+      "price_cents": 2499,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 5,
+        "reserved": 0,
+        "counted_hours_ago": 16
+      }
+    },
+    {
+      "isbn13": "9781774021729",
+      "title": "Around the World in Eighty Days",
+      "author": "Jules Verne",
+      "format": "paperback",
+      "published_on": "2020-05-20",
+      "ol_edition_key": "/books/OL40442880M",
+      "price_cents": 2299,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 5,
+        "reserved": 0,
+        "counted_hours_ago": 3065
+      }
+    },
+    {
+      "isbn13": "9781784871789",
+      "title": "Death at Intervals",
+      "author": "José Saramago",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL33307227M",
+      "price_cents": 2899,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 2,
+        "reserved": 1,
+        "counted_hours_ago": 3
+      }
+    },
+    {
+      "isbn13": "9781784875862",
+      "title": "Hopscotch",
+      "author": "Julio Cortázar",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL29477609M",
+      "price_cents": 699,
+      "stock": null
+    },
+    {
+      "isbn13": "9781844677016",
+      "title": "The notebook",
+      "author": "José Saramago",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL25543129M",
+      "price_cents": 1299,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 3,
+        "reserved": 0,
+        "counted_hours_ago": 12
+      }
+    },
+    {
+      "isbn13": "9781846554926",
+      "title": "The Prague cemetery",
+      "author": "Umberto Eco",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL25195738M",
+      "price_cents": 899,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 1,
+        "reserved": 0,
+        "counted_hours_ago": 2175
+      }
+    },
+    {
+      "isbn13": "9781847022240",
+      "title": "Five Weeks in a Balloon",
+      "author": "Jules Verne",
+      "format": "paperback",
+      "published_on": "2006-04-30",
+      "ol_edition_key": "/books/OL8964923M",
+      "price_cents": 2899,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 3,
+        "reserved": 0,
+        "counted_hours_ago": 19
+      }
+    },
+    {
+      "isbn13": "9781847026972",
+      "title": "L'Assommoir",
+      "author": "Émile Zola",
+      "format": "paperback",
+      "published_on": "2006-05-17",
+      "ol_edition_key": "/books/OL11915978M",
+      "price_cents": 2499,
+      "stock": {
+        "shape": "fully_reserved",
+        "on_hand": 1,
+        "reserved": 1,
+        "counted_hours_ago": 13
+      }
+    },
+    {
+      "isbn13": "9781852900175",
+      "title": "The Lost Honour of Katharina Blum: Or",
+      "author": "Heinrich Böll",
+      "format": "hardcover",
+      "published_on": null,
+      "ol_edition_key": "/books/OL11958434M",
+      "price_cents": 2299,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 5,
+        "reserved": 0,
+        "counted_hours_ago": 5
+      }
+    },
+    {
+      "isbn13": "9781933076317",
+      "title": "Tales Of Zorro",
+      "author": "Isabel Allende",
+      "format": "paperback",
+      "published_on": "2007-12-15",
+      "ol_edition_key": "/books/OL12336191M",
+      "price_cents": 2099,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 3,
+        "reserved": 2,
+        "counted_hours_ago": 5057
+      }
+    },
+    {
+      "isbn13": "9781933382722",
+      "title": "The Belly of Paris",
+      "author": "Émile Zola",
+      "format": "paperback",
+      "published_on": "2007-01-15",
+      "ol_edition_key": "/books/OL8813927M",
+      "price_cents": 2699,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 2,
+        "reserved": 1,
+        "counted_hours_ago": 8
+      }
+    },
+    {
+      "isbn13": "9781974233649",
+      "title": "Camus Albert the Fall",
+      "author": "Albert Camus",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL55434090M",
+      "price_cents": 1099,
+      "stock": {
+        "shape": "none_on_hand",
+        "on_hand": 0,
+        "reserved": 0,
+        "counted_hours_ago": 4055
+      }
+    },
+    {
+      "isbn13": "9782070360802",
+      "title": "Courrier Sud",
+      "author": "Antoine de Saint-Exupéry",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL8837779M",
+      "price_cents": 2099,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 5,
+        "reserved": 0,
+        "counted_hours_ago": 10
+      }
+    },
+    {
+      "isbn13": "9782070371778",
+      "title": "LA Terre",
+      "author": "Émile Zola",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL8838189M",
+      "price_cents": 1099,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 1,
+        "reserved": 0,
+        "counted_hours_ago": 1781
+      }
+    },
+    {
+      "isbn13": "9782070372423",
+      "title": "Au Bonheur Des Dames",
+      "author": "Émile Zola",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL8838213M",
+      "price_cents": 899,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 3,
+        "reserved": 0,
+        "counted_hours_ago": 17
+      }
+    },
+    {
+      "isbn13": "9782070738274",
+      "title": "Premier Homme",
+      "author": "Albert Camus",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL8840663M",
+      "price_cents": 2499,
+      "stock": null
+    },
+    {
+      "isbn13": "9782266082624",
+      "title": "Germinal (Pocket Classics)",
+      "author": "Émile Zola",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL8889973M",
+      "price_cents": 2899,
+      "stock": {
+        "shape": "fresh_available",
+        "on_hand": 3,
+        "reserved": 0,
+        "counted_hours_ago": 17
+      }
+    },
+    {
+      "isbn13": "9783882438000",
+      "title": "Im Krebsgang",
+      "author": "Günter Grass",
+      "format": "hardcover",
+      "published_on": null,
+      "ol_edition_key": "/books/OL9008652M",
+      "price_cents": 699,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 1,
+        "reserved": 0,
+        "counted_hours_ago": 1021
+      }
+    },
+    {
+      "isbn13": "9784770019868",
+      "title": "An Echo of Heaven",
+      "author": "Kenzaburō Ōe",
+      "format": "hardcover",
+      "published_on": null,
+      "ol_edition_key": "/books/OL9037187M",
+      "price_cents": 2899,
+      "stock": {
+        "shape": "none_on_hand",
+        "on_hand": 0,
+        "reserved": 0,
+        "counted_hours_ago": 16
+      }
+    },
+    {
+      "isbn13": "9788363471545",
+      "title": "The Invincible",
+      "author": "Stanisław Lem",
+      "format": "paperback",
+      "published_on": "2017-03-27",
+      "ol_edition_key": "/books/OL28172484M",
+      "price_cents": 2499,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 3,
+        "reserved": 0,
+        "counted_hours_ago": 1903
+      }
+    },
+    {
+      "isbn13": "9788401423031",
+      "title": "Cuentos de Eva Luna",
+      "author": "Isabel Allende",
+      "format": "paperback",
+      "published_on": "1999-01-01",
+      "ol_edition_key": "/books/OL9112014M",
+      "price_cents": 2099,
+      "stock": null
+    },
+    {
+      "isbn13": "9788432205378",
+      "title": "Memorial Del Convento",
+      "author": "José Saramago",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL9120944M",
+      "price_cents": 1899,
+      "stock": {
+        "shape": "fully_reserved",
+        "on_hand": 5,
+        "reserved": 5,
+        "counted_hours_ago": 6331
+      }
+    },
+    {
+      "isbn13": "9788845246449",
+      "title": "L'Isola Del Giorno Prima",
+      "author": "Umberto Eco",
+      "format": "paperback",
+      "published_on": null,
+      "ol_edition_key": "/books/OL9188414M",
+      "price_cents": 1899,
+      "stock": {
+        "shape": "stale_available",
+        "on_hand": 3,
+        "reserved": 0,
+        "counted_hours_ago": 4955
+      }
+    },
+    {
+      "isbn13": "9789580461647",
+      "title": "La Increible Y triste Historia de la candida Erendira y de su abuela desalmada",
+      "author": "Gabriel García Márquez",
+      "format": "paperback",
+      "published_on": "2001-05-31",
+      "ol_edition_key": "/books/OL9150059M",
+      "price_cents": 1299,
+      "stock": {
+        "shape": "none_on_hand",
+        "on_hand": 0,
+        "reserved": 0,
+        "counted_hours_ago": 4539
+      }
+    }
+  ]
+}
